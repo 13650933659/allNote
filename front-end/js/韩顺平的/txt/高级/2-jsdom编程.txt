@@ -1,0 +1,25 @@
+
+
+1、DOM编程
+	001、document.write("hello world")  //向浏览器输出文本后面加ln就是多给一个空格
+	001、document.getElementById("div1")  
+	001、document.getElementsByName("div1")  //根据属性name得到 类型数组
+	001、document.getElementsByTagName("div1")  //根据元素名得到 类型数组
+	001、document.all[]  //得到文档下的所有元素 类型数组
+	001、document.forms[index].user_name.value  //得到文档下的第index个表单下的user_name控件的值，注意比如checkbox这些同名的别用
+	001、  //创建元素/删除元素，添加属性/删除属性，dom二级  有需要再去看文档
+	//1、文档下的重点讲table
+	001、table.rows[index].cells[index].innerText  //得到第index行的第index个表格的文本（都是从0）  
+	001、  //创建行删除行看文档
+
+	1、o.innrHTML/o.innerText/o.value《html格式文本/普通元素的文本/表单控件的值》
+	2、o.style.[width/height/background/color…]=新值 //修改添加样式属性/怎么取呢（如果你是在js直接加某个style你就可以取得到如果是css文件的这样就取不到）
+	3、o.className=新类名  //修改class属性的名字
+	4、o.removeAttribute("style")  //删除样式属性少用style属性，用class和id属性
+	5、o.offseWidth/o.offseHeigth  //获取这个元素的宽度
+	6、body.clientWidth/body.clientHeigth  //得到此时窗口的大小
+
+
+2、取css文件的样式两种方法
+	1、document.stylesheet[0].cssRules[0].backgroundColor  //得到第一个引入的css文件的第一个样式集合的背景颜色
+	1、document.stylesheet[0].rules[0].backgroundColor  //得到第一个引入的css文件的第一个样式集合的背景颜色

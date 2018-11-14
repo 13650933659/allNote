@@ -1,0 +1,4 @@
+
+
+1、json_decode($jsonString, true)  //把json格式数据的字符串，解码成php的数组，如果false的话就是转成php的对象
+2、json_encode($array)  //把$array编码成json格式数据字符串，后面的参数自己看文档

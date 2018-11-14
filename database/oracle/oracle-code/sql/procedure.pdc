@@ -1,0 +1,21 @@
+记得打开控制台的输出才可以：set serverout on
+--第一个PL/SQL程序：输出 hello world
+begin
+dbms_output.put_line('hello world');
+end;
+
+--第二个PL/SQL程序：块的开发
+declare
+v_ename varchar2(32);
+begin
+select ename into v_ename from emp where empno=&empno;
+dbms_output.put_line('雇员的名字是：'||v_ename);
+end;
+
+--把块合成（过程）相当于函数吧
+create procedure p1(n_empno number) is
+v_ename varchar2(32);
+begin
+select ename into v_ename from emp where empno=n_empno;
+dbms_output.put_line('雇员的名字是：'||v_ename);
+end;

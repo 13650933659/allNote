@@ -1,0 +1,20 @@
+
+
+区别:
+
+1、struts1：分控是单例
+   1、2001年出的开源基于mvc的web框架
+   2、总控是ActionServlet，小队长要继承了Action/分派Action
+   3、总控和分控都是Servlet，但是分控不需要配置，总控就要去web.xml中配置
+   4、原理：浏览器->web服务器->
+   总控(总控去读struts-config.xml文件，再去填充表单，在调用分控的execute，分控调用Modena执行完之后return ActionForward对象，然后总控根据返回结果再转发给jsp)
+
+
+2、struts2：分控是不是单例
+   1、2007年出的开源基于mvc的web框架
+   2、总控是StrutsPrepareAndExecuteFilter（过滤器），小队长要继承ActionSupport，其实也有实现了Action区别struts1的继承Action类
+   3、2.0和2.1的总控过滤器的不一样
+
+
+
+ 总结：Action单例的变化，传数据是用的军火库的变化

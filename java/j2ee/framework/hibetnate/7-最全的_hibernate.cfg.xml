@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+
+        <!-- Database connection settings 连接信息 -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://127.0.0.1:3306/hw</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">316319</property>
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Echo all executed SQL to stdout 显示sql语句开发时用 -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        
+        <!-- 常用thread，在当前线程找session没有则创建新的 -->
+        <property name="current_session_context_class">thread</property>
+
+		<!-- update帮我们自动更新数据表,如果没有这个表就会自动创建之，其他值(validate、create、create-drop)看文档介绍 -->
+        <property name="hbm2ddl.auto">update</property>
+
+		<!-- Disable the second-level cache二级缓存先留着讲优化是再用，要用之要引入相应的jar包和相应的日志框架
+		<property name="cache.use_second_level_cache">true</property>
+		<property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>  -->
+		<!-- 启用查询结果集缓存他是依赖于二级缓存的
+		<property name="cache.use_query_cache">true</property>
+		 -->
+		
+		<!-- 这是hibernate的事务隔离配置，这个不用配置，默认安数据库的类型就可以 -->
+		<!-- 1：read-uncommitted  2：read-committed  4：repeatable read  8：serializable（数字代表对应值） -->
+		<!--<property name="hibernate.connection.isolation">2</property>-->
+		
+        <!-- JDBC connection pool (use the built-in) 很少用它的-->
+        <!--<property name="connection.pool_size">1</property>-->
+        
+        <!-- 引入XX.hbm.xml关系文件，同一管理 -->
+        <!--<mapping resource="com/msb/model/Students.hbm.xml"/>-->
+		
+		<!-- 用注解的方式 -->
+		<mapping class="com.msb.model.Dept"/>
+		<mapping class="com.msb.model.Employee"/>
+		
+    </session-factory>
+
+</hibernate-configuration>

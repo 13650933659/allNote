@@ -1,0 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+1、ServletContext应用
+	1、得到全部servlet在web.xml中的配置共享参数：this.getServletContext().getInitParameter(String)
+	2、得到属性：this.getServletContext().getAttribute(String)  //取值  类型Object
+	3、创建文件输入流：this.getServletContext().getResourceAsStream(path)  //得到inputStream输入流，(如果path在src就不可以用这种方法读要用：DownloadServlet.class.getClassLoader().getResourceAsStream(path))，还可以再用new java.util.Properties().load(inStream)加载该流进行读取
+	4、通过文件相对路径得到此文件在服务器的全路径：
+		String path=this.getServletContext().getRealPath("images/aa.jpg")  //在普通servlet文件获取文件的绝对路径
+		String path=this.getServlet().getServletContext().getRealPath("images/aa.jpg")  //在小队长servlet文件获取文件的绝对路径

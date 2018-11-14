@@ -1,0 +1,63 @@
+--PL/SQL的变量类型《标量，复合类型，参数类型》标量就是oracle的三打类型sql不用管先
+  --案例一：复合1《记录（类）的应用只能接受返回只有一行的行，还是游标好用》输入一个编号查出他名字，薪水，工作
+create or replace procedure pro1(v_in_empno in number) is
+--创建一个记录类型   ==>>   定义一个记录变量《其实相当于实例化一个对象》
+type record_emp is record(
+v_ename emp.ename %type,
+v_sal emp.sal %type,
+v_job emp.job %type
+);
+v_record_emp  record_emp;
+begin
+  select ename,sal,job into v_record_emp from emp where empno=v_in_empno;
+  dbms_output.put_line('名字：'||v_record_emp.v_ename||'//工资：'||v_record_emp.v_sal||'//工作：'||v_record_emp.v_job);
+end;
+/
+create procedure pro2(v_in_empno in number) is--这个存储过程报错说明创建的记录类型不可以在别的存储过程使用要放在包里
+v_record_emp  record_emp;
+begin
+  select ename,sal,job into v_record_emp from emp where empno=v_in_empno;
+  dbms_output.put_line('名字2：'||v_record_emp.v_ename||'//工资：'||v_record_emp.v_sal||'//工作：'||v_record_emp.v_job);
+end;
+/
+
+
+  --案例二：复合2《表（字典数组）的应用只能接受一种数据类型，还是没有记录好用》输入一个编号查出 薪水
+create or replace procedure pro1(v_in_empno in number) is
+--创建一个表类型   ==>>   定义一个表变量《其实相当于定义一个字典数字》
+type table_emp is table of emp.sal %type index by binary_integer;
+v_table_emp table_emp;
+begin
+  select sal into v_table_emp(-1) from emp where empno=v_in_empno;
+  dbms_output.put_line('//工资：'||v_table_emp(-1));
+end;
+/
+create or replace procedure pro2(v_in_empno in number) is--这个报错说明创建的b表类型不可以在别的存储过程使用
+v_table_emp table_emp;
+begin
+  select sal into v_table_emp(-1) from emp where empno=v_in_empno;
+  dbms_output.put_line('//工资：'||v_table_emp(-1));
+end;
+/
+
+
+
+  --案例三：参照1《游标（ResultSet）的应用接受多行记录行，好用》输入一个部门编号查出 该部门的所有员工的 姓名和薪水创建的游标类型不可以在别的存储过程使用？？？
+create or replace procedure pro1(v_in_deptno in number) is
+--创建一个游标类型   ==>>   定义一个表变量《其实相当于定义ResultSet对象》
+type cursor_emp is ref cursor;--这样创建了一个游标类型
+v_cursor_emp cursor_emp;--定义
+v_ename emp.ename %type;
+v_sal emp.sal %type;
+begin
+  open v_cursor_emp for select ename,sal from emp where deptno=v_in_deptno;--打开
+  loop
+    fetch v_cursor_emp into v_ename,v_sal;
+    exit when v_cursor_emp % notfound;
+    dbms_output.put_line('姓名：'||v_ename||'//工资：'||v_sal);
+  end loop;
+  --dbms_output.put_line('姓名：'||v_ename||'//工资：'||v_sal);
+  close v_cursor_emp;--关闭很重要
+end;
+/
+exec pro1(20);--测试

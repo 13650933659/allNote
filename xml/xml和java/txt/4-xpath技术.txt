@@ -1,0 +1,16 @@
+
+
+	dom是其他组织的产品（要引入的包？？.jar包）
+	原理：
+	更容易跨行取得各个元素节点，通常结合dom4j技术使用
+
+	1、套路
+	org.dom4j.io.SAXReader sAXReader=new org.dom4j.io.SAXReader();
+	org.dom4j.Document document=sAXReader.read(new java.io.File("src/classes.xml"));
+
+	2、操作
+	
+	//通常用它来查，查到后给dom4j操作
+	java.util.List<org.dom4j.Element> elements=document.selectNodes("看文档")  //得到你要的元素节点List集合
+	org.dom4j.Element element=document.selectSingleNode("看文档") //如果你确定只有一个就用这一个方法
+

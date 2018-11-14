@@ -1,0 +1,30 @@
+
+原理
+	1、原理：浏览器->web服务器->
+	总控(总控去读struts-config.xml文件，再去填充表单，在调用分控的execute，分控调用Modena执行完之后return ActionForward对象，然后总控根据返回结果再转发给jsp)
+	
+
+
+
+开发方式
+	1、手动开发
+		1、建工，建包，引入炸包，粘贴到lib目录既可以
+		2、在web.xml文件配置总司令，其实总司令也是servlet
+		3、编写界面
+		4、创建表单《ActionForm/动态表单》，并创建小队长《Action/分派Action》
+		5、在WEB-INF目录创建一个struts-config.xml文件，引入相应的dtd文件，配置表单和小队长的关系，详情自己去看
+		6、接下来就4,5循环了
+
+	2、用myEclipse协助开发（只需要我们配置struts-config.xml文件一个文件即可，他会帮我们web.xml文件配置我们的总控的）
+		1、建工，建包，引入炸包，粘贴到lib目录既可以
+		2、用myeclipse自带的功能引入struts1（这时他会帮我们web.xml文件配置我们的总控的，还会自动在WEB-INF目录创建一个struts-config.xml文件）
+		3、创建表单《ActionForm/动态表单》，并创建小队长《Action/分派Action》
+		4、开发完表单和分控就去struts-config.xml文件配置（这里直接可以用它的可视化创建：表单和分控）
+		5、接下来就3,4循环了
+
+经验
+	1、表单还可以用DynamicForm《动态表单，就不用创建表单/生成get/set,在struts-config.xml配置即可》那个set/get方法名要和表空件名称一样
+	2、小队长可用DispatchAction《分派Action，用修改函数名和设置flag表记然后你的jsp想转发到此分控的哪个方法执行，就用："/strutsLogin/login.do?flag=方法名"》
+	3、全过程好像都是在转发，有刷新的危险
+	4、因为分控在WEB-INF/struts-config.xml配置了path又因为他底层是servlet使用在浏览器可以直接输入访问：http://localhost:8080/strutsLogin/login.do 
+	5、在jsp也可以用：/strutsLogin/login.do你的分控，《这里你的分控有被攻击的隐患，有点奇怪的是总控也是配过url的但在浏览器攻击不了，不奇怪啊，因为总控他强大啊会分清是不是攻击的啦，还是要用要会用session保护分控》

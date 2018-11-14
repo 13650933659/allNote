@@ -1,0 +1,42 @@
+
+
+
+	dom是其他组织的产品（要引入的包dom4j.jar包）
+	原理：
+	为了解决dom耗内存，sax只查的缺点
+
+	1、套路
+	org.dom4j.io.SAXReader sAXReader=new org.dom4j.io.SAXReader();
+	org.dom4j.Document document=sAXReader.read(new java.io.File("src/classes.xml"));
+	new org.dom4j.Document().getRootElement()  //得到根元素
+	new org.dom4j.Document().asXML()  //得到xml文档的字符串格，因为Document是一个大对象用toString不好出串
+
+	2、操作
+	//增
+	new org.dom4j.DocumentHelper.createElement("student");  //创建一个元素节点
+	new org.dom4j.Element().add(studentElement)  //给这个元素节点增加一个子元素节点
+	new java.util.List<org.dom4j.Element>().add(0, studentElement) //加到指定的位置
+	org.dom4j.Element kp_element = document.addElement("Kp")  //这样在上一级加了kp元素而且返回一个kp元素节点
+
+	//删
+	studentElement.getParent().remove(studentElement)  //从父元素节点删除自己
+	studentElement.remove(studentElement.attribute("别名"))  //删除属性
+
+	//改
+	studentElement.addAttribute("别名", "hello");  //官方推荐使用这个方法，他可以添加属性和修改属性
+	studentElement.setText("成龙")  //给这个元素节点填充内容，和修改内容
+
+	//查
+	new org.dom4j.Element().elementIterator()  //得到rootElement元素下的所有元素（包括本身和子子孙孙）的迭代器可以遍历了
+	new org.dom4j.Element().elements()  //得到rootElement元素下的所有元素（包括本身和子子孙孙）的List数组可以遍历了
+
+	
+
+
+	3、保存，注意乱码
+	org.dom4j.io.OutputFormat outputFormat=org.dom4j.io.OutputFormat.createPrettyPrint();
+	outputFormat.setEncoding("utf-8");
+	
+	org.dom4j.io.XMLWriter xMLWriter=new org.dom4j.io.XMLWriter(new java.io.FileOutputStream(new java.io.File("src/classes.xml")),outputFormat);
+	xMLWriter.write(document);
+	xMLWriter.close();

@@ -1,0 +1,6 @@
+
+1、js数组和php差不多，元素可以任意数据类型，还可以动态添加
+2、创建方式：比较自由
+	var array=[1,"f"];
+	var array=new Array(1,"f");
+	var array={1,"f"};

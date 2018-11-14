@@ -1,0 +1,27 @@
+
+	dom是sun公司的产品
+	原理：
+	dom把xml文件看成一个dom树并一次性加入内存，特别适合较小的xml文件的crud，dom会把每个元素映射成一个Node接口引用对象
+	我们要把他转化成子接口才有更多的方法可用。
+
+	1、dom套路
+	javax.xml.parsers.DocumentBuilderFactory documentBuilderFactory=javax.xml.parsers.DocumentBuilderFactory.newInstance();
+	javax.xml.parsers.DocumentBuilder documentBuilder=documentBuilderFactory.newDocumentBuilder();
+	org.w3c.dom.Document document=documentBuilder.parse("src/classes.xml");
+	document.getDocumentElement()  //得到根元素
+	
+	2、操作，把Node转成Element子接口
+	//增，删，改，查自己去看文档吧
+	new org.w3c.dom.Document().createElement("学生")  //创建一个学生
+	new org.w3c.dom.Element().setTextContent("成龙")  //给这个元素节点填充内容
+	new org.w3c.dom.Element().appendChild(studentElement)  //给这个元素节点增加一个子元素节点
+	new org.w3c.dom.Element().setAttribute("爱好", "打篮球")  //给这个元素节点增加一个属性
+	其余的自己去看文档测试
+
+
+
+	3、保存
+	javax.xml.transform.TransformerFactory transformerFactory=javax.xml.transform.TransformerFactory.newInstance();
+	javax.xml.transform.Transformer transformer=transformerFactory.newTransformer();
+	transformer.transform(new javax.xml.transform.dom.DOMSource(document), new javax.xml.transform.stream.StreamResult("src/classes.xml"));
+	

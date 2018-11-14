@@ -1,0 +1,19 @@
+
+
+1、启动关闭
+2、备份还原
+
+3、创建语句：
+	create table hw_users(
+		_user_id int identity (1,1) primary key,  --主键默认不能为空,自增长（从1开始步长为1）
+		_dept_id int references hw_dept(_dept_id),  --外键列
+		_user_name varchar(32) not null,  --用户名不能为空
+		_password varchar(32) not null,  --密码名不能为空
+		_sex varcahr(1)  default '男',  --人的性别默认男，要填只能在男女选一个(这里可以用枚举吗)
+		_age int check(_age>0 and _age<255),  --年龄从0-255的整型数据。存储大小为 1 字节
+		_hire_date datetime,  --入职时间
+		_salary numeric(10,2)  --薪水最大99999999.99
+	);
+	insert into hw_users values(1,1,'hsp','mm','男',18,'2016-12-12 12:00:00',10000.00);
+
+4、查看数据表结构：sp_help table_name/sp_columns table_name

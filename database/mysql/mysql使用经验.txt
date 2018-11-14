@@ -1,0 +1,14 @@
+1、mysql的使用经验
+	1、是auto_increment就一定是主键，是主键不一定是A_I
+	2、order by（默认是asc升序的，desc就是降序） 的后面，至少mysql可以用别名（别的数据库就不知道了）
+	3、select sum(_num) as n from hw_test20160512 group by _num order by n desc limit 1,1;
+		这句的意思：安_num分组计算每组的_num的总数别名为n,再用n降序，再从结果的第二条数据开始取一条
+	4、order by和group by 可以用1,2来指定你是要用结果集的第几列
+	5、如果多表查询，两个表的相同字段名时必须用表别名，不然报错 ambiguous
+
+
+
+
+2、mysql的常用函数
+	1、日期类型
+	now()  //得到：2016-05-12 21:34:50当前系统时间，

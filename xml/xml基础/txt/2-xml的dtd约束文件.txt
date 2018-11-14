@@ -1,0 +1,43 @@
+
+文本=括特殊字符吗
+
+1、这里只说外部的dtd文件
+
+	元素
+	1、元素的修饰符：
+		+=1~n
+		*=0~n
+		?=0~1
+		|=选择其中一个
+		,=按顺序
+	2、元素的特点：
+		(#PCDATA)=只可以有文本包
+		EMPTY=不能有文本和子元素但可以有属性
+		ANY=可以有文本和dtd定义过的元素，默认就是他吧
+
+	
+	元素属性
+	1、元素属性的类型：
+		CDATA=属性值可文本
+		ID=属性值是唯一的且以字母开头
+		IDREF/IDREFS=属性值引用ID,一/多
+	2、元素属性的特点：
+		#REQUIRED=必须有属性值
+		#IMPLIED=属性值可有可无
+		#FIXED value=属性的值是固定的为value,也可以不定此属性
+		Default value=属性值默认，用的不多
+	3、案例
+	<!ATTLIST 学生  //定义元素的属性语法
+	 住址 CDATA  #REQUIRED 
+	 学号 ID  #REQUIRED
+	 大佬 IDREF  #IMPLIED
+	 婚姻状态 (已婚|未婚|离婚) #REQUIRED
+	 国籍 CDATA  #FIXED "中国"
+	>
+
+
+
+	实体
+	1、应用实体：<!ENTITY intro "这只一个引用实体">   在xml文件引用：&intro
+	2、参数实体：<!ENTITY % name "名字">  在dtd文件引用：%name
+

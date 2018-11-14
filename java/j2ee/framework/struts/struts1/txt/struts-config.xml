@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	
+	<!-- 配置表单ActionFrom -->
+	<form-beans>
+		<!-- 表单名字：一般ActionForm子类表单军火库的小写 -->
+		<!-- type表单类全路径：一般表单的小写 -->
+		<form-bean name="userForm" type="com.hsp.form.UserForm">
+		</form-bean>
+	</form-beans>
+	
+	<!-- 配置小队长了Action -->
+	<action-mappings>
+		<!-- path：是表示将来访问该Action的url如：http://localhost:8080/webname/path? -->
+		<!-- name：用与关联ActionForm -->
+		<!-- type：用与该Action的全路径 -->
+		<!-- scope：表示要把表单数据放入哪个域对象 request=request.setAttribute("userForm",uf);-->
+		<!-- scope：表示要把表单数据放入哪个域对象 session=request.getSession(true).setAttribute("userForm",uf);-->
+		<action path="/login" name="userForm" scope="request" type="com.hsp.action.UserAction">
+			<!-- 这里还要配置跳转关系 -->
+			<!-- name：返回的结果 -->
+			<!-- path：转发的路径 -->
+			<forward name="ok" path="/WEB-INF/wel.jsp"></forward>
+			<forward name="err" path="/WEB-INF/err.jsp"></forward>
+		</action>
+	</action-mappings>
+
+</struts-config>

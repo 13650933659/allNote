@@ -1,0 +1,14 @@
+
+1、XMLHttpRequest对象实例的方法详解
+	1、发送原理看技术库
+	
+	方法
+	1、this.open('get',url,true)  //打开一个连接
+	2、this.setRequestHeader("Content-Type","application/x-www-form-urlencoded")  //如果是post请求就要这一句
+	3、this.send(data)  //发送一个ajax请求
+	4、
+
+	属性
+	1、.onreadystatechange
+
+

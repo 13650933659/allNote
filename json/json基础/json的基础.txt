@@ -1,0 +1,13 @@
+
+
+1、json数据格式如下：
+
+	json：
+	{"type":"view","name":"下载手机APP","url":"http://app.kuaizhan.com/download/3905804366"}
+	json数组：
+	[
+		{"type":"view","name":"下载手机APP","url":"http://app.kuaizhan.com/download/3905804366"},
+		{"type":"view","name":"下载手机APP","url":"http://app.kuaizhan.com/download/3905804366"}
+	]
+
+				

@@ -1,0 +1,21 @@
+<html>
+	
+	<title>自定义的xml验证工具</title>
+	<head>
+		<script>
+			
+			document.writeln("你好");
+			//1.加载解析器(这里我的浏览器不支持ActiveXObject这个控件)，2.开启验证功能，3.加载那个要验证的文件，4.打印出错误信息和行数
+			var xmldoc=new ActiveXObject("Microsoft.XMLDOM");
+			xmldoc.validateOnParse="true";
+			xmldoc.load(myClass.xml);
+
+			document.writeln("错误信息是："+xmldoc.parseError.reason+"<br/>");
+			document.writeln("错误的行数："+xmldoc.parseError.line);
+		
+		</script>
+
+	</head>
+
+
+</html>

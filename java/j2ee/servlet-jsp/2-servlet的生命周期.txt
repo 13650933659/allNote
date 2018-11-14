@@ -1,0 +1,7 @@
+
+1、servlet的生命周期（首先强调servlet是单例的）
+	（0）构造方法：客户端的第一次访问该servlet时，调用一次以后就不调用了，他比init更先被调用
+	（1）init方法：客户端的第一次访问该servlet时，调用一次以后就不调用了（这里注意init有两个，有参和无参的，GenericServlet干的，因为他怕我们重写有参的忘记写super.init()，我们重写无参的那个）
+	（2）doGet、doPost、service等方法：每一次客户端的访问，都会调用，为客户端的请求服务
+	（3）destroy方法：reload、关机、终止tomcat服务器：但是异常终止服务器不会执行
+

@@ -1,0 +1,85 @@
+JAVA程序操作SQL Server数据库
+
+一、	浅谈jdbc-odbc的桥连接
+
+（一）	用Statement直接发没有编译的sql语句
+try{
+	//1.加载驱动，2.得到连接，3创建SM，4，执行SQL语句
+Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+	ct=DriverManager.getConnection("jdbc:odbc:mytest","sa","666666");
+sm=ct.createStatement();
+res=sm.executeQuery(dql);/ int=sm.executeUpdate(dml);
+}catch(Exception e){
+	e.printStackTrace();
+}finally{
+	try{
+	//先开后关，并且做结实一点，并且用垃圾处理机制,自己做吧
+				if(res!=null){
+					res.close();
+					res=null;
+				}
+				if(sm!=null){
+					sm.close();
+				}
+				if(ct!=null){
+					ct.close();
+				}
+}catch(Exception e){ e.printStackTrace();}
+}
+
+（二）	用PreparedStatement发送通过java程序的预编译机制的sql语句
+try{
+	//1.加载驱动，2.得到连接，3创建PS《并给问号赋值再执行SQL语句》
+Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+	ct=DriverManager.getConnection("jdbc:odbc:mytest","sa","666666");
+ps=ct.prepareStatement(dql/ dml);
+res=ps.executeQuery();/ int=ps.executeUpdate();
+}catch(Exception e){
+	e.printStackTrace();
+}finally{
+	try{
+	//先开后关，并且做结实一点，并且用垃圾处理机制
+				if(res!=null){
+					res.close();
+					res=null;
+				}
+				if(sm!=null){
+					sm.close();
+				}
+				if(ct!=null){
+					ct.close();
+				}
+}catch(Exception e){ e.printStackTrace();}
+}
+
+
+
+
+
+二、	浅谈jdbc驱动直接连接《需要引入3个炸包，微软写的》
+
+（一）	只用PreparedStatement发送通过java程序的预编译机制的sql语句
+try{
+	//1.加载驱动，2.得到连接，3创建《PS火箭车》（并给问号赋值再执行SQL语句）
+Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver");	ct=DriverManager.getConnection("jdbc:microsoft:sqlserver://127.0.    0.1:1433;databaseName=helloWord", "sa", "666666")
+ps=ct.prepareStatement(dql/ dml);
+res=ps.executeQuery();/ int=ps.executeUpdate();
+}catch(Exception e){
+	e.printStackTrace();
+}finally{
+	try{
+	//先开后关，并且做结实一点，并且用垃圾处理机制
+				if(res!=null){
+					res.close();
+					res=null;
+				}
+				if(sm!=null){
+					sm.close();
+				}
+				if(ct!=null){
+					ct.close();
+				}
+}catch(Exception e){ e.printStackTrace();}
+}
+
+

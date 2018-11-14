@@ -1,0 +1,26 @@
+
+
+	dom是sun公司的产品
+	原理：
+	sax解析器如果扫描到相应的事件的开始就会调用相应的方法，看成事件处理机制吧
+	sam只有查找功能，没有更新的功能
+
+
+	1、套路
+	javax.xml.parsers.SAXParserFactory sAXParserFactory=javax.xml.parsers.SAXParserFactory.newInstance();
+	javax.xml.parsers.SAXParser sAXParser=sAXParserFactory.newSAXParser();
+	sAXParser.parse("src/classes.xml", new MyDefaultHandler());
+
+
+	2、编写自己的处理类
+	MyDefaultHandler类要继承org.xml.sax.helpers.DefaultHandler类并且实现5个方法：
+
+	知其名而知其意，重要的是后面三个函数
+	public void startDocument() throws SAXException{}
+	public void endDocument() throws SAXException{}
+	
+	public void startElement(String uri, String localName, String qName,Attributes attributes) throws SAXException{}
+	public void endElement(String uri, String localName, String qName) throws SAXException{}
+	public void characters(char[] ch, int start, int length) throws SAXException{}
+			 		
+			 

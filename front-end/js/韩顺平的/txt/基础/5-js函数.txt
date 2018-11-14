@@ -1,0 +1,5 @@
+
+1、函数种类
+	1、有名函数：function a(){} 通常是var级别的
+	2、匿名函数：function(){} 通常把他赋给一个this级别的属性
+	3、立即调用函数：(function(){})(a,b) 通过arguments来获取参数的数组对象

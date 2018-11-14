@@ -1,0 +1,37 @@
+RegExp对象（类）
+
+1、创建有两种方式
+	1、隐式创建：var my_reg=/(\d){4}/gi
+	2、显示创建：var my_reg=new RegExp("/(\d){4}/",gi);  //这种我好像错了
+
+2、一些方法属性
+	1、my_reg.exec(context)  //匹配到了一个就得到一个数组（有两个元素）结果指针就会往下指一下
+	2、my_reg.test(context)  //如果找到了一个就返回true,应用于验证邮箱和身份证什么的
+	3、index/leftContext/rightContext  //当前字串的下标/当前字串的左边/当前字串的右边
+
+	3、context.search(/aad/gi)  //第一次出现的下标
+	4、context.match(/aad/gi)  //匹配到了一个就得到一个数组（有两个元素）(结果就是全部结果数组的数组集合)
+	5、context.replace(/aad/gi,"hi")  //把aaa替换成hi
+
+3、弄清楚：子表达式/捕获/反向引用
+
+4、元字符
+	1、限定符：{n}=出现n次/{n,m}=a要出现大于n小于m次/+=1到多/*=0到多/?=0到1，贪婪
+	2、字符匹配：
+		1、[0-9a-z_-]=自己看/[abcd]=只能有abcd/[^abc]=取反
+		2、\d=0-9(\D反之)/\w=任意英文字符，数字和下划线(\W反之)
+		3、\s=任意不可见的字符，比如空格tab(\S反之)
+		4、.=除了\n之外的任意字符
+	3、转义字符：（.*+()$/\?[]^{}）十四个
+	4、定位符：/^abc/=行开始是abc  /abc$/=行结束是abc，结合m多行模式
+
+5、案例
+	1、var my_reg=/(\d){4}/gi;  //四个数字相连的字串，是一个小数组
+	2、var my_reg=/^(abc)/gim;  //以abc开头的行,m是多行模式
+	3、var my_reg=/abc/gi;  //result_string=context.match(my_reg)是一个大数组
+	4、var my_reg=/(\d)(\d)\2\1/gi;  //像1221，2332的数
+	5、var my_reg=/(\d){4}/gi;var new_context=context.replace("/(\d){4}/gi","h");  //替换文本还要接受一下正则表达式
+	6、var my_reg=/(\d{5}-(\d)\2\2(\d)\3\3(\d)\4\4)/gi;  //d*5-aaabbbccc
+	7、var my_reg=/[^a]/gi;  //a以外的任意字符
+	8、var my_reg=/(h|d)/gi;=var my_reg=/[hd]/gi;但是作用还是有点区别
+	9、var my_reg=/^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|org|net)$/;my_reg.test(context);  //电子邮件的验证

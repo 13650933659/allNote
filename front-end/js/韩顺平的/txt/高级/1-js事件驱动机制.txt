@@ -1,0 +1,43 @@
+
+参照java
+1、总览
+	1、事件源（html元素/浏览器窗口/其他）
+	2、事件对象（event但是有分类）
+	3、事件处理程序（js函数，可以有多个）
+	4、事件名（分类）
+
+2、事件的绑定和解除
+	1、直接在html元素属性直接加
+	2、this.onclick=test/this.onclick=null
+	3、(第三种可以一个事件可以绑定的多个行为不要带on)标准：this.addEventListener("click",test,冒泡/捕捉)[(IE11开始就支持标准了)但是低版本的ie用this.addchEvent("onclick",test)/detachEvent("onclick",test)]
+
+2、事件分类
+	1、鼠标事件
+		(1)onclick(鼠标点击放开发生)
+		(2)onmousedown/onmouseup(鼠标点击立即发生/鼠标放开立即发生)
+		(3)onmouseover/onmouseout(鼠标移入/鼠标移出)
+	2、键盘事件
+		(1)onkeydown/onkeyup(某个按键被按下立即发生/某个按键被松开立即发生)
+		(2)onkeypress(某个按键被按下然后松开立)
+	3、html事件
+		(1)window事件
+			1、onload(一张页面或一幅图像完成加)
+			2、onunload/onbeforeunload(关闭窗口后发生/关闭窗口前发生)
+			3、onresize(窗口大小变化了)
+			4、onscroll(滚动条变动发生动一次触发两次)
+		(2)onselectstart="return false"(不给用户选择网页或者元素内容)
+		(3)onsubmit/onreset(提交/重置按钮被按下松开，最好给一个有返回值的方法，这样就可以控制表单的提交与否)
+		(4)onblur/onfocus(失去焦点/得到焦点，这个好像要加一个什么才可以设置他为焦点)
+		(5)onselect(文本被选中)
+	4、其他事件
+		(1)oncontextmenu="return false"(不给用户使用鼠标右键)
+		
+		
+jgjgjgj
+
+
+
+jgjgjgj
+
+
+

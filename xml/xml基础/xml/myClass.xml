@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE class SYSTEM "myclass.dtd">
+
+<class>
+	<stu>
+		<name>杨过</name>
+		<sex>男</sex>
+		<age>30</age>
+		<info>niaho</info>
+	</stu>
+	<stu>
+		<name>李莫愁</name>
+		<sex>女</sex>
+		<age>30</age>
+	</stu>
+</class>

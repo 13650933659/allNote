@@ -1,0 +1,24 @@
+
+和php一样
+
+一、程序的执行控制：
+1、程序正常执行，从上到下
+2、单分支/双分支的if...else
+3、switch语句：注意break，default是最后去匹配的（如果进来没有break，下面的就不用匹配了就直接执行了）
+	var a=1;
+	switch(a){
+		case 1:
+		window.alert('a=1');
+		break;
+		defalut:
+		window.alert('no');
+	}
+
+二、循环控制：
+1、while语句：（注意最后出来的时候那个i已经加或者减了）
+2、do...while（无论如何都要执行一次）
+3、for循环
+4、for增强专门对数组的遍历
+	for(var key in array){
+		window.alert(array[key]);
+	}

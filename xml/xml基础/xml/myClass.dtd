@@ -1,0 +1,5 @@
+<!ELEMENT class (stu+)>
+	<!ELEMENT stu (name,sex,age)>
+		<!ELEMENT name (#PCDATA)>
+		<!ELEMENT sex (#PCDATA)>
+		<!ELEMENT age (#PCDATA)>

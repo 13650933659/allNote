@@ -1,0 +1,109 @@
+--创建视图
+create view view2 as (select empno,ename from scott.emp);
+
+--创建dml触发器
+  --案例一：创建监听一个（my_emp表）的添加记录的触发器
+create table my_emp(id number,name varchar2(32));
+create or replace trigger tri1 
+after insert  on scott.my_emp
+begin
+      dbms_output.put_line('你添加了一条记录');
+end;
+insert into my_emp values (1,'cjr');测试
+  --案例二：多行监听
+create or replace trigger tri2
+after update on scott.emp
+for each row
+begin
+      dbms_output.put_line('你修改了一条记录2');
+end;
+update emp set ename='ABC' where empno=7499;测试
+  --案例三：休息日不可以删除，修改，更新记录
+create or replace trigger tri2
+before update or delete or insert on scott.emp
+begin
+  if to_char(sysdate,'day') in('星期一','星期六') then
+    RAISE_APPLICATION_ERROR(-20001,'今天不可dml');
+    end if;
+end;
+/
+  --案例四：删除，修改，更新分开来监听  这里不懂语法啊
+create or replace trigger tri2
+before update or delete or insert on scott.emp
+begin
+  case
+    when inserting then
+    raise_application_error(-20021,'今天不可I');
+    when deleteing then
+    raise_application_error(-20022,'今天不可D');
+    when updateing then
+    raise_application_error(-20023,'今天不可U');
+   end case;
+end;
+/
+  --案例五：《巧用：old :new》1.修改emp表的信息时，改后的sal不可以高于原来的1.2倍
+create or replace trigger tri2
+before update on scott.emp
+for each row
+begin
+  if :new.sal>:old.sal*1.2 then
+    raise_application_error(-20000,'修改后的薪水不符合');
+  else
+    dbms_output.put_line(:old.ename||'现在的sal:'||:new.sal||'之前的sal'||:old.sal);
+  end if;
+end;
+/
+update emp set sal=8043 where empno=7499;测试
+  --案例六：《巧用：old :new》1.修改emp表的信息时，改后的sal不可以高于原来的1.2倍同时不能低于原来的sal
+create or replace trigger tri2
+before update on scott.emp
+for each row
+begin
+  if (:new.sal>:old.sal*1.2 or :new.sal<:old.sal) then
+    raise_application_error(-20000,'修改后的薪水不符合');
+  else
+    dbms_output.put_line(:old.ename||'现在的sal:'||:new.sal||'之前的sal'||:old.sal);
+  end if;
+end;
+/
+update emp set sal=8043 where empno=7499;/update emp set sal=83 where empno=7499;测试
+  --案例七：《巧用：old :new》1.创建my_emp表，插入的员工的年龄不能小于18岁
+create table or replace my_emp(m_id number,birth date);
+create or replace trigger tri1
+before insert on scott.my_emp
+for each row
+begin
+  if (add_months(:new.birth,18*12)>sysdate) then
+    raise_application_error(-20000,'你未满18岁');
+  end if;
+end;
+/
+insert into my_emp values (1,to_date('2010-02-02','yyyy-mm-dd'));/insert into my_emp values (1,to_date('1970-02-02','yyyy-mm-dd'));测试
+--创建系统触发器《特权》
+  --案例一：创建一张表log_table来记录用户的登录、退出oracle的用户《用户名，id，时间》登录退出每个系统事件写一个触发器
+create table log_table (un varchar2(32),logon_time date,logoff_time date,address varchar2(32));
+create or replace trigger logon_tri
+after logon on database
+begin
+  insert into log_table(un,logon_time,address) values (ora_login_user,sysdate,ora_client_ip_address);
+end;
+/
+create or replace trigger logoff_tri
+before logoff on database
+begin
+  insert into log_table(un,logoff_time,address) values (ora_login_user,sysdate,ora_client_ip_address);
+end;
+/
+select un,to_char(logon_time,'yyyy-mm-dd hh24-mi-ss'),to_char(logoff_time,'yyyy-mm-dd hh24-mi-ss'),address from log_table;测试
+
+--创建ddl触发器《特权》
+  --案例一：创建一张表my_ddl_event表来记录执行ddl操作的用户的信息《ddl事件种类，用户名，时间》
+create table my_ddl_event(un varchar2(32),ddl_time date,ddl_event varchar2(32));
+create or replace trigger ddl_tri
+before ddl on scott.schema
+begin
+  insert into my_ddl_event(un,ddl_time,ddl_event) values (ora_login_user,sysdate,ora_sysevent);
+end;
+/
+
+create table t1(ids number);/drop table t1;测试

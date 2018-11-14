@@ -1,0 +1,23 @@
+--分页的存储过程 以后在去加强《要求输入:1.那个表2.pageSize3.pageNow ==>>1.rowCount2.pageCount3.cursor就是当前页要显示的数据》
+
+六个参数：
+in_table varchar2,in_pageSize number,in_pageNow number,out_result out pack1.cursor_comm,out_rowCount out number,out_pageCount out number
+sql1='select t2.* from (select t1.*,rownum rn from (select * from '||in_table||') t1 where rownum<='||v_end||') t2 where rn>='||v_start;
+sql2='select count(*) into '||out_rowCount||' from '||in_table;
+
+--1、先建一个包来装游标
+create or replace package pack1 is
+type cursor_comm is ref cursor;
+end;
+/
+--2、创建存储过程
+create  procedure fenye() is
+v_start number:=in_pageSize*(in_pageNow-1)+1;
+v_end number:=in_pageSize*in_pageNow;
+v_sql varchar2(1000):='select t2.* from (select t1.*,rownum rn from (select * from '||in_table||') t1 where rownum<='||v_end||') t2 where rn>='||v_start;
+begin
+  open out_result for v_sql;
+  select count(*) into out_rowCount from emp;
+  out_pageCount:=ceil(out_rowCount/in_pageSize);
+end;
+/

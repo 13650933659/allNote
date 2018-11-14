@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context 
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+           
+
+	<!-- 1、启用注解配置的支持 -->
+	<context:annotation-config/>
+
+	<!-- 2、扫描指定包下的所有bean -->
+	<context:component-scan base-package="com.msb"/>
+	
+	
+	
+	<!-- 3、mysql的配置databaseSource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="org.gjt.mm.mysql.Driver"/>
+	    <property name="url" value="jdbc:mysql://localhost:3306/hw"/>
+	    <property name="username" value="root"/>
+	    <property name="password" value="316319"/>
+		<!-- 连接池启动时的初始值 -->
+		<property name="initialSize" value="3"/>
+		<!-- 连接池的最大值 -->
+		<property name="maxActive" value="500"/>
+	 	<!-- 最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止 -->
+		<property name="maxIdle" value="2"/>
+		<!--  最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请 -->
+		<property name="minIdle" value="1"/>
+	</bean>
+	
+	
+	
+	<!-- 4、配置SessionFactory会话工厂(hibernate框架)，mybatis的去参考项目 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	
+    	 <!--
+	    <property name="annotatedClasses">
+		    <list>
+		      <value>com.msb.model.User</value>
+		      <value>com.msb.model.Log</value>
+		    </list>
+		     
+	    </property>
+	    -->
+	    <!-- 这一种用法最好，他会包括了上面的配置，他会扫描com.msb.model包的所有实体类 -->
+	    <property name="packagesToScan">
+		    <list>
+		      <value>com.msb.model</value>
+		    </list>
+	    </property>
+	    
+	    <property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 5、事务处理机制 -->
+	
+	<!--5.1、管理器-->
+		<!-- 5.1.1、hibernate框架事务管理器 -->
+		<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+			<property name="sessionFactory" ref="sessionFactory"/>
+		</bean>
+
+		<!-- 5.1.2、mybatis框架事务管理器
+		<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="dataSource"/>
+		</bean>
+		-->
+	
+	<!-- 5.2、事务的声明模式 -->
+		<!-- 5.2.1、xml的声明式事务(推荐) -->
+		<!-- 1、通知（建议） -->
+		<tx:advice id="txAdvice" transaction-manager="txManager">
+			<tx:attributes>
+				<tx:method name="getUser" read-only="true" />
+				<tx:method name="check*" propagation="REQUIRED"/>
+			</tx:attributes>
+		</tx:advice>
+		<!-- 2、切入com.service.impl包下面的所有类的所有方法(aop的模式) -->
+		<aop:config>
+			<aop:pointcut id="bussinessService" expression="execution(public * com.msb.service..*.*(..))" />
+			<aop:advisor pointcut-ref="bussinessService" advice-ref="txAdvice" />
+		</aop:config>
+
+		<!-- 5.2.2、使用注解的方式(不推荐)
+		<tx:annotation-driven transaction-manager="txManager"/>-->
+	
+	
+	
+</beans>

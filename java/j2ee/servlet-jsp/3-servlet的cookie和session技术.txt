@@ -1,0 +1,29 @@
+
+1、cookie技术《特点：1、值不可以是对象，不能写中文 2、大小最多4k 3、客户端可以阻止服务端写 4、只能拿自己webapp写入的内容 5、针对javaweb可能子目录设的cookie父亲不能读，反过来可以》
+	1、介绍:服务器回写在客户端的信息(小纸条)。
+	2、创建：Cookie cookie = new Cookie(String n,String val);
+	3、回写：response.addCookie(cookie);
+	4、获得有点麻烦看如下代码：《用for增强遍历reqest.getCookies()数组》
+	5、删除有点麻烦看如下代码：《用for增强遍历reqest.getCookies()数组》
+	6、生命周期
+		1、cookie.setMaxAge(0)设置cookie的生命周期（秒），如果没设则关闭当前浏览器就没有了。
+
+
+2、session技术《特点：值是对象》
+	1、介绍:在用户不禁用cookie前提条件下，当某用户打开一个ie访问我们，我们就会给用它分配一个空间（有sessionID和值（键值对）），利用cookie技术叫客户端ie帮忙把JSESSIONID写到客户机子，
+		只要不关闭此这个ie并且这个session的生命周期不结束，那么此客户端以后的每一次访问都会带这个SESSIONID，那么我们就可以通过SESSIONID拿到属于他的session，就可以做一些业务了。
+	2、添加：httpReqest.getSession(true).setAttribute(String name,Object val)
+	3、获得：httpReqest.getSession(true).getAttribute(String name)
+	4、删除：httpReqest.getSession(true).removeAttribute(name)/ invalidate()《结束某个session属性/清空session》
+	5、生命周期
+		1、setMaxInactiveInterval(int)设置不活跃生命周期（秒，0和负数无限期），默认30min，关闭ie不管时间到没到都会结束，因为浏览器不带那个JSESSIONID，关tomcat或者重新加载你的web应用也会结束。
+		2、不活跃生命周期还可以去D:/tomcat/conf/web.xml配置，如果你想只改变自己的web应用的session就把那个配置复制到你的web.xml文件去<session-config><session-timeout>30</session-timeout></session-config>
+		3、还有是同一台机器打开两个ie，是两个不同的session。
+		4、Cookie和session是关联的，如果用户禁用cookie我们的session技术也无法实现，解决用户禁用cookie的方法：
+			1、第一种：检查用户是否禁用cookie如果禁用就弹窗提示一句叫他打开cookie，比较霸道。
+			2、第二种：URL重写，需要用到session的url都要重写一下response.encodeURL(request.getRequestURL().toString())，如果客户没有禁用cookie则url不变，否则会加入JSESSIONID，但是参数他分隔符好像是;而不是平常的?
+			3、总结：如果是局域网的web应用，我们不用重写url，可以要求用户别禁用cookie，但是是公网的web最后要重写一下，比较稳定
+
+	比较session/cookie
+		1、保存地方/安全/宽带/生命周期
+		2、核心的业务不要用cookie，要用session，锦上添花的功能可以考虑使用cookie
