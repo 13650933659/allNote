@@ -1,13 +1,6 @@
 
 
 
-j2se->Spring->SpringMVC->mybatis->SpringBoot->SpringCloud->mongodb->redis->关系型数据库
-linux->docker->git->idea->maven->webservice
-
-git/SpringCloud/mybatis
-
-是的，我们那个项目比较特别，从2012做到现在，可以说是一个成型的产品了，但是后面的客户有时会提出一些新的功能，我们还在继续开发和维护，往标准化完善
-
 
 1、j2se篇
 	1、安装jre（java运行环境），这个其实jdk就有了，但是装这个有好处（他修改系统的注册表，不用我们手动配置lib(一些需要依赖的类库)的环境变量）
@@ -38,23 +31,50 @@ git/SpringCloud/mybatis
 
 
 
-意：700+250=950+88
-耳：100(付给其他人)+500
-叔叔：400
+叔叔：1000+200
 
 
-我的衣服尺码
-	1、9分裤子 = 29码 76腰围 88臀围 89裤长 52大腿围 34小腿围
-	2、短衬衫 = L码 41肩宽 92胸围 61衣长 16.5袖长
-	3、长衬衫 = L码 42肩宽 96胸围 69衣长 62袖长
 
-1、红色毛衣 98-83
-2、白色衬衫 128-108
-3、
 
-1、学习docker
-3、约科三，找利本
-5、2018-11-26之前取消自动续费
+
+
+
+1、数据库升级机制
+	1、什么时候执行好呢
+	2、分库
+12、idea查看pom的依赖结构
+13、换掉springboot的默认的日志框架
+14、换掉springboot内嵌的tomcat(换成不是内嵌的，但是他启动springboot那个tomcat是哪里的呢？我还能直接从浏览器访问项目吗？)
+15、spring-boot-starter-jdbc这个是什么
+16、commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等
+17、字典研究，项目启动慢是不是他的原因，hanl
+1、springboot里边的pom依赖的研究
+1、看一下springboot打出来的war里面的结构
+1、maven编译一个java
+1、@Autowired注解构造方法，还是使用类型吗？
+1、看一下maven会不会把没用的bean编译进入target
+1、数据库的触发器
+1、idea自动编译java,和忽略警告
+1、maven打包resource怎么看
+1、idea的modify table研究，新增注释
+
+1、redisson的分布式锁
+1、fixedThreadPool.shutdownNow();的再次研究
+1、SubProjExtrRslt subProjExtrRslt : subProjExtrRslts 如果没有指标段，是怎么样的呢？
+1、线程安全问题
+
+已解决
+	1、@Service bean的名称默认是被注解类的名称吗？
+		如果有指定@Service("xx")就是xx，没有就是类名首字母小写
+
+
+
+
+
+1、今天的
+	4、地区匹配的最好写一下测试用例
+	4、mongodb的集群，写成自适应的（暂时不处理）
+	5、mybatis plus
 
 
 

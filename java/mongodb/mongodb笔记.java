@@ -66,6 +66,8 @@
 			6、$nor(所有条件不满足返回true)：{$nor,[条件1,条件2]}
 			7、也可以直接写正则表达式：db.stu.find({name:/zs.*/},{name:1});
 			8、$where(bson->json再来比效率低)：db.goods.find({$where:'this.id != 3 && this.id != 11'});
+
+
 	3、游标
 		1、用while来循环游标
 			> var mycursor = db.stu.find();
@@ -147,6 +149,9 @@
 		6、使用db.printShardingStatus()查看分片的状态
 	8、安全认证：MongoDB会将普通的数据作为admin数据库处理，其他库的只能自己库的用户才能处理。admin数据库中的用户被视为超级用户(即管理员)。
 		1、在对应的库加入用户：db.addUser("root","root");
+			db.createUser({user:"root",pwd:"root",roles[{role:"root",db:"admin"}]})
 		2、启动加参数：--auth
 		3、db.auth("root","root");在相应的数据库中认证
 	9、java操作mongodb，看项目演示
+
+	db.auth("bxkc","bidizhaobiaowang2017")

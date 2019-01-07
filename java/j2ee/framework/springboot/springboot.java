@@ -42,7 +42,12 @@
 
 1、springboot是什么
 	1、整合了spring技术栈，大量的使用自动化的配置，使得基于spring的应用开发起来更加简化
-	2、自动化配置原理，有空去看看
+	2、springboot常用组件
+		1、应该就是说starter了：-web(内置了视图解析器，日期时间，json转换器),-thymeleaf,-data-jpa,-jdbc
+	3、springboot的自动化配置原理：
+		1、springboot启动回去加载主程序@SpringBootApplication有@EnableAutoConfiguration，
+		他会使用classloader来加载classpath:meta-inf/spring.factories的下面定制好了的自动化配置类
+		典型的有WebmvcAutoConfiguration
 
 2、开发流程
 	1、pom.xml继承spring‐boot‐starter‐parent继承spring‐boot‐dependencies，加入依赖直接使用springboot的启动器，例如使用spring‐boot‐starter‐web，可以使用springmvc
@@ -137,11 +142,11 @@
 		public void contextLoads() {
 			Logger logger = LoggerFactory.getLogger(getClass());
 			// 由低到高 trace<debug<info<warn<error，默认info级别，只会输出>=info级别的日志
-			logger.trace("这是trace日志...");
-			logger.debug("这是debug日志...");
-			logger.info("这是info日志...");
-			logger.warn("这是warn日志...");
-			logger.error("这是error日志...");
+			logger.trace("这是trace日志...");		// 开发者看
+			logger.debug("这是debug日志...");		// 开发者看
+			logger.info("这是info日志...");			// 介于开发和用户，这个一般开发者和用户的分界线
+			logger.warn("这是warn日志...");			// 介于开发和用户
+			logger.error("这是error日志...");		// 介于开发和用户
 		}
 
 	3、日志输出格式：%d{yyyy‐MM‐dd HH:mm:ss.SSS} [%thread] %‐5level %logger{50} ‐ %msg%n
@@ -162,12 +167,12 @@
 		1、/webjars/XX都去path=classpath:/META-INF/resources/webjars/找，例如：localhost/webjars/a/a.js=path/a/a.js
 		2、"/**"，都去（path=下列四种）找，例如：localhost/abc/a.js =path/abc/a.js
 			"classpath:/META‐INF/resources/",
-			"classpath:/resources/",
 			"classpath:/static/",
+			"classpath:/resources/",
 			"classpath:/public/"
 			"/"：当前项目的根路径
-		3、欢迎页=path/index.html页面，例如：localhost=path/index.html
-		4、网站图标=path/favicon.ico
+		3、欢迎页=path/index.html页面，例如：localhost=path(2)/index.html
+		4、网站图标=path(2)/favicon.ico
 	2、thymeleaf：<html lang="en" xmlns:th="http://www.thymeleaf.org">
 		1、引入：
 			<!-- 4、引入thymeleaf依赖就相当于jsp的功能-->
@@ -280,3 +285,4 @@
 7、启动配置原理(有空再去看)
 8、自定义starter(有空再去看)
 
+	

@@ -15,16 +15,18 @@
 		1、一般的equals方法判断的是两个对象的地址是否相等，有时我们需要按照我们的业务来判断两个对象是否相等，就要重写他了
 		2、一般的地方不需要重写hashCode，当在HashMap和HashSet这集合集合类是，他们的key是以hashCode为准，这时就需要重写hashCode
 	4、反射机制的用途
-		1、在运行时可以动态的对类对应的对象的方法和属性进行操作，反射最大的应用就是框架
-	5、动态代理有3种表现方式
+		1、在运行时可以动态地操作类对应的对象里面的方法和属性，反射最大的应用就是框架
+	5、java代理
 		1、我自己模拟的是静态代理
-		2、通过JDK提供的InvocationHandler接口来做
-		3、CGLIB
+		2、动态代理
+			1、通过JDK提供的InvocationHandler接口来做
+			2、CGLIB
+			3、两者的区别，前者只能代理实现接口的类，后者可以代理没有实现接口的类
 	6、静态代码块、构造代码块、构造方法
 		1、优先级：静(类加载时)>构块(被实例化时)>构方(被实例化时)
 	7、线程和锁
 	8、newInstance和new的区别
-		1、newInstance是弱类型，效率低，他通过反射机制创建对象，分解成两步（即：加载类再创建），而且只能调用此类的无参构造方法
+		1、newInstance是弱类型，效率低，他通过反射机制创建对象，分解成两步（即：加载类再创建），只能调用此类的无参构造方法
 		2、new是强类型，效率相对高，他可以调用任何public的构造方法	
 	9、你对MVC的看法？
 		答：他是model/view/controller的缩写，把数据/业务逻辑/界面显示分离开，降低了代码耦合度，利于的管理和扩展。
@@ -79,12 +81,18 @@
 			2、方法：System.arraycopy(Object[] src, int srcStart, Object[] target, targetStart, int len);	// 从src的srcStart开始复制len个元素到target
 	20、有序的HashMap是LinkedHashMap
 	21、hashMap的底层
-		1、HashMap实际上是一个“链表散列”的数据结构，即数组和链表的结合体。HashMap底层就是一个数组，
-		每一项又是一个链表(类型为Map.Entry 其实就是一个key-value对)，它使用key的hashcode指向下一个元素的引用，这就构成了链表。
+		1、HashMap底层是数组和链表的结合体，key的hashcode数组下标，
+		并每个元素指向下一个元素构成一个链表(类型为Map.Entry 其实就是一个key-value对)，
 	22、同步的Map：HashTable和HashMap都是实现Map，但是前者是同步的后者是异步的
 	23、String str = new String("abc");创建了多个字符串对象
 		1、把new String("abc")看成2部分，如果字符串常量池中没有"abc"则创建之，并且放在栈中，new的时候把这个字符串对象拷贝一份到堆中，所以一共创建2次
 	24、注意：Double a = 0d;Double b = 0d;a==b为false，和Integer不一样
+	25、一个栈的序列是12345，根据栈是先进后出的(像装子弹一样，队列就反之)5开头的不可能
+	26、wait和sleep方法的区别
+		1、这两个方法来自不同的类分别是Thread和Object
+		2、最主要是sleep方法没有释放锁，而wait方法释放了锁
+		3、sleep必须捕获异常，而wait不用
+	
 2、j2ee
 	1、对j2ee的，struts/spring/hibernate三大框架的看法？
 		答：
@@ -100,31 +108,58 @@
 			瞬：内存有，没ID，缓存没，DB没
 			持：内存有，有ID，缓存有，DB有
 			脱：内存有，有ID，缓存没，DB有
-		4、session常用的方法有：save(teacher)/delete(teacher)/get或者load(teacher.getClass,id)/update(teacher)
+		4、session常用的方法有：save/delete/get或者load/update
 		5、session不常用的方法有：merger(teacher)/saveorupdate(teacher)/flush(强制同步)/clear(清除session级缓存)
 		6、对4,5的总结：
 			1、get和load区别：load是懒加载（还有级联的的两个参数：cascade要级联吗/fetch取要懒吗）
-			2、update他改一个会改全部字段浪费效率，最好用hql语句，好友其他两种方法看马士兵的教程。
+			2、update他改一个会改全部字段浪费效率，最好用hql语句，还有其他两种方法看马士兵的教程。
 		7、事务提交则自动关闭session自动关闭，这时缓存也没有了。
-	3、你对AOP的理解
-		1、AOP的理解
-			答：答：程序运行时，插入了一个东西（切面，像拦截器，底层是java动态代理技术），他可以帮我们加入我们想要的业务，比如（事务管理、日志管理、性能测试、权限管理=就像springmvc和struts的拦截器）
+	3、AOP(Aspect Orient Programming)，Spring该我们提供了多切面比如声明式的事物管理
+		1、底层是动态代理，这里所说的切面是面向一大堆的对象的，当这些对象在执行指定的方法时，这个切面就会切入做一些自定义的业务（比如：日志管理、性能测试、事务管理）
 	4、mybatis如何做批处理的(用forEech标签)
 	5、mybatis的引入
-	6、springcloud和dubbo最大的区别就是，服务调用方式，前者使用的是rest API风格，后者使用的RPC
+	6、springcloud和dubbo最大的区别就是，服务调用方式前者使用的是rest API风格，后者使用的RPC
 	7、IOC的注入方式有几种（上面的注解注入先不管了）
 		1、3种（接口注入、构造方法注入、set方法注入）
 	8、Spring有几种配置方式？
 		1、3种（xml配置、注解配置、java类的配置这个要在此类加 @Configuration） 
 	9、如何以注解的方式配置spring，2.5以后才支持的
 		1、默认是关闭，我们要在xml中启用<context:annotation-config/>，然后就可以使用注解来配置bean了
-
+	10、什么是IOC(Inversion of control)和DI(Dependency Injection)
+		1、IOC：创建对象的控制权由我们转IOC向容器
+		2、DI：我们需要使用的属性对象依赖IOC容器注入
+	11、mybatis和hibernate的有什么区别
+		1、h是标准的orm框架，严格说m不是，但是m比h使用起来更加简单一点，m可以非常灵活的编写动态的sql，这样就避免了一些额外的查询，
+		虽然h也可以直接写sql但是这样就破坏了h的原来的思想了orm
+		2、如果项目中表关系比较复杂，而且查询的逻辑复杂建议使用m，如果业务简单可以使用h
+	12、docker容器里面的环境怎么访问外网
+		1、可以访问外网的，但是他没有硬件的驱动呢(配置文件)
+	13、servlet的生命周期
+		1、init"只在第一次初始化时调用"->service再去调用doGet或者doPost方法"每次"->destroy方法"销毁"
+	14、为什么要注册到eureka
+		1、微服务交给eureka管理，就能其他微服务通讯
+	15、tomcat如何优化
+		1、jvm内存配置的优化，去$TOMCAT_HOME/bin/catalina.sh(win是.bat)配置参数，也可以在eclipse那边配置
+			1、解决java.lang.OutOfMemoryError: Java heap space  // 堆内存溢出(对象过多)
+				-Xms512M(JVM堆初始内存) 
+				-Xmx1024M(JVM堆最大内存) 
+			2、解决java.lang.OutOfMemoryError: PermGen space  // 静态区溢出(加载的类过多)
+				java8以下版本使用XX:PermSize和-XX:MaxPermSize 两个参数，限制静态区最小和最大内存范围
+				java8开始已经将类定义存放到了元数据（MetaspaceSize）空间，而元数据空间是与堆空间共享同一块内存区域的，所以java8开始没这个问题了
+			3、解决堆栈溢出的另一个方法
+				-XX:MaxNewSize=256m // 当tomcat内存不足时使用此分配的内存；从而达到调优的目的
+			4、解决java.lang.StackOverflowError异常 // 表示栈内存溢出(一般是死循环、无限递归导致，自己查看代码)
+		2、并发配置优化，去$TOMCAT_HOME/conf/server.xml配置，详情参考：https://blog.csdn.net/cjr2015/article/details/84279916
+	16、微服务的优势
+		1、解耦，他把一个大型的应用按业务拆分成多个小服务，服务之间互相调用，又互相独立运行在独立的进程中，可以单独的部署
+	15、git冲突了，要回滚使用什么命令
+		1、使用：git merge –abort，可以回滚到刚刚没合并之前的状态
 
 3、数据库
-	1、创建表、索引
+	1、创建表索引
 		1、以mysql为例
 			1、create index 索引名称 on 表名(列名1,列名2);
-			1、查看是否创建成功：show index from 表名，也可以在UI客户端清晰的看到
+			2、查看是否创建成功：show index from 表名，也可以在UI客户端清晰的看到
 	2、java如何调用视图和存储过程
 		1、CallableStatement来调用存储过程
 		2、视图直接使用select语句即可(create view v1 as select id from user; -> select * from v1)
@@ -188,7 +223,16 @@
 			4、非关系型数据库特点：
 				效率高：因为存储在内存中，
 				不安全：断电数据会丢失，现在很多都开始支持数据持久化了，像redis的rdb和aof
-
-
-
+	9、redis，mongodb适用场景
+		1、redis他是内存k-v的数据库，适合高频访问的数据，比如淘宝的关键字
+		2、mongodb他是文档型分布式数据库，他可以分片就行微服务那样把一个库分成多个小库，通过路由去实现负载，
+			MongoDB更侧重高数据写入性能，而非事务安全，高可用复制集
+	10、oracle有几种索引
+		1、B-tree索引(默认的)
+		2、位图索引
+		3、基于函数的索引(有一些字段查询时带函数的，这是就有意义了)
+		4、hash索引
+		5、反向索引
+		6、分区索引和全局索引
+	11、交叉用sql怎么实现
 

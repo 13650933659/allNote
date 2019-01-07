@@ -151,6 +151,25 @@
 		5、拷贝
 			1、cp /home/a.txt /home/aa/：把a.txt文件拷贝到aa目录，如果拷贝目录用下面的
 			2、cp -r /home/aa/ /home/bb：把aa目录拷贝到bb，如果有相同文件会提示是否覆盖，使用\cp不提示
+		5、远程拷贝（只能linux对linux吧）
+			1、scp root@10.10.10.10:/opt/a.txt /opt/  // 从10.10.10.10拷贝/opt/a.txt文件到本地的/opt/目录
+			2、scp -r root@10.10.10.10:/opt/ /opt/  // 从10.10.10.10拷贝/opt/目录到本地的/opt/目录
+			3、scp /opt/a.txt root@10.10.10.10:/opt/  // 本地文件/opt/a.txt拷贝到远程
+			4、scp -r root@10.10.10.10:/opt/ /opt/  // 本地目录/opt/拷贝到远程
+			5、参数
+				-1：使用ssh协议版本1；
+				-2：使用ssh协议版本2；
+				-4：使用ipv4；
+				-6：使用ipv6；
+				-B：以批处理模式运行；
+				-C：使用压缩；
+				-F：指定ssh配置文件；
+				-l：指定宽带限制；
+				-o：指定使用的ssh选项；
+				-P：指定远程主机的端口号；
+				-p：保留文件的最后修改时间，最后访问时间和权限模式；
+				-q：不显示复制进度；
+				-r：以递归方式复制。
 		6、删除目录和文件
 			1、rm -rf a.txt aa：批量删除a.txt和aa,-r递归删除 -f不提示
 		7、移动、重命名
@@ -162,7 +181,15 @@
 			2、more：自带分页(空格=下一页\enter下一行\ctrl+f=下一页\ctrl+b=下一页\n=显示行号\:f显示文件和行\q=退出)
 				1、more /etc/profile
 			3、less(这个功能比more更强他还支持搜索"/zs"或者"?zs"使用n和N定位下一个和上一个)
-				1、less /etc/profile
+				1、例子：less /etc/profile
+				2、参数
+					-N: 显示行号
+				3、快捷键
+					[pagedown/pageup]： 向下翻动一页，向上翻动一页
+					q: 退出
+					G和gg：到文件末行和到首行
+					/zs或者?zs: 向前或者向后检索zs，可以使用n向前一个和N反向一个
+
 		9、">"(覆盖)和">>"(追加)指令
 			1、(cat a.txt\cal\echo abc) > b.txt：前面的内容覆盖b.txt文件的内容，如果b.txt不存则创建之
 			2、(cat a.txt\cal\echo abc) >> b.txt：前面的内容追加到b.txt文件的内容，如果b.txt不存则创建之
@@ -360,10 +387,10 @@
 		2、安装tomcat7
 			1、解压：tar -zxvf apache-tomcat-7.0.70.tar.gz
 			2、使用./startup.sh和./shutdown.sh启动关闭之
-			3、防火墙开发8080端口
-				1、vim /etc/sysconfig/iptables
-				2、参考22端口的开放
-				3、service iptables restart
+			3、防火墙开放端口8080
+				1、vim /etc/sysconfig/iptables，添加一行-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+				2、重启防火墙：service iptables restart
+				3、查看开放的端口：service iptables status
 			4、测试是否成功
 				1、http://localhost:8080
 		3、安装eclipse(有空再去安装)
