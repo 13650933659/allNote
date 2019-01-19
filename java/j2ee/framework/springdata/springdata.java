@@ -15,4 +15,8 @@
 	1、查询：直接使用规范的方法，或者使用@Query
 	2、更新：直接使用规范的方法，或者使用@Query+@Modifying(注意这个需要事务，不支持insert语句)
 7、JpaRepository->>PagingAndSortingRepository->>CrudRepository->>Repository
+	1、方法规范
+		1、QiYeZiZhi findFirstByCompanyName(String companyName);	// 根据companyName获取第一条记录
+
+
 8、JpaSpecificationExecutor接口(可以查询带查询条件的分页)

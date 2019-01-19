@@ -55,11 +55,8 @@
 1、看一下maven会不会把没用的bean编译进入target
 1、数据库的触发器
 1、idea自动编译java,和忽略警告
-1、maven打包resource怎么看
-1、idea的modify table研究，新增注释
 
 1、redisson的分布式锁
-1、fixedThreadPool.shutdownNow();的再次研究
 1、SubProjExtrRslt subProjExtrRslt : subProjExtrRslts 如果没有指标段，是怎么样的呢？
 1、线程安全问题
 
@@ -72,10 +69,20 @@
 
 
 1、今天的
-	4、地区匹配的最好写一下测试用例
-	4、mongodb的集群，写成自适应的（暂时不处理）
+	
 	5、mybatis plus
-
-
-
-
+	6、事务测试
+	7、spring boot的jar，测试maven的<scope>和jar是否打入包中
+	1、拦截器和动态代理是什么关系
+	1、数据库的存储过程，和触发器复习
+	1、log4j复习
+	1、|的语法
+	1、spring两个定时器会并发吗
+	1、mongodb的java使用
+	8、下周的任务
+		1、调用爬虫要改成集群(信用中国的)
+			1、顺便把那段代码合并进来（不远程调用了）
+		2、要素提取的比选
+		
+		// 看到ProjectMete
+		   

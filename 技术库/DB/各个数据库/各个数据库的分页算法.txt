@@ -7,7 +7,7 @@
 	String endRow=pageSize+"";
 	String[] parementrs={startRow,endRow};
 
-2、oracle：为什么要三重查询？因为他要拿到第一层的rownum
+2、oracle：为什么要三重查询？因为他要拿到固定的rownum，但是有的老师只写了3层
 	select * from (select t1.*,rownum rn from (select * from user) t1 where rownum<=?) t2 where t2.rn>=?; // rownum始于1
 	String startRow=(pageSize*(pageNow-1)+1)+"";
 	String endRow=pageNow*pageSize+"";

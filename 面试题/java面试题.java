@@ -68,7 +68,7 @@
 		在方法执行中，对形式参数的操作实际上就是对实际参数的操作，方法执行中形式参数值的改变将会影响实际参数的值。
 	18、String和StringBuffer区别
 		1、他俩最大的区别是，他们在拼接字符串时，String是重新new一个String覆盖旧的，而StringBuffer是在原来的基础之上追加
-		2、StringBuffer是同步的，StringBulid是异步的
+		2、StringBuffer是同步的， StringBuilder 是异步的
 	19、ArrayList源码分析
 		1、默认长度为10的空数组
 		2、elementData、size、modCount是真正的数组和长度和被修改的次数(改和查不会修改modCount)
@@ -172,7 +172,7 @@
 			1、表结构完全一样：insert into 表1 select * from 表2
 			2、表结构不一样（这种情况下得指定列名）：insert into 表1 (列名1,列名2,列名3) select  列1,列2,列3 from 表2
 			3、只从另外一个表取部分值：insert into 表1 (列名1,列名2,列名3) values(列1,列2,(select 列3 from 表2));
-	5、引起索引失效
+	5、引起索引失效，可以使用explain select * from sys_document where docid like '1';语法查看索引是否实现
 		1．隐式转换导致索引失效tu_mdn为varchar2(20),但在查询时把该字段作为number类型以where条件传给Oracle,这样会导致索引失效.
 			 错误的例子：select * from test where tu_mdn=13333333333;
 			 正确的例子：select * from test where tu_mdn='13333333333'

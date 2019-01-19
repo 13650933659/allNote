@@ -15,10 +15,10 @@
            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
            
 
-	<!-- 1、启用注解配置的支持 -->
+	<!-- 1、启用注解配置的支持，这个可能是默认开启的 -->
 	<context:annotation-config/>
 
-	<!-- 2、扫描指定包下的所有bean -->
+	<!-- 2、扫描指定包下的所有bean(spring和spring mvc 的组件通用) -->
 	<context:component-scan base-package="com.msb"/>
 	
 	
@@ -81,14 +81,14 @@
 		</bean>
 
 		<!-- 5.1.2、mybatis框架事务管理器
-		<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 			<property name="dataSource" ref="dataSource"/>
 		</bean>
 		-->
 	
-	<!-- 5.2、事务的声明模式 -->
+	<!-- 5.2、事务配置 -->
 		<!-- 5.2.1、xml的声明式事务(推荐) -->
-		<!-- 1、通知（建议） -->
+		<!-- 1、建议（主要配置方法的事物属性） -->
 		<tx:advice id="txAdvice" transaction-manager="txManager">
 			<tx:attributes>
 				<tx:method name="getUser" read-only="true" />

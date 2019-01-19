@@ -98,6 +98,42 @@
 		2、同时执行多个线程
 			1、先把我们的线程加一句CyclicBarrier.await()，然后submit给线程池
 			2、先把我们的线程加一句countDownLatch.wait()，然后submit给线程池，然后执行countDownLatch.down();
+		3、终止线程池里边有某个线程(超时、异常)，注意submit()一定要传Callable.call，如果传Runnable调用task.get()是没有返回值的
+			public static void main(String[] arr) {
+				ExecutorService fixedThreadPool = Executors.newFixedThreadPool(4);
+
+				List<Future<String>> list = new LinkedList<>();
+				for (int i = 0; i < 10; i++) {
+					Future<String> future = fixedThreadPool.submit(() -> {
+						Thread.sleep(2000);
+						return "我是" + getCount();
+					});
+					list.add(future);
+				}
+
+				// 每一条线程的超时时间为1s，谁超时谁就被终止（通过捕捉异常：超时异常，但我们还可以捕捉线程的其他异常比如中断异常）
+				for (Future<String> f : list) {
+					try {
+						System.out.print("开始取返回值：");
+						String s = f.get(1, TimeUnit.SECONDS);
+						System.out.println(s);
+					} catch (Exception e) {
+						f.cancel(true);		// 这个会触发线程中断，注意：如果线程里边有处理中断异常的话，线程后续代码还是会继续跑的，慎处理
+						System.out.println("超时");
+					}
+				}
+
+
+				// 由于cpu核数有限，调用shutdownNow也不一定马上终止所有线程，所以要while小等待一下，真的所有线程停止之后isTerminated才等于true
+				fixedThreadPool.shutdownNow();
+				while (!fixedThreadPool.isTerminated());
+				System.out.println("定时器结束...");
+			}
+		4、线程中断的知识
+			Thread.currentThread().isInterrupt();		// 中断线程
+			Thread.currentThread().isInterrupted();		// 判断线程是否中断
+			Thread.interrupted();						// 判断线程是否中断，并且取消中断状态
+            
 
 7、IO流看代码(看代码)
 8、二进制运算(以后再去学吧，等学到数据类型时再学)

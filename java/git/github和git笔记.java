@@ -51,16 +51,17 @@
 			3、提交到本地仓库：git conmmit -m '提交描述'
 	4、本地仓库和远程仓库的交互
 		1、李岳群去github注册一个账号，并且创建仓库命名为：huashan
-		2、设置系统/项目  的签名
+		2、设置系统/项目的签名
 		3、创建huashan目录，进入huashan目录参数本地仓库：git init
 		4、创建文件提交到本地仓库：vim a.txt -> git add a.txt -> git commit "描述"
 		5、由于远程仓库地址长，所以我们记一下(会记录到.git/config文件)
 			1、查看当前所有的远程地址：git remote -v
 			2、添加远程仓库地址：git remote add [名称] [远程地址]
+				1、例子：git remote add origin http://192.168.2.65:3000/chenjiaru/bd.git
 			3、删除远程仓库地址：git remote remove 名称
-		6、把远程库拉下来(因为远程有新代码了，你不合并push不了)：git pull origin master
+		6、把远程库拉下来：git pull origin master
 		7、如果6报错使用：git pull origin master --allow-unrelated-histories(建立他们的关联，并且会把新代码拉下来，)
-		8、把我们本地仓库的代码推送到远程仓库：git push origin master(这个master是代表远程的分支)
+		8、把我们本地仓库的代码推送到远程仓库：git push origin master(如果报错，要先执行6,7，或者要把文件提交到本地仓库)
 		9、李岳群自己玩没意思，邀请令狐冲来参与项目
 			1、进入github指定的仓库->setting->collaborators->add collaborator->然后把邀请链接发给令狐冲让他同意邀请既可
 			2、然后创建lhc目录给令狐冲用，进入lhc目录启动git bash
@@ -90,8 +91,8 @@
 				5、提交代码到远程(ssh)：git push origin_ssh master
 	5、git log：查看提交日志，默认以more命令查看
 		--pretty=oneline/--oneline：一行显示
-		reflog：查看版本的head，可以用于版本前进后退
-	6、本地版本的回退前进
+		--reflog：查看版本的head，可以用于版本前进后退
+	6、本地版本的回退前进：git reset会删除之前的本地库的提交，你git push可能导致冲突(如果本地版本落后于远程)
 		1、语法
 			1、基于索引(推荐)
 				1、git reset --hard 索引值

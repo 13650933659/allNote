@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 
+1、此配置文件具体请参考：http://www.mybatis.org/mybatis-3/zh/configuration.html的“XML配置文件”
+2、配置的标签一定要按照一下顺序：properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, 
+ objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?) -->
+<configuration>
+	
+	<!-- 1、加载属性文件 -->
+	<properties resource="db.properties">
+		<!--properties中还可以配置一些属性名和属性值  -->
+		<!-- <property name="jdbc.driver" value=""/> -->
+	</properties>
+	
+	<!-- 2、全局配置参数，需要时再设置 -->
+	<!-- <settings>
+	<setting name="mapUnderscoreToCamelCase" value="是否启用自动转换把数据库的下划线转换成驼峰法，默认false"></setting>
+	<setting name="useActualParamName" value="使用了这个你就不用使用@Param，但是java8和mybatis3.4.1以上版本"></setting>
+	<setting name="jdbcTypeForNull" value="当参数为空时，提供的值，在这里写是全局，如果你去#{}写JdbcType=OTHER就只影响自己(默认为OTHER，但是这个oracle不认识)"></setting>
+	<setting name="cacheEnabled" value="开启二级缓存，默认也是true"/>
+	<setting name="localCacheScope" value="一级缓存的作用域，默认为SESSION表示当前session，STATEMENT相当于禁用了V331+"/>
+	<setting name="defaultExecutorType" value="配置默认的执行器。SIMPLE 默认；REUSE 执行器会重用预处理语句（prepared statements）； BATCH 执行器将重用语句并执行批量更新。"/>
+	
+	下面两个配置是控制懒加载 的(打开就对了，防止版本影响)，将积极加载改为消极加载即按需要加载，这里开启就行了，各自的mapper中的statement默认是懒加载，如果要积极加载可以在具体的statement中设置fetchTye
+	<setting name="lazyLoadingEnabled" value="true"/>
+	<setting name="aggressiveLazyLoading" value="false"/>
+	</settings> -->
+	
+	
+	<!-- 3、别名定义，建议使用全类名 -->
+	<typeAliases>
+		<!-- 1、针对单个类别名定义-->
+		<!-- <typeAlias type="cn.itcast.mybatis.po.User" alias="user"/> -->
+		<!-- 2、批量别名定义 指定包名，别名就是类名（首字母大写或小写都可以），如果别名冲突，可以使用@Alisa("emp")在个别类指定-->
+		<package name="com.po"/>
+	</typeAliases>
+
+	<!--plugins：注册插件  -->
+	<plugins>
+		<plugin interceptor="com.atguigu.mybatis.dao.MyFirstPlugin">
+			<property name="username" value="root"/>
+			<property name="password" value="123456"/>
+		</plugin>
+		<plugin interceptor="com.atguigu.mybatis.dao.MySecondPlugin"></plugin>
+		<!-- 分页插件 -->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+	</plugins>
+
+	<!-- 4、与数据库连接的《配置》《连接池》《事务》，和spring整合后 environments配置将废除-->
+	<environments default="development">
+		<environment id="development">
+			<!-- 使用jdbc事务管理，事务控制由mybatis，底层有空去了解，就是动态代理-->
+			<transactionManager type="JDBC" />
+			<!-- 数据库连接池，由mybatis管理，有空去看看数据库连接池的实现-->
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 5、给各个数据库厂商起别名，然后statement中使用databaseId="oracle"来指定在哪个数据库下执行的sql，我们写好兼容的sql比较好 -->
+	<databaseIdProvider type="DB_VENDOR">
+	  <property name="SQL Server" value="sqlserver"/>
+	  <property name="DB2" value="db2"/>        
+	  <property name="Oracle" value="oracle" />
+	</databaseIdProvider>
+	
+	<!-- 6、加载sql映射文件，和spring整合之后也不用写了 -->
+	<mappers>
+		<!-- 第一种：<mapper resource="mapper/UserMapper.xml"/> -->
+		<!-- 第二种：<mapper class="com.mapper.UserMapper"/>
+			这种有条件的：1、对应的UserMapper.xml名称必须和接口一样，2、namespace必须是接口同名 -->
+		<!-- 第三种：条件和第二种一样的，xml和接口放在同包，为了好看xml放在config资源包下的对应包 -->
+		<package name="com.mapper"/>
+	</mappers>
+	
+	
+	
+</configuration>
