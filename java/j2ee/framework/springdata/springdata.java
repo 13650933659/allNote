@@ -17,6 +17,7 @@
 7、JpaRepository->>PagingAndSortingRepository->>CrudRepository->>Repository
 	1、方法规范
 		1、QiYeZiZhi findFirstByCompanyName(String companyName);	// 根据companyName获取第一条记录
+		2、 and 1=1 and (1=1 or 1=1)怎么表示
 
 
 8、JpaSpecificationExecutor接口(可以查询带查询条件的分页)

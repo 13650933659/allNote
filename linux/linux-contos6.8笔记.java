@@ -222,7 +222,7 @@
 		1、gzip/gunzip(压缩只能压缩成.zg文件)
 			1、gzip a.txt：把a.txt文件压缩成a.txt.gz文件放在此目录(注意a.txt不保留)
 			2、gunzip a.txt.gz：把a.txt.gz文件解压到成a.txt存放于当前目录
-		2、zip/unzip
+		2、zip/unzip	// 可以解压war、jar、zip、tar.gz等包
 			1、zip -r a.zip /home/：将/home/目录压缩成a.zip(如果是压缩目录需要带-r)
 			2、unzip -d /test/  a.zip：将a.zip文件解压到test目录(如果test不存在则创建之)
 		3、tar
@@ -436,7 +436,11 @@
 	1、用户属于多个组怎么弄呢？
 	2、删除组，然后组用户怎么办？
 	3、文件的恢复
+	2、curl命令的使用
+	5、使用ulimit -a // 查看当前用户的限制
 
 
 
 看完57
+
+

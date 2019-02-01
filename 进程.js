@@ -31,7 +31,7 @@
 
 
 
-叔叔：1000+200
+叔叔： 1000+200
 
 
 
@@ -69,20 +69,16 @@
 
 
 1、今天的
-	
-	5、mybatis plus
 	6、事务测试
 	7、spring boot的jar，测试maven的<scope>和jar是否打入包中
 	1、拦截器和动态代理是什么关系
 	1、数据库的存储过程，和触发器复习
 	1、log4j复习
-	1、|的语法
-	1、spring两个定时器会并发吗
+	1、spring两个定时器会并发吗	// 默认不并发，但是可以配置并发
 	1、mongodb的java使用
+	
+	1、Organization organization = organizationRepo.findByName(name);	// 这个如果有同名的公司就麻烦了
+	1、neo4j没事使用事务
 	8、下周的任务
 		1、调用爬虫要改成集群(信用中国的)
-			1、顺便把那段代码合并进来（不远程调用了）
-		2、要素提取的比选
-		
-		// 看到ProjectMete
 		   
