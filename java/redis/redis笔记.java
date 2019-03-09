@@ -16,7 +16,7 @@
 		1、支持持久化
 		2、kv的值支持string、list、set、zset、hash，这一点就淘汰了memcache，因为他只支持string
 		3、支持备份：主从复制，读写分离的
-2、安装redis因为他是c编写的 ，所以要先装gcc(自己安装吧)
+2、安装redis因为他是c编写的 ，所以要先装gcc(自己安装吧)，windows下安装请参考：http://www.runoob.com/redis/redis-install.html
 	1、在/opt目录下解压：tar -zxvf redis-3.0.4.tar.gz
 	2、得到redis-3.0.4目录执行make(需要有gcc才行)
 		1、redis-3.0.4/redis.conf很重要，启动时需要用到，这份别动，拷贝一份到/usr/local/bin/目录自定义配置
@@ -29,12 +29,17 @@
 		5、redis-sentinel：redis集群是用到的哨兵支持
 		6、redis-server：redis服务器启动命令
 3、启动
-	1、最好把/opt/redis-3.0.4/reids.conf文件拷贝一份来使用
-	2、vim reids.conf：将daemonize no改为yes，后台启动
-	3、进入安装目录启动：redis-server redis.conf
-	4、测试是否启动成功
-		1、进入安装目录登录：redis-cli -p 6379：
-		2、ping(如果看到PONG证明OK)
+	1、linux
+		1、最好把/opt/redis-3.0.4/reids.conf文件拷贝一份来使用
+		2、vim reids.conf ：将daemonize no改为yes，后台启动
+		3、进入安装目录启动：redis-server redis.conf
+		4、测试是否启动成功
+			1、进入安装目录登录： redis-cli -p 6379
+			2、ping(如果看到PONG证明OK)
+	2、windows
+		1、配置环境变量
+		2、redis-server.exe C:\Software\OpenSource\Redis-x64-3.0.504\redis.windows.conf		// 然后不要关闭此窗口，一旦关闭redis也关了
+		3、 redis-cli -h localhost -p 6379	// 登录
 4、关闭
 	1、单例关闭：shutdown -> exit
 	2、多实例关闭(指定端口关闭没试过)：shutdown -> exit

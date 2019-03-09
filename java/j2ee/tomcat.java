@@ -16,7 +16,7 @@
 	1、打开C:\Windows\System32\drivers\etc目录的【hosts文件】在最后加入【ip 域名】
 	2、再打开tomcat/conf/server.xml文件 在</Host>之下加入下码:
 	<Host name="域名" appBase="你的web应用的绝对路径">
-			<Context path="/" docBase="你的web应用的绝对路径"/>
+			<Context path="/a" docBase="C:\Software\OpenSource\Tomcat\apache-tomcat-7.0.67-x64\webapps\a"/>
 	</Host>重启《这里注意：path一定是/》
 5、自动监控WEB-INF的变动(也叫热部署建议开发环境启用，生成环境禁用，因为他有开销)：
 	1、针对tomcat管理的所有app：	在tomcatHome/conf/context.xml的第一句<Context>加属性reloadable="true"，

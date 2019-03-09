@@ -46,7 +46,7 @@
 	8、mvn site
 4、Eclipse安装maven，如果是Eclipse4.0以上就不用安装了
 	1、配置jdk，一定要用jdk里边的jre
-	2、去preferences -> Maven -> installations -> add我们自己安装的maven -> User Settings配置我们的setting.xml
+	2、去 preferences -> Maven -> installations -> add我们自己安装的 maven -> User Settings配置我们的 setting.xml
 	3、创建maven项目 -> 选择maven-archetype-quickstart，或者跳过快捷创建
 	4、运行定位到pom.xml右键run as -> build...，然后写自己的maven命令
 5、maven的依赖传递
@@ -98,21 +98,84 @@
 		2、本地仓库
 			1、默认位置：C:\Users\Chenjiaru\.m2\repository，修改<localRepository>新的位置</localRepository>
 
+11、打包，测试环境根本就不要打包，直接把配置文件考过去，让后他会自动编译java文件(新增的java他会加入的)
+	1、打包命令：clean package -Dmaven.test.skip=true 或者  clean compile -Dmaven.test.skip=true
+		1、打包参数
+			-DskipTests ：不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
+			-Dmaven.test.skip=true：不执行测试用例，也不编译测试用例类。
+			-Dname=zs：springboot配置文件可以使用@name@来获取值
+		2、打包的Profiles(separated with space)：这里可以指定pom.xml文件指定的profile的id，然后里面的属性springboot配置文件可以使用@name@来获取值
+			 <profiles>
+					<profile>
+						<id>dev-historical-datasource-mode</id>
+						<properties>
+							<profile.active>dev</profile.active>
+							<application.datasource-mode>historical</application.datasource-mode>
+						</properties>
+						<activation>
+							<activeByDefault>true</activeByDefault>
+						</activation>
+					</profile>
+					<profile>
+						<id>dev-daily-datasource-mode</id>
+						<properties>
+							<profile.active>dev</profile.active>
+							<application.datasource-mode>daily</application.datasource-mode>
+						</properties>
+					</profile>
+				</profiles>
+		3、打包时资源文件的管理（先去掉全部，然后在引入，参考下面的）
+			<resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>application.properties</include>
+                    <include>*-${profile.active}.*</include>
+                    <include>mybatis-config.xml</include>
+                </includes>
+            </resource>
+		4、打包指定war的名称加上时间戳
+			1、指定时间格式
+				<properties>
+					<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+				</properties>
+			2、war的名称
+				<build>
+					<finalName>${project.artifactId}-${project.version}_${maven.build.timestamp}</finalName>
+				</build>
+		5、资源文件的改名插件
+			<plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-and-rename-hanlp</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>rename</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>${project.build.outputDirectory}/hanlp-${profile.active}.properties</sourceFile>
+                            <destinationFile>${project.build.outputDirectory}/hanlp.properties</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+	3、运行：
+		1、直接使用spring-boot:run命令(需要maven的插件)
+		2、使用springboot的主程序运行
+			在VM options：-Dspring.profiles.active=dev -Dapplication.datasource-mode=daily
 
 
 
-
-
-
-
-
-
-
-1、以继承的方式的springboot
-	1、我的 ->> spring-boot-starter-parent ->> spring-boot-dependencies
-	2、然后自己的dependencies中去按需引入
-2、以引入的方式的springboot
-	1、我的 -> spring-boot-dependencies
 
 
 

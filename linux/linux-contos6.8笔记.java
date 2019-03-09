@@ -151,11 +151,14 @@
 		5、拷贝
 			1、cp /home/a.txt /home/aa/：把a.txt文件拷贝到aa目录，如果拷贝目录用下面的
 			2、cp -r /home/aa/ /home/bb：把aa目录拷贝到bb，如果有相同文件会提示是否覆盖，使用\cp不提示
-		5、远程拷贝（只能linux对linux吧）
+		5、远程拷贝（只能linux对linux吧，而且默认会覆盖）
 			1、scp root@10.10.10.10:/opt/a.txt /opt/  // 从10.10.10.10拷贝/opt/a.txt文件到本地的/opt/目录
 			2、scp -r root@10.10.10.10:/opt/ /opt/  // 从10.10.10.10拷贝/opt/目录到本地的/opt/目录
 			3、scp /opt/a.txt root@10.10.10.10:/opt/  // 本地文件/opt/a.txt拷贝到远程
-			4、scp -r root@10.10.10.10:/opt/ /opt/  // 本地目录/opt/拷贝到远程
+			4、scp -r /opt/ root@10.10.10.10:/opt/ // 本地目录/opt/拷贝到远程
+tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/classes/com/bidizhaobiao/data/bigdata/base/service/mysql/impl/
+			scp -r 
+
 			5、参数
 				-1：使用ssh协议版本1；
 				-2：使用ssh协议版本2；
@@ -442,5 +445,22 @@
 
 
 看完57
+
+
+
+
+
+
+
+我的理解是这样的，如下描述：
+	比如我的cpu只有一个，而且是单核的（即：同时只能处理一个任务）
+
+	现在我的线程池有a、b、c三条线程
+	-> 刚开始创建abc这时他们都处于就绪状态
+	-> 过了一会a得到使用权，执行了50毫秒
+	-> 切到b了，执行50毫秒，此时a回到了就绪状态
+	-> 又切到c了，此时a,b都是就绪状态
+
+	-->> 由于上面的切换时间间隔很短，几乎可以忽略，所以看起来abc是同时并发
 
 

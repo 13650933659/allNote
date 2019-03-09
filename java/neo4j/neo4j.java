@@ -33,16 +33,18 @@
 		2、查询
 			match(d:Dept) where d.name='zs' return d.name,d limit 10 // 查询name=zs的，返回name和全部，十条
 		3、删除属性：match(d:Dept) remove d.name 
-		4、删除节点：match(d:Dept) delete d 
+		4、删除节点：match(d:Dept) delete d				// 如果有关系的话使用 match(d:Dept) detach delete d 他会清除所有关系然后在删除
 		5、更新属性：match(d:Dept{name:'zs'}) set d.name='zs2',d.age=10;	// 没有属性就会增加
 		6、排序：match(d:Dept) return d order by d.id  // 用id排序默认升序，降序可以使用desc
-		7、合并结果：match(d:Dept{name:'zs1'}) return d.name as name union match(d2:Dept{name:'zs1'}) return d2.name as name  // 如果要合并相同行可以使用union all
+		7、联合多个查询结果：match(d:Dept{name:'zs1'}) return d.name as name union match(d2:Dept{name:'zs1'}) return d2.name as name  // 如果要合并相同行可以使用union all
+		7、合并相同数据：match (o:Organization)-[r]->(p:Project) return distinct  id(o);
 		8、分页：match(d:Dept) return skip 10 limit 10  // 跳过前10行，取十行
 		9、处理空is null和is not null：match(d:Dept{name:'zs1'}) where d.id is not null return d	// 为空或者没有此字段的，不包括空字符串的，要判断空字符串使用下面的
 		9、处理空字符串：match(d:Dept) where d.name<>''					// 
 		10、in和not in：match(d:Dept) where d.name in['zs1','zs2']  return d
 		11、字符串函数：MATCH (n:Student) RETURN upper(n.name)   // 把name转成大写的，如果要用小写的使用lower
 		12、聚合函数：match(d:Dept) return count(*),min(id(d))  // 总数和最小id，注意这个id是neo4j自己维护的，所以要这样的写法
+		12、 delete 联合 return 的使用 match (o:Organization)-[r:ZhongBiaoRelation]->(p:Project) delete r return o;
 		
 		14、关系的查询：match p=()-[r:Belong]->() RETURN p 
 		14、查询项目(id=17036888)所有的关系：match result=(o:Organization)-[r]->(p:Project) where id(p)=17036888 return result
@@ -57,6 +59,8 @@
 		create(p:Project{project_name:'testProject1',area:'华北',province:'内蒙古'});
 		match(o:Organization{name:"testOrg1"}) set o.area='华北',o.province='内蒙古';
 
+
+
 		match(p:Project{project_name:'testProject1'}),(o:Organization{name:'testOrg1'}) create r=(o)-[d:DaiLiRelation]->(p) return r;
 		match(p:Project{project_name:'testProject1'}) set p.zhao_biao_uuid='uuid1';
 
@@ -64,6 +68,10 @@
 		match(p:Project) where p.zhao_biao_uuid='' or p.zhong_biao_uuid='' ()-[r]->(p) return r;
 
 		match result=(o:Organization)-[r]->(p:Project) where p.zhao_biao_uuid='testDocId' or p.zhong_biao_uuid='testDocId' return r;
+
+
+
+		match (o:Organization),(p:Project) where id(o) in[1,2] and not (o)-[]->(p)  return distinct  id(o);
 
 
 
@@ -82,6 +90,23 @@
 5、数据库的本分还原
 	1、备份有空再去看看
 		1、可能就是C:\Software\OpenSource\neo4j-C-3410\data\databases\graph.db这个目录了，拷贝即可
+
+
+
+
+
+
+
+
+
+neo4j java客户端
+	1、neo4j-jdbc-driver
+		<dependency>
+			<groupId>neo4j-jdbc-driver</groupId>
+			<artifactId>neo4j</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+	2、使用spring data
 
 
 

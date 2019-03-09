@@ -24,7 +24,7 @@
 4、git工具的下载安装
 	1、下载地址：https:\\www.git-scm.com/download/win
 	2、安装注意以下几点，其他默认
-		1、至少要选择：Git bash Here和Git GUI Here
+		1、至少要选择：Git bash Here 和 Git GUI Here
 		2、到Adjusting your PATH environment选择：Use Git from Git Bash only
 	3、检验是否安装成功：到桌面鼠标右击看到：Git Bash Here即安装成功
 5、git的使用
