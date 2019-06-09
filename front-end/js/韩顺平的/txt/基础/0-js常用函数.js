@@ -108,18 +108,8 @@
 001、
 
  
-
-
-Ext.create('Ext.grid.Panel', {
-title: 'Simpsons',
-store: Ext.data.StoreManager.lookup('simpsonsStore'),
-columns: [
-	{ text: 'Name',  dataIndex: 'name' },
-	{ text: 'Email', dataIndex: 'email', flex: 1 },
-	{ text: 'Phone', dataIndex: 'phone' }
-],
-height: 200,
-width: 400,
-});
+1、 JSON 对象
+	1、 var jsonStr = JSON.stringify(subVos)	// 把js的对象、数组转成字符串，可以提交给后台
+	2、 var jsonObj = JSON.parse(result);		// 把json字符串转成js对象、数组，一般用于解析后台返回的json字符串
 
 

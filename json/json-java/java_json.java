@@ -26,6 +26,7 @@
 			1、转换的代码
 				1、String s1 = JSON.toJSONString(vo);											// 如果属性为空则不显示
 				2、String s2 = JSON.toJSONString(vo, SerializerFeature.WriteMapNullValue);	// 如果属性为空也会显示，值为null，如果还有其他需求(比如null显示"")也可以继续加SerializerFeature，他是数据
+				3、如果field不需要双引号需要加一行代码(影响全局，导致返回给前台的field没双引号，会有问题，所以改了之后必须改回来)： JSON.DEFAULT_GENERATE_FEATURE =  SerializerFeature.config( JSON.DEFAULT_GENERATE_FEATURE,SerializerFeature.QuoteFieldNames , false);
 			2、数据格式转换
 				1、日期转换处理：在日期属性加上注解@JSONField(format = DateUtil.YYYYMMDDHHMM)
 		2、反序列化
@@ -45,7 +46,11 @@
 
 
 
-
+<dependency>
+            <groupId>uk.com.robust-it</groupId>
+            <artifactId>cloning</artifactId>
+            <version>1.9.10</version>
+        </dependency>
 
 
 

@@ -107,4 +107,7 @@
 8、上传图片，对form的多部件的支持(有空再去看)
 9、RESTful支持(有空再去看)
 
+10、 @ControllerAdvice 全部的controllerr的增强器 有空去看
 
+
+localhost:8769/api/addUser?companyId=27&apicode=SERVICE-API-DETAIL&userId=a7&starttime=2019-01-02&endtime=2019-01-02

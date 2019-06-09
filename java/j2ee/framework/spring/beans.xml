@@ -104,6 +104,13 @@
 		<!-- 5.2.2、使用注解的方式(不推荐)
 		<tx:annotation-driven transaction-manager="txManager"/>-->
 	
+	<!-- 6、定时任务，使用注解版的可以使用 @Scheduled(fixedDelay = 1000) + @EnableScheduling + @EnableAsync -->
+	<task:annotation-driven /> <!-- 定时器开关-->
+	<bean id="myTask" class="com.spring.task.MyTask"></bean>
+	<task:scheduled-tasks>
+		<task:scheduled ref="myTask" method="show" cron="*/5 * * * * ?" /><!-- myTask.show 方法每5秒执行一次--> 
+		<task:scheduled ref="myTask" method="print" cron="*/10 * * * * ?"/>
+	</task:scheduled-tasks>
 	
 	
 </beans>

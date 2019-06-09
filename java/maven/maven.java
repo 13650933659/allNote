@@ -52,9 +52,10 @@
 5、maven的依赖传递
 	1、一处引入即可，compile的才有传递性，依赖的排除：<exclusion>GA就行了</exclusion>
 	2、scope的取值，默认值是compile
-		1、compile： {main=√,test=√,package=√,example=spring core}
-		2、test：    {main=×,test=√,package=×,example=junit}
-		3、provided：{main=√,test=√,package=×,example=servlet}
+		1、 compile   {main=√,test=√,package=√,example=spring core}
+		2、 test      {main=×,test=√,package=×,example=junit}
+		3、 provided  {main=√,test=√,package=×,example=servlet}
+		4、 runtime   {main=×,test=×,package=√,example=mysql-connector-java}
 6、依赖冲突
 	1、短路优先-先依先用
 7、继承
@@ -97,8 +98,16 @@
 			</mirror>
 		2、本地仓库
 			1、默认位置：C:\Users\Chenjiaru\.m2\repository，修改<localRepository>新的位置</localRepository>
-
-11、打包，测试环境根本就不要打包，直接把配置文件考过去，让后他会自动编译java文件(新增的java他会加入的)
+11、maven 安装jar包到本地
+	1、安装指定文件到本地仓库命令： mvn install:install-file
+		-DgroupId=<groupId>       : 设置项目代码的包名(一般用组织名)
+		-DartifactId=<artifactId> : 设置项目名或模块名 
+		-Dversion=1.0.0           : 版本号
+		-Dpackaging=jar           : 什么类型的文件(jar包)
+		-Dfile=<myfile.jar>       : 指定jar文件路径与文件名(同目录只需文件名)
+	2、安装命令实例：
+		mvn install:install-file -DgroupId=com.baidu -DartifactId=ueditor -Dversion=1.0.0 -Dpackaging=jar -Dfile=ueditor-1.1.2.jar
+12、打包，测试环境根本就不要打包，直接把配置文件考过去，让后他会自动编译java文件(新增的java他会加入的)
 	1、打包命令：clean package -Dmaven.test.skip=true 或者  clean compile -Dmaven.test.skip=true
 		1、打包参数
 			-DskipTests ：不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。

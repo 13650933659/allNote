@@ -412,7 +412,9 @@
 					return new DataSourceTransactionManager(dataSource());
 				}
 			3、 @EnableTransactionManagement 开启基于注解的事务管理功能
-			4、给方法上标注 @Transactional 表示当前方法是一个事务方法	// 但是事务的传播属性的配置有空再去看
+			4、给需要事务的方法上标注 @Transactional // 但是事务的传播属性的配置有空再去看，还有使用aop去做的事务声明，这个有空也去看一下
+			5、 如果使用了springboot2.0.0开始， @EnableTransactionManagement 和 transactionManager 都不用指定了，但是为了规范这两个还是加上吧， 直接就可以使用 @Transactional 注解使用事务了
+			6、如果是多数据源的事务管理需要使用到 https://blog.csdn.net/qq_36138324/article/details/81612890，由于使用jta+atomikos解决分布式事务，所以此处不必再指定事务
 		2、原理
 			1、 @EnableTransactionManagement 利用 TransactionManagementConfigurationSelector 给容器中会导入组件导入两个组件
 				1、 AutoProxyRegistrar
@@ -810,7 +812,3 @@
 
 
 
-extract
-要素提取
-
-PW_bd.cjr1

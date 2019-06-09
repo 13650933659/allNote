@@ -16,60 +16,14 @@
 
 1、mybatis plus：MyBatis-Plus(简称MP)是一个MyBatis的增强工具，提供给我们很多实用的插件。在Mybatis的基础上只做增强不做改变，为简化我们开发，提高工作效率。
 2、安装
-	<!-- mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖-->
+	<!-- mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring整合包的 相关的依赖-->
 	<dependency>
 		<groupId>com.baomidou</groupId>
 		<artifactId>mybatis-plus</artifactId>
 		<version>2.3.2</version>
 	</dependency>
-	<!-- log4j -->
-	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.17</version>
-	</dependency>
-	<!-- c3p0 -->
-	<dependency>
-		<groupId>com.mchange</groupId>
-		<artifactId>c3p0</artifactId>
-		<version>0.9.5.2</version>
-	</dependency>
-	<!-- mysql -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>5.1.37</version>
-	</dependency>
-	<!-- spring -->
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context</artifactId>
-		<version>4.3.10.RELEASE</version>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-orm</artifactId>
-		<version>4.3.10.RELEASE</version>
-	</dependency>
 3、使用
-	1、创建数据库
-		-- 创建库
-		CREATE DATABASE mp;
-		-- 使用库
-		USE mp;
-		-- 创建表
-		CREATE TABLE tbl_employee(
-		  id INT(11) PRIMARY KEY AUTO_INCREMENT,
-		  last_name VARCHAR(50),
-		  email VARCHAR(50),
-		  gender CHAR(1),
-		  age int
-		);
-		INSERT INTO tbl_employee(last_name,email,gender,age) VALUES('Tom','tom@atguigu.com',1,22);
-		INSERT INTO tbl_employee(last_name,email,gender,age) VALUES('Jerry','jerry@atguigu.com',0,25);
-		INSERT INTO tbl_employee(last_name,email,gender,age) VALUES('Black','black@atguigu.com',1,30);
-		INSERT INTO tbl_employee(last_name,email,gender,age) VALUES('White','white@atguigu.com',0,35);
-	2、mybatis直接和spring整合的
+	1、mybatis直接和spring整合的
 		1、spring的配置文件
 			<!--  配置SqlSessionFactoryBean 
 				Mybatis提供的: org.mybatis.spring.SqlSessionFactoryBean
@@ -95,12 +49,17 @@
 				<!-- 全局的表前缀策略配置，这样配置，他表如果加了tb1_前缀的不用配置(@TableName(value="tbl_employee")) -->
 				<property name="tablePrefix" value="tbl_"></property>
 			</bean>
-		2、创建对应Mapper接口要继承BaseMapper接口：public interface EmployeeMapper extends BaseMapper<Employee>{}
+		2、创建对应Mapper接口要继承 BaseMapper 接口：@Mapper public interface EmployeeMapper extends BaseMapper<Employee>{} ， 
+			继承了他之后如果是单表的操作你甚至不用写xml文件了，你可以可以写xml但是单表的sql你可以不用写，写一些多表关联的sql，可以考虑多建一个VO为之服务
+			但是这个xml和mapper.java是怎么关联的呢？
+				1、mapper.xml和mapper.java
+					1、 springboot 主配置文件使用 mybatis-plus.mapper-locations=classpath*:mapper\/*.xml 
+					2、 然后对应xml的命名空间 namespace 写成对应的mapper.java
 		3、实体类的处理
-			1、@TableName(value="tbl_employee")	// 映射表名，如果表名和pojo名一样，可以不用写
+			1、@TableName(value="tbl_employee")			// 映射表名，如果表名和pojo名一样，可以不用写
 			2、@TableId(value="id" , type =IdType.AUTO)	// 映射id，value表示字段名称，type表示id生成策略，如果在全局配置写了，这里可以不用写
-			3、@TableField(value = "last_name")		// 其他字段名映射，如果名字不一样可以通过value指定，也可以解决了下划线命名自动映射
-			4、@TableField(exist=false)	// 指定此字段不是数据库的
+			3、@TableField(value = "last_name")			// 其他字段名映射，如果名字不一样可以通过value指定，也可以解决了下划线命名自动映射
+			4、@TableField(exist=false)					// 指定此字段不是数据库的
 		4、通用的crud操作
 			1、插入操作
 				1、Integer insert(T e)	// 插入不为空的字段，插入之后主键的获取，原生mybatis要做特殊的配置，mybatisplus默认就有的，返回影响的条数
@@ -126,7 +85,7 @@
 			Configuration	// mybatis或者MP的全局配置文件对象
 			MapperStatement	// 对应一个[增删改查]标签
 			SqlMethod		// MP支持的sql枚举类
-			SqlSource		// sql语句处理对象
+			SqlSource				// sql语句处理对象
 			MapperBuilderAssistant	// 用于缓存，sql参数，查询方法结果处理等，最后创建MapperStatement并且放入configuration
 		6、条件构造器EntityWrapper<>和Condition他俩都是继承Wrapper的，使用起来差不多，参考：https://mp.baomidou.com/guide/wrapper.html
 			1、EntityWrapper
@@ -144,7 +103,9 @@
 					.orderBy("age")		//默认是asc 可以使用.orderDesc(Arrays.asList(new String [] {"age"}))
 					.last("desc limit 1,3")		// 给sql末尾拼接sql子句，注意sql注入
 			2、Condition把new EntityWrapper<Employee>()换成Condition.create()，其他一样的
-		7、ActiveRecord(AR)他是在实体类中继承Model<>抽象类，然后就可以使用此实体类型对象直接操作数据库了，不需要dao，有空再去看吧
+		7、 对应的service 实现类 @Service public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {}	// 有了他之后，也可以直接使用他给我写好的一些方法，比如 save saveBatch
+		
+		7、ActiveRecord(AR)他是在实体类中继承Model<>抽象类，然后就可以使用此实体类型对象直接操作数据库了，不需要dao，我个人不推荐使用，直接使用dao的比较好，有空再去看吧
 		8、MP的自动生成代码
 			1、加入依赖
 				<!-- Apache velocity -->
@@ -250,6 +211,7 @@
 					@Test
 					public void testPage() {
 						Page<Employee> page = new Page<>(1,1);
+
 
 						List<Employee > emps = 
 								employeeMapper.selectPage(page, null);

@@ -83,16 +83,19 @@
 			3、命令行模式(:)：可以提供你相关指令，完成读取、存盘、替换、离开vim 、显示行号等的动作
 		2、快捷键(其他的去看文档)
 			1、正Nyy：复制行
-			2、正p：粘贴行
+			2、正p：粘贴行，如果是Np就是表示张贴N次
 			3、正Ndd：删除行
 			4、正G和gg：到文件末行和到首行
 			5、正20+shift+g：定位到第20行
-			6、正u：撤销上个动作
+			6、正u：撤销上个动作，Ctrl+r 恢复上一步被撤销的操作
 			7、命:/zs：查找zs按下n进入下一个zs
 			8、命:set nu\nonu：显示行号和取消
 			9、命:q：退出(在没有修改的情况下)
 			10、命:q!：强制退出(修改了也无效)
-			11、命:wq：保存后退出
+			11、命:wq 或者 x ：保存后退出
+			12、插:w 文件路径	// 相当于ctrl s 不指定路径就是当前文件
+			13、vi vimrc	// 这里面的命令每次启动vi都会被执行
+			14、gVim是Windows里的vi
 	8、开机、重启、用户登录
 		1、shutdown
 			1、shutdown -h now：立即关机
@@ -145,6 +148,7 @@
 		3、cd
 			1、cd ~：切到用户的home
 			2、cd ..：切到上一级目录
+			3、cd .：切到当前目录
 		4、目录的创建与删除
 			1、mkdir：创建目录，可批量(如果想要多级使用-p参数)
 			2、rmdir：删除空目录，可批量(如果想要删除非空的使用rm -rf)
@@ -153,11 +157,11 @@
 			2、cp -r /home/aa/ /home/bb：把aa目录拷贝到bb，如果有相同文件会提示是否覆盖，使用\cp不提示
 		5、远程拷贝（只能linux对linux吧，而且默认会覆盖）
 			1、scp root@10.10.10.10:/opt/a.txt /opt/  // 从10.10.10.10拷贝/opt/a.txt文件到本地的/opt/目录
-			2、scp -r root@10.10.10.10:/opt/ /opt/  // 从10.10.10.10拷贝/opt/目录到本地的/opt/目录
+			2、scp -r root@10.10.10.10:/opt/ /opt/    // 从10.10.10.10拷贝/opt/目录到本地的/opt/目录
 			3、scp /opt/a.txt root@10.10.10.10:/opt/  // 本地文件/opt/a.txt拷贝到远程
-			4、scp -r /opt/ root@10.10.10.10:/opt/ // 本地目录/opt/拷贝到远程
-tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/classes/com/bidizhaobiao/data/bigdata/base/service/mysql/impl/
-			scp -r 
+			4、scp -r /opt/ root@10.10.10.10:/opt/    // 本地目录/opt/拷贝到远程
+			
+			root@172.16.147.23:/home/appuser/tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/classes/com/bidizhaobiao/data/bigdata/extraction/service/impl/
 
 			5、参数
 				-1：使用ssh协议版本1；
@@ -202,7 +206,7 @@ tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/cla
 			3、tail -n 5 a.txt：输出a.txt的后5行，默认10
 			4、tail -f a.txt：实时监控a.txt文件的变动，很实用
 		11、ln(软连接)
-			1、ln -s /root/ linkToRoot：创建linkToRoot软连接，实际目录为/root/目录
+			1、ln -s /root/ linkToRoot：创建linkToRoot软连接，实际目录为/root/目录，如果不带 -s是硬连接文件(硬连接文件是可以独立存在的，软文件不可以)
 			2、rm -rf linkToRoot：删除软连接，注意末尾不要带斜杆
 	13、history(显示历史命令)
 		1、history：显示所有命令
@@ -340,7 +344,7 @@ tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/cla
 			1、ps -ef | grep sshd
 		3、终止进程
 			1、kill [-9] 1：终止1号进程-9强制终止(这个应该也可以使用进程名称终止吧？)
-			2、killall 进程名称：通过进程名称终止，也可以使用通配符
+			2、killall 进程名称：通过进程名称终止，也可以使用通配符(? *)
 		4、查看进程树
 			1、pstree -p：以树状显示进程信息(-p=显示进程号 -u=显示用户id)
 		5、服务进程
@@ -449,18 +453,5 @@ tomcat8-extract-historical/webapps/extract-produce-historical-190221/WEB-INF/cla
 
 
 
-
-
-
-我的理解是这样的，如下描述：
-	比如我的cpu只有一个，而且是单核的（即：同时只能处理一个任务）
-
-	现在我的线程池有a、b、c三条线程
-	-> 刚开始创建abc这时他们都处于就绪状态
-	-> 过了一会a得到使用权，执行了50毫秒
-	-> 切到b了，执行50毫秒，此时a回到了就绪状态
-	-> 又切到c了，此时a,b都是就绪状态
-
-	-->> 由于上面的切换时间间隔很短，几乎可以忽略，所以看起来abc是同时并发
 
 

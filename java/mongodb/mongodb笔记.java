@@ -91,7 +91,9 @@
 			2、$ne(不等于)：{field:{$nq:v}}
 			3、$nin(not in)：{field:{$nin: [v1,v2]}}
 			4、$all(用于数组)：{field:{$all:[v1,v2..]}}
-			5、$exists(不存在field列的)：{field:{$exists:1}}
+			5、$exists(不存在field列的)：
+				1、 db.stu.find({name:{$exists:1}})		// 不存在name字段的，但是不包括 name=null的，如果需要包括则使用 db.stu.find({"check":null})
+				2、 db.stu.find({name:null})			// name为null，包括了不存在此字段的，但不包括 name=''
 			6、$nor(所有条件不满足返回true)：{$nor: [条件1,条件2]}
 			7、{$or: [ { status: "A" }, { qty: { $lt: 30 } } ] }	// or
 			7、也可以直接写正则表达式：db.stu.find({name:/zs.*/},{name:1});
@@ -121,10 +123,11 @@
 			db.find(query).explain();
 			"cursor" : "BasicCursor", ----说明没有索引发挥作用，如果是BtreeCurso则说明发挥作用了
 			"nscannedObjects" : 1000 ---理论上要扫描多少行
-		2、索引的常用命令
+		2、索引的常用命令	// 参考 https://www.cnblogs.com/a-du/p/7805951.html
 			1、db.stu.getIndexes();查看stu的所有索引
 			2、db.collection.ensureIndex({field:1});创建普通索引1升序，-1降序，如果一下创建多个索引使用逗号分隔
 				1、唯一索引{unique:true}值不能重复
+					db.user.ensureIndex({"name":1},{"unique":true})
 				2、稀疏索引{sparse:true}如果没有此字段，则此文档没有索引
 				3、db.stu.ensureIndex({file:"hashed"});创建hash索引2.4新增
 			3、db.collection.dropIndex({filed:1/-1});不带条件则删除所有索引不包括_id
@@ -189,3 +192,9 @@
 	9、java操作mongodb，看项目演示
 
 	db.auth("bxkc","bidizhaobiaowang2017")
+
+
+
+
+
+

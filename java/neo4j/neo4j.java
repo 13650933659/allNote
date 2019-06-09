@@ -1,15 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
 1、neo4j是什么
 	1、OGM(Object-Graph-Mapping)
 2、安装
@@ -53,25 +43,16 @@
 		17、删除索引：drop index on : Teacher(name) 
 		18、创建唯一约束：create constraint on (t:Teacher) assert t.name is unique
 		19、删除唯一约束：drop constraint on (t:Teacher) assert t.name is unique
-
+		20、列出所有label的索引以及约束：  :schema
 		// 整理到索引
-
-		create(p:Project{project_name:'testProject1',area:'华北',province:'内蒙古'});
-		match(o:Organization{name:"testOrg1"}) set o.area='华北',o.province='内蒙古';
-
-
-
-		match(p:Project{project_name:'testProject1'}),(o:Organization{name:'testOrg1'}) create r=(o)-[d:DaiLiRelation]->(p) return r;
-		match(p:Project{project_name:'testProject1'}) set p.zhao_biao_uuid='uuid1';
-
-		match(p:Project) where id(p)=17036888 result=()-[r]->(p) return r;
-		match(p:Project) where p.zhao_biao_uuid='' or p.zhong_biao_uuid='' ()-[r]->(p) return r;
-
-		match result=(o:Organization)-[r]->(p:Project) where p.zhao_biao_uuid='testDocId' or p.zhong_biao_uuid='testDocId' return r;
+		21、查询不存在关系的节点： match (n:Project) where (n.zhao_biao_page_time='2019-05-08' or n.zhong_biao_page_time='2019-05-08') and  (not (n)–[]-())  return count(n)
+		21、自动分组查询： match (o:Organization{name:'比地1'})-[r]->(p:Project) return type(r) as type ,count(type(r)) as nb,sum(toFloat(replace(p.bidding_budget,'元','')));	// 如果你没加 count(type(r)) 就不会自动分组
+		22、 使用子查询 ： 
+			1、 分批删除不存在关系的企业节点 ： match(o:Organization) where  (not (o)–[]->())  with o limit 5000 delete o;
+		22、 合并加排序案例
+			Match (o:Organization)-[r]->(p:Project) where o.name in['比地1','比地2','比地3'] and type(r) in['ZhaoBiaoRelation','ZhongBiaoRelation']  return o.name as 名称,count(*) as 招投标数 order by  count(*) desc
 
 
-
-		match (o:Organization),(p:Project) where id(o) in[1,2] and not (o)-[]->(p)  return distinct  id(o);
 
 
 
@@ -110,3 +91,8 @@ neo4j java客户端
 
 
 
+
+45548996
+50000000
+
+50000000

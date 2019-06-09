@@ -37,8 +37,8 @@
 			1、进入安装目录登录： redis-cli -p 6379
 			2、ping(如果看到PONG证明OK)
 	2、windows
-		1、配置环境变量
-		2、redis-server.exe C:\Software\OpenSource\Redis-x64-3.0.504\redis.windows.conf		// 然后不要关闭此窗口，一旦关闭redis也关了
+		1、 配置redisHome的环境变量
+		2、 redis-server C:\Software\OpenSource\Redis-x64-3.0.504\redis.windows.conf		// 然后不要关闭此窗口，一旦关闭redis也关了
 		3、 redis-cli -h localhost -p 6379	// 登录
 4、关闭
 	1、单例关闭：shutdown -> exit
@@ -48,8 +48,8 @@
 	1、杂项
 		1、默认有16个库通过databases:16配置的，下标以0开始，切换到7号数据库：select 6
 		2、查看数据库有多少个元素：dbsize
-		3、清库：flushdb(清空当前库) flushall(清除16个库)
-		4、可以设置密码：config set requirepass "123456"，登录之后需要使用auth 123456验证之后才可以继续操作redis
+		3、清库： flushdb(清空当前库) flushall(清除16个库)
+		4、可以设置密码：config set requirepass "123456"，登录之后需要使用 auth 123456验证之后才可以继续操作redis
 		5、redis不像mongodb有集合的概念，redis直接使用库开工
 	2、key的是使用案例
 		1、keys *：列出所的key
@@ -189,3 +189,12 @@
 	4、redis的事物支持
 	5、redis的发布订阅
 	6、java使用jedis操作redis
+
+
+
+
+
+
+
+
+

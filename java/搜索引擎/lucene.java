@@ -73,10 +73,6 @@
 						//第一个参数:域名
 						//第二个参数:域值
 						//第三个参数:是否存储,是为yes,不存储为no
-						/*TextField nameFiled = new TextField("fileName", fileName, Store.YES);
-						TextField contextFiled = new TextField("fileContext", fileContext, Store.YES);
-						TextField sizeFiled = new TextField("fileSize", fileSize.toString(), Store.YES);*/
-						
 
 						// 下面三个是优化好的TextField
 						//是否分词:要,因为它要索引,并且它不是一个整体,分词有意义

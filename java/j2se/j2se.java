@@ -99,9 +99,12 @@
 		1、线程池的好处
 			1、管理线程
 			2、线程的复用
-		2、同时执行多个线程
+		2、同时执行4个线程
 			1、先把我们的线程加一句CyclicBarrier.await()，然后submit给线程池
-			2、先把我们的线程加一句countDownLatch.wait()，然后submit给线程池，然后执行countDownLatch.down();
+			2、先把我们的线程加一句 countDownLatch.wait()，然后submit给线程池，然后执行countDownLatch.down();	// 参考 https://zapldy.iteye.com/blog/746458
+				CountDownLatch countDownLatch = new CountDownLatch(1);
+				for(4){submit()}
+				countDownLatch.down();	// down 之后countDownLatch就会减1，然后线程池里面的线程就可以并发了
 		3、终止线程池里边有某个线程(超时、异常)，注意submit()一定要传Callable.call，如果传Runnable调用task.get()是没有返回值的
 			public static void main(String[] arr) {
 				ExecutorService fixedThreadPool = Executors.newFixedThreadPool(4);
@@ -174,3 +177,15 @@
 	2、tcp(transmission control protocol)：可靠但是慢于udp
 	3、udp(user data protocol)：不可靠但是快
 10、图形用户界面（gui）编程-这个暂时不管
+
+
+
+
+
+
+
+
+
+
+
+

@@ -51,7 +51,7 @@
 							4、mode: 待看？？？
 						2、一个参数的处理
 							1、一般是：基本类型、pojo、Map类型，直接取值，或者通过OGNL取
-						3、多个参数处理(java8和mybatis341可以考虑使用useActualParamName配置)
+						3、多个参数处理(java8和mybatis341可以考虑使用 useActualParamName 配置)
 							1、使用注解
 								Employee getEmpByIdAndLastName(@Param("id")Integer id,@Param("lastName")String lastName);
 								<select id="getEmpByIdAndLastName" resultType="com.atguigu.mybatis.bean.Employee">
@@ -204,8 +204,7 @@
 									close:遍历出所有结果拼接一个结束的字符
 									index:遍历list的时候是index就是索引，遍历map的时候index表示的就是map的key，item就是map的值
 								  -->
-								<foreach collection="ids" item="item_id" separator=","
-									open="where id in(" close=")">
+								<foreach collection="ids" item="item_id" separator="," open="where id in(" close=")">
 									#{item_id}
 								</foreach>
 							 </select>
@@ -660,7 +659,7 @@
 				</plugins>
 		3、分页插件
 			1、github项目：https://github.com/pagehelper/Mybatis-PageHelper		// 使用方法也是在里面
-			2、使用
+			2、使用	// 这个是真正的分页，靠的是 PageHelper.startPage(3, 2);
 				1、引入依赖
 					<dependency>
 						<groupId>com.github.pagehelper</groupId>
@@ -845,8 +844,10 @@
 
 
 1、问题
-	1、和springboot结合是怎么配置的
-		1、接口和xml是怎么联合的
+	1、和springboot是怎么结合 接口和xml是怎么联合的
+		1、 可以直接使用 mapperConfig.xml 的 package/mapper标签配置： mapper.resource="mapper/UserMapper.xml"， 
+		springboot直接使用 mybatis.mapper-locations=classpath*:mapper\/*.xml 但是mapper.xml的命名空间一定要对应的mapper.java的全路径
+		使用springboot后 mapperConfig.xml 可以不要了，可以要 使用mybatis.configLocation=classpath:mapper/mybatis-config.xml
 	2、maven的
 		1、待会看看<scope>
 

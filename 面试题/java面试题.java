@@ -235,4 +235,6 @@
 		5、反向索引
 		6、分区索引和全局索引
 	11、交叉用sql怎么实现
+	12、修改字段
+		1、 mysql : alter table bxkc_operation_log modify content longtext null comment '日志内容';
 

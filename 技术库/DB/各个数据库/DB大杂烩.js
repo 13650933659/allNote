@@ -18,3 +18,5 @@
 		deallocate mycursor
 
 
+2、mysql 查看最大允许的包
+	show VARIABLES like '%max_allowed_packet%';

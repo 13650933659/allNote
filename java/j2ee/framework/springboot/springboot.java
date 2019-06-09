@@ -61,7 +61,7 @@
 		典型的有WebmvcAutoConfiguration
 
 2、开发流程
-	1、pom.xml继承spring‐boot‐starter‐parent继承spring‐boot‐dependencies，加入依赖直接使用springboot的启动器，例如使用spring‐boot‐starter‐web(springmvc)，这里面就依赖着spring‐boot‐starter
+	1、pom.xml继承spring‐boot‐starter‐parent继承spring‐boot‐dependencies，加入依赖直接使用springboot的启动器，例如使用spring‐boot‐starter‐web(springmvc)，这里面就依赖着 spring‐boot‐starter
 	2、编写src/main/resources/application.yml(bootstrap.yml优先级最高)等文件
 	3、主程序的开发
 		@SpringBootApplication
@@ -149,7 +149,7 @@
 		1、日志门面有：JCL(Jakarta Commons Logging),SLF4j,Jboss-logging	
 		2、日志实现有：JUL(java.util.Logging),Log4j->Log4j2->Logbak
 		3、总结：门面选slf4j，实现选log4j2或者logbak，因为jcl他老了，并且slf4j和log4j2和logbak是同一个人写的
-	2、日志的统一（slf4j+logbak 或者 slf4j+log4j2）；
+	2、日志的统一（ slf4j+logbak 或者 slf4j+log4j2 ）；
 		1、排除其他日志框架门面，比如spring的jcl门面，这个springboot已经帮我们移除了，其他的门面就要自己去排除了
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -161,7 +161,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-		2、springboot自动帮我们引入了jul-to-slf4j、log4j-over-slf4j、jcl-over-slf4j等等其他门面的偷天换日包(最后全部调用slf4j)
+		2、springboot自动帮我们引入了 jul-to-slf4j 、log4j-over-slf4j、jcl-over-slf4j等等其他门面的偷天换日包(最后全部调用slf4j)
 		3、接下来就是实现了
 			1、如果你直接使用logbak你就不用配置了，springboot默认就是使用logbak
 			2、选用log4j2就要使用如下配置
@@ -170,8 +170,8 @@
 					<artifactId>spring-boot-starter-web</artifactId>
 					<exclusions>
 						<exclusion>
-							<artifactId>spring-boot-starter-logging</artifactId>
 							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-starter-logging</artifactId>
 						</exclusion>
 					</exclusions>
 				</dependency>
@@ -193,7 +193,7 @@
 				logger.error("这是error日志...");		// 介于开发和用户
 			}
 		2、配置说明
-			1、配置文件名称默认是logback-spring.xml or logback.xml，推荐使用带spring的，因为可以使用spring的高级功能，比如使用springProfile标签来激活那个环境的配置
+			1、配置文件名称默认是logback-spring.xml or logback.xml ，推荐使用带spring的，因为可以使用spring的高级功能，比如使用springProfile标签来激活那个环境的配置
 				如果是使用log4j2实现，默认配置文件为：log4j2-spring.xml或者log4j2.xml也可以自己指定logging.config=classpath:log4j2-dev.xml（也许log4j2和logback的配置是兼容的）
 			2、日志配置
 				1、logging.level=trace：			日志级别

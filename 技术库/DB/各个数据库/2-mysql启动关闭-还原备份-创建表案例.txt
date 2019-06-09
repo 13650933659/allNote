@@ -25,7 +25,7 @@
 
 3、mysql数据表的创建案例
 	create table hw_users(
-		_user_id int primary key auto_increment,  --主键默认不能为空,自增长
+		_user_id bigint primary key auto_increment,  --主键默认不能为空,自增长
 		_dept_id references hw_dept(_dept_id),  --外键列
 		_user_name varchar(32) not null,  --用户名不能为空
 		_password varchar(32) not null,  --密码名不能为空
@@ -46,6 +46,9 @@
 	1、create index 索引名称 on 表名(列名1,列名2)
 	2、还有unique index唯一的索引，两个值不可以相同有点像主键了
 	3、查看是否创建成功：show index from 表名，也可以在UI客户端清晰的看到
+
+
+
 
 
 

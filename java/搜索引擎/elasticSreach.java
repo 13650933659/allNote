@@ -53,9 +53,9 @@
 			client.transport.ping_timeout: 60s
 			discovery.zen.ping.unicast.hosts: ["192.168.57.4","192.168.57.5", "192.168.57.6"]
 
-3、ES卸载：直接删除elasticsearch-6.4.2目录即可
+3、ES卸载：直接删除 elasticsearch-6.4.2目录即可
 4、ES启动(不要使用root用户)
-	1、命令：elasticsearch-6.4.2/bin/elasticsearch // 如果想要后台启动使用-d
+	1、命令： /opt/elasticsearch-6.4.2/bin/elasticsearch // 如果想要后台启动使用-d
 	2、启动失败的解决方案(这个应该是高版本的一些限制，参考：https://www.cnblogs.com/configure/p/7479988.html)
 		1、切换到root用户修改 vim /etc/security/limits.conf	// 在末尾加上一下两行
 			zs hard nofile 65536
@@ -127,9 +127,10 @@
 				1、创建索引库bjsxt: curl -H 'Content-Type: application/json' -XPUT 'http://192.168.216.129:9200/bd' -d '{setting:{number_of_shards:3,number_of_replicas:2},mappings:{doc:{dynamic:"strict",properties:{name:{type:"string"},nicknams:{type:"string"}}}}}'	// PUT和POST都可以记得大写，返回{"acknowledged": true}就说明成功了
 					1、setting：shards数量以及replicas数量，之后shards不可改，replicas可以改
 					2、mappings：就像约束一样关系型数据库的scheme，但是这里好像没有约束，也是随便可以存入数据，不过这样也可以理解，他本来就是NoSql
-				2、创建索引bjsxt.employee._id=1: curl -XPOST 'http://192.168.216.129:9200/bjsxt/employee/1' -d '{name:"zs",age:25,about:"喜欢运动"}'	// 如果不带1，ES自动自动分配一个_id，但是只能使用POST请求
-			curl -h 'Content-Type: application/json' -XPOST 'http://192.168.216.129:9200/bd/org/1' -d '{name:"a",nicknames:"a"}'
-			curl -XPUT 'http://192.168.216.129:9200/bd'
+				2、创建索引bjsxt.employee._id=1:  curl -XPOST 'http://192.168.216.129:9200/organizations/Organization/1' -d '{name:"比地1",nicknames:"比地1"}'	// 如果不带1，ES自动自动分配一个_id，但是只能使用POST请求
+					curl -h 'Content-Type: application/json' -XPOST 'http://192.168.216.129:9200/organizations/Organization//1' -d '{name:"比地1",nicknames:"比地1"}'
+					curl -XPUT 'http://192.168.216.129:9200/bd'
+					// 以上的命令不能使用了
 			2、查询：
 				1、普通语言
 				curl -XGET 'http://192.168.216.129:9200/bd/org/1?pretty'
@@ -163,7 +164,7 @@
 			6、ES的版本控制，他是乐观锁的原理
 				curl -XPUT 'http://192.168.216.129:9200/bjsxt/employee/20?version=10&version_type=external' -d '{name: "laoxiao"}' // 这个是使用外部版本号，注意：此处url前后的引号不能省略，否则执行的时候会报错
 		
-
+17037208
 
 7、集群
 	1、只要是统一网段他会自动发现(10->11)
@@ -197,3 +198,55 @@
 	//                        .field("nicknames", name)
 	//                        .endObject()
 	//                ).get();
+
+
+1、java操作es
+	java操作使用 http://47.97.210.202:9200/ 或者 9300端口去访问
+
+	1、依赖
+		<!-- ES的依赖 -->
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>transport</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>${elasticsearch.version}=6.4.1</version>
+		</dependency>
+	2、java代码可以参考 要素提取的项目和bxkc的项目
+		1、复杂查询
+			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+			MatchPhraseQueryBuilder matchPhraseQueryBuilder = QueryBuilders.matchPhraseQuery("name", keyword);	// 短语匹配
+			TermsQueryBuilder termsQueryBuilderCitys = QueryBuilders.termsQuery("city.keyword", citys);			// 全字匹配
+			boolQueryBuilder.must(matchPhraseQueryBuilder);								// 相当于 and
+			boolQueryBuilderArea.should(boolQueryBuilderProvinceAndCity);				// 相当于 or
+
+2、访问使用 http://47.97.210.202:9100/
+	1、这是短语型的不分词的
+		{"query":{"multi_match":{"query":"比地","type":"phrase","slop":0,"fields":["nicknames"],"max_expansions":1}}}
+	2、 正则匹配
+		{
+		"query": {
+			"bool": {
+				"must": [
+					{"prefix": {"name.keyword": "比地"}}
+				]
+			}
+		},
+		"from": 0,
+		"size": 10
+		}
+
+		也可以把 {"prefix": {"name.keyword": "比地"}} 
+		替换成   {"regexp": {"name.keyword": "比地.*"}}
+
+
+
+
+
+
+
+
+

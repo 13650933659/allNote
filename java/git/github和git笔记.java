@@ -52,7 +52,7 @@
 	4、本地仓库和远程仓库的交互
 		1、李岳群去github注册一个账号，并且创建仓库命名为：huashan
 		2、设置系统/项目的签名
-		3、创建huashan目录，进入huashan目录参数本地仓库：git init
+		3、创建huashan目录，进入huashan目录参数本地仓库： git init
 		4、创建文件提交到本地仓库：vim a.txt -> git add a.txt -> git commit "描述"
 		5、由于远程仓库地址长，所以我们记一下(会记录到.git/config文件)
 			1、查看当前所有的远程地址：git remote -v
@@ -189,6 +189,12 @@
 		2、第二种：git revert是用一次新的commit来回滚之前的commit，再次提交(类似第一种了)
 		3、第三种：git reset但是会删除之前的本地库的提交，你git push可能导致冲突(如果本地版本落后于远程)
 	2、git rebase(衍合操作)，一般我使用git merge最终效果是一样的，整洁的提交历史
-
+	3、修改提交信息
+		1、 已经提交到git仓库的 git 修改提交信息 https://www.cnblogs.com/dudu/p/4705247.html
+		2、 还未提交到git仓库的
+			git commit --amend	// 然后进入vim模式编辑既可以(但是这是最后一次的提交)
 
 	
+
+
+	mapZhongbiao = neo4jUtils.finOrgZhongbiaoOrg(    // 245 就是上一次版本的， 370才是当前版本的
