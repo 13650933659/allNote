@@ -61,7 +61,8 @@
 		典型的有WebmvcAutoConfiguration
 
 2、开发流程
-	1、pom.xml继承spring‐boot‐starter‐parent继承spring‐boot‐dependencies，加入依赖直接使用springboot的启动器，例如使用spring‐boot‐starter‐web(springmvc)，这里面就依赖着 spring‐boot‐starter
+	1、pom.xml继承 spring‐boot‐starter‐parent 他继承 spring‐boot‐dependencies 即可，例如使用spring‐boot‐starter‐web(springmvc)，其实这里面就依赖着 spring‐boot‐starter
+		1、 其实 springcloud 依赖 springboot 其实我们在 <dependencyManagement> 引入 spring-cloud-dependencies 其实就有 springboot 的依赖了
 	2、编写src/main/resources/application.yml(bootstrap.yml优先级最高)等文件
 	3、主程序的开发
 		@SpringBootApplication
@@ -283,6 +284,59 @@
 			2、thymeleaf的使用：#{login.btn}
 			3、区域解析器默认使用请求头解析区域，但我可以自定义LocaleResolver可以通过传参数解析
 		4、自定义拦截器：HandlerInterceptor放入容器中即可
+			1、 声明我们的拦截器
+				@Component
+				public class TimeInterceptor implements HandlerInterceptor {
+
+					// 请求目标方法之前
+					@Override
+					public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+							throws Exception {
+						System.out.println("preHandle");
+						
+						System.out.println(((HandlerMethod)handler).getBean().getClass().getName());
+						System.out.println(((HandlerMethod)handler).getMethod().getName());
+						
+						request.setAttribute("startTime", new Date().getTime());
+						return true;
+					}
+
+					// 请求目标方法之后
+					@Override
+					public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+							ModelAndView modelAndView) throws Exception {
+						System.out.println("postHandle");
+						Long start = (Long) request.getAttribute("startTime");
+						System.out.println("time interceptor 耗时:"+ (new Date().getTime() - start));
+
+					}
+
+					// 请求目标方法之前 postHandle 之后 或者控制器抛了异常也会处理
+					@Override
+					public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+							throws Exception {
+						System.out.println("afterCompletion");
+						Long start = (Long) request.getAttribute("startTime");
+						System.out.println("time interceptor 耗时:"+ (new Date().getTime() - start));
+						System.out.println("ex is "+ex);
+
+					}
+				}
+			2、注册到 InterceptorRegistry
+				@Configuration
+				public class WebConfig extends WebMvcConfigurerAdapter {
+					@Autowired
+					private TimeInterceptor timeInterceptor;
+					
+					@Override
+					public void addInterceptors(InterceptorRegistry registry) {
+						registry.addInterceptor(timeInterceptor);
+					}
+				}
+			3、他和过滤不同的是，
+				1、他多了Object handler
+				2、而且他需要先声明为@Component后 InterceptorRegistry.addInterceptor(timeInterceptor)注册到这里
+				3、不像过滤器他直接注册到spring容器即可生效，过滤器的拦截要早于拦截器
 		5、容错处理(有空再去看看)
 		6、嵌入式的Servlet容器
 			1、嵌入式的web容器(以tomcat为例子)
@@ -310,11 +364,11 @@
 								ServletRegistrationBean registrationBean = new ServletRegistrationBean(newMyServlet(),"/myServlet");
 								return registrationBean;
 							}
-						2、Filter
+						2、Filter	// 如果使用框架，直接使用他们提供的拦截器跟好用，因为他有被访问的那个方法的对象
 							@Bean
 							public FilterRegistrationBean myFilter(){
 								FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-								registrationBean.setFilter(new MyFilter());
+								registrationBean.setFilter(new MyFilter());		// MyFilter 不需要声明称bean 区别于拦截器的注册
 								registrationBean.setUrlPatterns(Arrays.asList("/hello","/myServlet"));
 								return registrationBean;
 							}

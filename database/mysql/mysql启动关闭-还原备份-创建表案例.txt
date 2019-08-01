@@ -48,7 +48,7 @@
 	3、查看是否创建成功：show index from 表名，也可以在UI客户端清晰的看到
 
 
-
+WebSourceNoOrgRelMapper
 
 
 

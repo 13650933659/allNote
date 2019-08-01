@@ -15,7 +15,8 @@
 	2、查看nginx是否启动
 		1、命令方式   tasklist /fi "imagename eq nginx.exe"
 
-
+	2、liunx使用
+		https://www.cnblogs.com/fhen/p/5896105.html
 
 
 

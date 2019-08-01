@@ -72,7 +72,7 @@
 			1、db.stu.update({name:"zs"},{name:"ls"});会把zs的文档变成{name:"ls"}这个慎用
 			2、db.stu.update({name:"zs"},{$set:{name:"ls"}});把zs改为ls
 				1、第一个参数使用说明
-					$unset 删除某个列
+					$unset 删除某个列			// db.user.update({name:'zs'},{$unset:{age:null}}); 值会删除zs的这个字段，其他记录不会影响
 					$rename 重命名某个列
 					$inc 增长某个列
 					$setOnInsert 当第三个参数upsert为true时,并且发生了insert操作时,可以补充的字段
@@ -88,7 +88,7 @@
 			1、最简单的：{f:v}	// f如果是数据，则只要f包含一个v即可
 			1、{'f.name':'a'}	// 如果是内嵌的对象，则一定要使用引号包起来
 			1、var stu_id = db.stu.findOne()._id; db.order.find({stu_id:stu_id})	// 可以结合js语法查询
-			2、$ne(不等于)：{field:{$nq:v}}
+			2、$ne(不等于)：{field:{$ne:v}}
 			3、$nin(not in)：{field:{$nin: [v1,v2]}}
 			4、$all(用于数组)：{field:{$all:[v1,v2..]}}
 			5、$exists(不存在field列的)：
@@ -129,7 +129,7 @@
 				1、唯一索引{unique:true}值不能重复
 					db.user.ensureIndex({"name":1},{"unique":true})
 				2、稀疏索引{sparse:true}如果没有此字段，则此文档没有索引
-				3、db.stu.ensureIndex({file:"hashed"});创建hash索引2.4新增
+				3、db.stu.ensurendex({file:"hashed"});创建hash索引2.4新增
 			3、db.collection.dropIndex({filed:1/-1});不带条件则删除所有索引不包括_id
 			4、重建索引(索引多次修改会出现碎片)使用修复：db.stu.reIndex();
 	5、备份和恢复=针对库(导出导入=针对集合)

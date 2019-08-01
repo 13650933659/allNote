@@ -1,5 +1,5 @@
 
-公用算法：pageCount=(rowCound-1)/pageSize+1;
+公用算法：pageCount=(rowCount-1)/pageSize+1;
 
 1、mysql；
 	select * from user limit ?,?;  //始于0

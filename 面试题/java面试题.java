@@ -115,7 +115,9 @@
 			2、update他改一个会改全部字段浪费效率，最好用hql语句，还有其他两种方法看马士兵的教程。
 		7、事务提交则自动关闭session自动关闭，这时缓存也没有了。
 	3、AOP(Aspect Orient Programming)，Spring该我们提供了多切面比如声明式的事物管理
-		1、底层是动态代理，这里所说的切面是面向一大堆的对象的，当这些对象在执行指定的方法时，这个切面就会切入做一些自定义的业务（比如：日志管理、性能测试、事务管理）
+		1、 切面类(包括切点=@Before@Around等注解=使用指定的表达式说在哪些方法起作用+什么时候起作用)
+		2、 可以看出来切面是面向一大堆对象的（比如：日志管理、性能测试、事务管理）
+		3、 原理是动态代理+spring的后置处理器
 	4、mybatis如何做批处理的(用forEech标签)
 	5、mybatis的引入
 	6、springcloud和dubbo最大的区别就是，服务调用方式前者使用的是rest API风格，后者使用的RPC
@@ -237,4 +239,4 @@
 	11、交叉用sql怎么实现
 	12、修改字段
 		1、 mysql : alter table bxkc_operation_log modify content longtext null comment '日志内容';
-
+		2、 oracle 新增字段 : alter table test1 add (name varchar2(30) default ‘无名氏’ not null);

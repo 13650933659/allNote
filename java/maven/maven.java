@@ -40,7 +40,7 @@
 	2、mvn clean					// 删除target目录
 	3、mvn compile\mvn test-compile	// 编译项目
 	4、mvn test						// 运行测试用例
-	5、mvn package					// 把我们的项目打成jar包(clean->compile->)
+	5、mvn package					// 把我们的项目打成jar/war包 这个取决于 <packaging>jar</packaging> 如果是父工程使用pom
 	6、mvn install					// 安装jar包到我们本地仓库中，其项目需要引用就可以根据此项目的坐标引用，这个好像包括mvn的功能
 	7、mvn deploy					// 通过插件自动部署到我们本机的tomcat容器，远程的不知道可以不，此命令最好是在命令行使用
 	8、mvn site
@@ -107,6 +107,7 @@
 		-Dfile=<myfile.jar>       : 指定jar文件路径与文件名(同目录只需文件名)
 	2、安装命令实例：
 		mvn install:install-file -DgroupId=com.baidu -DartifactId=ueditor -Dversion=1.0.0 -Dpackaging=jar -Dfile=ueditor-1.1.2.jar
+		mvn install:install-file -DgroupId=net.sf.dozer -DartifactId=dozer -Dversion=5.5.1 -Dpackaging=jar -Dfile=C:/Software/net/sf/dozer/dozer/5.5.1/dozer-5.5.1.jar
 12、打包，测试环境根本就不要打包，直接把配置文件考过去，让后他会自动编译java文件(新增的java他会加入的)
 	1、打包命令：clean package -Dmaven.test.skip=true 或者  clean compile -Dmaven.test.skip=true
 		1、打包参数
@@ -178,11 +179,31 @@
                     </execution>
                 </executions>
             </plugin>
+		6、 打成可运行的 jar包
+			 1、 加入以下插件和配置（前提是： <packing>jar</packing>）
+				 <plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>1.3.3.RELEASE</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+
+
+			2、打完包之后
+				target目录下会两个jar包 带 a.jar.original 和 a.jar, 其中 a.jar 里面包含了全部依赖，在 lib目录， 如果是springboot的项目，直接有内嵌的tomcat了，直接可以使用 java -jar a.jar 运行，然后应用就运行起来了
+    </build>
 	3、运行：
 		1、直接使用spring-boot:run命令(需要maven的插件)
 		2、使用springboot的主程序运行
 			在VM options：-Dspring.profiles.active=dev -Dapplication.datasource-mode=daily
-
+		3、 java -jar a.jar // 运行可运行的jar包
 
 
 

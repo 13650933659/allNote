@@ -236,17 +236,17 @@
 			1、导入aop模块的依赖；Spring AOP：(spring-aspects)
 			2、定义一个日志切面类（LogAspects）	// 以后有空去开发一个方法的性能勘测
 				1、通知方法：
-					前置通知(@Before)：			// logStart：在目标方法(div)运行之前运行
-					后置通知(@After)：			// logEnd：在目标方法(div)运行结束之后运行（无论方法正常结束还是异常结束）
-					返回通知(@AfterReturning)：	// logReturn：在目标方法(div)正常返回之后运行
-					异常通知(@AfterThrowing)：	// logException：在目标方法(div)出现异常以后运行，后续异常还会继续抛出
-					环绕通知(@Around)：			// 动态代理，手动推进目标方法运行（joinPoint.procced()）
+					前置通知(@Before)：			// logStart ：               在目标方法(div)运行之前运行
+					后置通知(@After)：			// logEnd    ：              在目标方法(div)运行结束之后运行（无论方法正常结束还是异常结束）
+					返回通知(@AfterReturning)：	// logReturn ：              在目标方法(div)正常返回时运行，我们可以对返回值进行二次修改等等，区别于 @After 他是返回之后
+					异常通知(@AfterThrowing)：	// logException ：		     在目标方法(div)出现异常以后运行，后续异常还会继续抛出
+					环绕通知(@Around)：			// handleControllerMethod ： 手动推进目标方法运行（joinPoint.procced()）	， 这个包括了上面4个，最好和上面互斥用，要不会同时生效， 我们也可以在 joinPoint.procced() 处理异常
 				2、代码实现
 					@Aspect		// 注解为切面类
 					@Service
 					public class LogAspects {
 
-						//抽取公共的切入点表达式
+						//抽取公共的切入点表达式，
 						//1、本类引用            @Before("pointCut()")
 						//2、其他的切面引用       @Before("全类名.pointCut()")
 						@Pointcut("execution(public * com.atguigu.bean.MathCalculator.*(..))")
@@ -273,6 +273,22 @@
 						@AfterThrowing(value="pointCut()",throwing="exception")
 						public void logException(JoinPoint joinPoint,Exception exception){
 							System.out.println(""+joinPoint.getSignature().getName()+"异常。。。异常信息：{"+exception+"}");
+						}
+
+						@Around("execution(* com.imooc.web.controller.UserController.*(..))")
+						public Object handleControllerMethod(ProceedingJoinPoint pjp) throws Throwable {
+							System.out.println("time aspect start");
+							
+							Object[] args = pjp.getArgs();
+							for (Object arg : args) {
+								System.out.println("arg is "+arg);
+							}
+							
+							long start = new Date().getTime();
+							Object object = pjp.proceed();
+							System.out.println("time aspect 耗时:"+ (new Date().getTime() - start));
+							System.out.println("time aspect end");
+							return object;
 						}
 
 					}

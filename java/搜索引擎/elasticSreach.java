@@ -94,7 +94,7 @@
 	2、Bigdesk插件：是Elasticsearch的一个集群监控工具，他可以来查看各种状态，如cpu、内存使用、索引数据、搜索情况、http连接数等
 		1、cd elasticsearch-6.4.2/bin 使用./plugin install lukas-vlcek/bigdesk/2.5.0
 		2、使用浏览器访问：http//:192.168.216.129/_plugin/bigdesk/
-	3、Marvel插件是集head和bigdesk有点于一身的插件，但是他收费的
+	3、Marvel插件是集head和bigdesk优点于一身的插件，但是他收费的
 		1、cd elasticsearch-6.4.2/bin 使用./plugin install elasticsearch/marvel/latest
 		2、使用浏览器访问：http//:192.168.216.129/_plugin/marvel/
 	4、解压安装kibana
@@ -164,7 +164,8 @@
 			6、ES的版本控制，他是乐观锁的原理
 				curl -XPUT 'http://192.168.216.129:9200/bjsxt/employee/20?version=10&version_type=external' -d '{name: "laoxiao"}' // 这个是使用外部版本号，注意：此处url前后的引号不能省略，否则执行的时候会报错
 		
-17037208
+curl -XGET 'http://localhost:9200/organizations/Organization/46485153?pretty'
+curl -XGET 'http://172.16.57.178:9200/organizations/Organization/46502113?pretty'
 
 7、集群
 	1、只要是统一网段他会自动发现(10->11)
@@ -225,7 +226,28 @@
 
 2、访问使用 http://47.97.210.202:9100/
 	1、这是短语型的不分词的
-		{"query":{"multi_match":{"query":"比地","type":"phrase","slop":0,"fields":["nicknames"],"max_expansions":1}}}
+		{
+		  "query": {
+			"multi_match": {
+			  "query": "深圳市国际招标有限公司",
+			  "type": "phrase",
+			  "slop": 0,
+			  "fields": [
+				"name"
+			  ],
+			  "max_expansions": 1
+			}
+		  },
+		  "from": 0,
+		  "size": 10,
+		  "sort": [
+			{
+			  "bidNumber": {
+				"order": "desc"
+			  }
+			}
+		  ]
+		}
 	2、 正则匹配
 		{
 		"query": {
@@ -245,8 +267,8 @@
 
 
 
-
-
-
-
+1、 公司 ES 的使用
+	
+	1、 head插件： http://47.97.210.202:9100
+	2、 部署路径： /usr/local/elasticsearch-6.4.2
 
