@@ -404,11 +404,12 @@
 			1、下载安装：Erlang，然后配置 ERLANG_HOME
 			2、下载安装：rabbitmq-server-3.6.11.exe
 				1、查看插件：rabbitmq-plugins list
-				2、开启管理插件：rabbitmq-plugins enable rabbitmq_management，然后就可以使用http://localhost:15672/在浏览器管理了，默认账号和密码是guest=guest
+				2、开启管理插件：rabbitmq-plugins enable rabbitmq_management ，然后就可以使用 http://localhost:15672/ 在浏览器管理了，默认账号和密码是guest=guest
+				3、 cd C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.11
 		2、kafka(注意这两个软件安装的目录不要太长了)
 			1、解压：zookeeper-3.4.6.tar.gz和解压：kafka_2.11-0.11.0.0.tgz
 			2、把   C:\zookeeper-3.4.10\conf\zoo_sample.cfg 复制一份改名为zoo.cfg放在此目录
-			3、进入 C:\zookeeper-3.4.10\bin，启动zookeeper服务输入： zkserver 启动之后窗口不需要关闭，如果启动成功是占用2181端口
+			3、进入 cd C:\zookeeper-3.4.10\bin，启动zookeeper服务输入： zkserver 启动之后窗口不需要关闭，如果启动成功是占用2181端口
 			4、进入 C:\kafka_2.11-2.0.0\bin\windows，启动kafka输入：kafka-server-start ../../config/server.properties如果启动成功是占用9092端口
 			6、如果有生产者向kafka发送消息了(topic)，查看：进入C:\kafka_2.11-2.0.0\bin\windows输入：kafka-topics --list --zookeeper localhost:2181
 7、bus总线	// 这个没看完

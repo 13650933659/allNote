@@ -40,5 +40,9 @@
 
 6、取消自动更新Idea
 
-7、  lombok 插件的安装和使用 : 请参考 ：https://jingyan.baidu.com/article/0a52e3f4e53ca1bf63ed725c.html
-8、 安装  free mybatis plugin（实现mybatis的 xml 和 mapper的跳转） : https://www.wandouip.com/t5i73222/
+7、 插件安装
+	7、  lombok 插件的安装和使用 : 请参考 ：https://jingyan.baidu.com/article/0a52e3f4e53ca1bf63ed725c.html
+	8、 安装  free mybatis plugin（实现mybatis的 xml 和 mapper的跳转） : https://www.wandouip.com/t5i73222/
+	9、 安装less插件 https://www.cnblogs.com/liaojie970/p/6653593.html
+
+

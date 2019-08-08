@@ -43,11 +43,11 @@
 					1、id: 称为statement的id
 					2、#{id}：表示一个占位符号，可能有中文乱码问题，如果输入参数是简单类型，#{}中的参数名可以任意
 					3、${value}：接收输入参数的内容，如果传入类型是简单类型，${}中只能使用value，注意：有sql注入的问题，一般使用在原生sql不支持占位符的
-					4、parameterType(输入参数，好像这个可以不用写)
+					4、 parameterType(输入参数，好像这个可以不用写)
 						1、例子：#{property,javaType=int,jdbcType=NUMERIC}或者#{height,javaType=double,javaType=NUMERIC,numericScale=2}
-							1、javaType：可以从参数对象中来确定
-							2、jdbcType：当参数值为空时默认的值，<setting name="jdbcTypeForNull" value="在这里改是全局，如果你去对应的#{}写JdbcType=OTHER就只影响自己(默认为OTHER，但是这个oracle不认识)"></setting>
-							3、numericScale：保留的小数
+							1、 javaType ：可以从参数对象中来确定
+							2、 jdbcType ：当参数值为空时默认的值，<setting name="jdbcTypeForNull" value="在这里改是全局，如果你去对应的#{}写JdbcType=OTHER就只影响自己(默认为OTHER，但是这个oracle不认识)"></setting>
+							3、 numericScale ：保留的小数
 							4、mode: 待看？？？
 						2、一个参数的处理
 							1、一般是：基本类型、pojo、Map类型，直接取值，或者通过OGNL取
@@ -57,14 +57,14 @@
 								<select id="getEmpByIdAndLastName" resultType="com.atguigu.mybatis.bean.Employee">
 									select * from tbl_employee where id = #{id} and last_name=#{lastName}
 								</select>
-							2、使用硬编码#{param1},#{param2}...
+							2、使用硬编码 #{param1},#{param2}...
 								Employee getEmpByIdAndLastName(Integer id, String lastName);
 								<select id="getEmpByIdAndLastName" resultType="com.atguigu.mybatis.bean.Employee">
 									select * from tbl_employee where id = #{param1} and last_name=#{param2}
 								</select>
-					5、resultType(输出参数)
+					5、 resultType(输出参数)
 						1、pojo和List<pojo>
-							Employee getById(Integer id); 或者 List<Employee> getById(Integer id);
+							Employee getById(Integer id); 或者 List<Employee> findById(Integer id);
 							<select id="getEmpById" resultType="com.atguigu.mybatis.bean.Employee">
 								select * from tbl_employee where id = #{id}
 							</select>
@@ -80,7 +80,7 @@
 								<select id="getEmpByLastNameLikeReturnMap" resultType="com.atguigu.mybatis.bean.Employee">
 									select * from tbl_employee where last_name like #{lastName}
 								</select>
-					6、resultMap(输出参数的映射，用了这个就不用resultType了，用了这个字段和属性不对应也不用在sql写别名了)
+					6、 resultMap(输出参数的映射，用了这个就不用 resultType 了，用了这个字段和属性不对应也不用在sql写别名了)
 						1、单个pojo的映射
 							<resultMap type="com.po.User" id="userResultMap">
 								<!-- 
@@ -405,6 +405,13 @@
 	4、逆向工程(代码生成器)
 		1、使用java程序生成
 			1、generatorConfig.xml请参考笔记
+			2、maven依赖
+				<!-- mybatis自动生成代码依赖 -->
+				<dependency>
+					<groupId>org.mybatis.generator</groupId>
+					<artifactId>mybatis-generator-core</artifactId>
+					<version>1.3.2</version>
+				</dependency>
 			2、java代码
 				@Test
 				public void generateMybatis() throws Exception{
@@ -847,7 +854,7 @@
 	1、和springboot是怎么结合 接口和xml是怎么联合的
 		1、 可以直接使用 mapperConfig.xml 的 package/mapper标签配置： mapper.resource="mapper/UserMapper.xml"， 
 		springboot直接使用 mybatis.mapper-locations=classpath*:mapper\/*.xml 但是mapper.xml的命名空间一定要对应的mapper.java的全路径
-		使用springboot后 mapperConfig.xml 可以不要了，可以要 使用mybatis.configLocation=classpath:mapper/mybatis-config.xml
+		使用springboot后 mapperConfig.xml 可以不要了，可以要 使用 mybatis.configLocation=classpath:mapper/mybatis-config.xml
 	2、maven的
 		1、待会看看<scope>
 

@@ -3,7 +3,7 @@
 001、typeof var1  //得到var1是什么数据类型
 001、parseInt("92")  //把字符串转成number,如果转不成功就报错NaN 类型是number
 001、parseFloat("92.4")  //把字符串转成number,如果转不成功就报错NaN 类型是number(这里说明一下他的number已经包括全部数值了，如果你用上面的函数就会四舍五入)
-001、isNaN("f")  //结果是true,如果不是一个数则返回true，是数（0、1、'0'、'1'、'001'、null）返回false 类型是boolean
+001、isNaN("f")  //结果是true,如果不是一个数（其他不是数的字符串、undefined）则返回true，是数（0、1、'0'、'1'、'001'、null、''）返回false 类型是boolean
 001、encodeURI(var1)==>>decodeURI(var1)  //对var1进行重新URI编码，再用URI解回来，为了通讯时特殊字符什么的
 001、escape(var1)==>>unescape(var1)  //对var1进行重新？？编码，再用？？解回来，为了通讯时特殊特殊字符什么的
 001、eval("window.alert('hello world')")  //把字符串当成一个脚本来执行

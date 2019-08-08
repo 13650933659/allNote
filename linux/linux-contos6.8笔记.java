@@ -396,7 +396,7 @@
 			1、解压：tar -zxvf apache-tomcat-7.0.70.tar.gz
 			2、使用./startup.sh和./shutdown.sh启动关闭之
 			3、防火墙开放端口8080
-				1、vim /etc/sysconfig/iptables，添加一行-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+				1、vim /etc/sysconfig/iptables ，添加一行-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 				2、重启防火墙：service iptables restart
 				3、查看开放的端口：service iptables status
 			4、测试是否成功

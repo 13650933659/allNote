@@ -34,6 +34,15 @@
 		_salary float(8,2) unsigned,  --无符号值（丢掉负值）
 	);
 	
+	create table PluginInfo(
+		id bigint(20) primary key comment '插件id，主键',  --主键默认不能为空唯一，一般都是设置为自增，bigint长度默认20，int默认11
+		version  bigint NOT NULL COMMENT '插件版本' ,
+		code int NOT NULL COMMENT '插件编码' ,
+		deviceType varchar(255) NOT NULL COMMENT '设备类型' ,
+		name  varchar(255) NOT NULL COMMENT '插件名称' ,
+		url  varchar(2000) NOT NULL COMMENT '插件文件存储的url'
+	) comment '插件信息表' engine=InnoDB collate=utf8_bin;
+	 // ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 	insert into hw_users values(1,1,'hsp','mm','男',18,10000.00);
