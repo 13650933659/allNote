@@ -1,25 +1,7 @@
 
 
-看完 5-8
+看完 5-11 （如果是单单看springSecurity 就直接从4开始即可，前面都是基础）
 
-
-
-
-1、所以登陆验证拦截器AuthenticationProcessingFilter要讲
-2、资源管理拦截器AbstractSecurityInterceptor
-
-
-
-
-但拦截器里面的实现需要一些组件来实现，所以就有了 AuthenticationManager 、accessDecisionManager等组件来支撑。
-
-单点登录是？
-
-
-1、 图片验证码 拦截器
-2、 记住我功能
-3、 实现短信验证码登录
-	1、 spring的依赖搜索
 
 
 
@@ -69,7 +51,20 @@
 								tokenRepository.createNewToken(persistentToken);
 								addCookie(persistentToken, request, response);
 
+5-9
+	1、spring.session.timeout=10	// 配置10秒，默认30分钟，最小1分钟
 
 
-
-
+1、 认证方式
+	1、 用户名 + 密码
+		4-2 至 4-9
+	2、 手机号 + 短信验证码
+		4-10 至 4-13
+	3、 社交网账号登录（QQ或者微信等等）
+		5-1 至5-8
+2、 认证之后的 session 管理
+	1、单机版的管理（直接放在服务器即可）
+		5-9
+	2、集群版的管理（借用spring-seesion模块然后借用redis存储）
+		5-10
+	3、退出登录功能的实现
