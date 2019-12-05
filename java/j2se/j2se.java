@@ -95,17 +95,20 @@
 			MyThread myThread = new MyThread();
 			myThread.setName("t1");
 			myThread.start();
-	4、创建固定的线程池：ExecutorService s = Executors.newFixedThreadPool(10);
-		1、线程池的好处
-			1、管理线程
-			2、线程的复用
+	4、创建固定的线程池：ExecutorService s = Executors.newFixedThreadPool(10);	// 并发10条，但是可以放入10+线程，10+以后的线程就可以等待其他线程运行完成才可以执行
+		1、线程池的好处 与 问题
+			1、好处
+				1、管理线程
+				2、线程的复用
+			2、问题
+				1、如果某条线程卡住了，怎么办？（如果给每条线程加超时时间）
 		2、同时执行4个线程
 			1、先把我们的线程加一句CyclicBarrier.await()，然后submit给线程池
 			2、先把我们的线程加一句 countDownLatch.wait()，然后submit给线程池，然后执行countDownLatch.down();	// 参考 https://zapldy.iteye.com/blog/746458
 				CountDownLatch countDownLatch = new CountDownLatch(1);
 				for(4){submit()}
 				countDownLatch.down();	// down 之后countDownLatch就会减1，然后线程池里面的线程就可以并发了
-		3、终止线程池里边有某个线程(超时、异常)，注意submit()一定要传Callable.call，如果传Runnable调用task.get()是没有返回值的
+		3、终止线程池里边有某个线程(超时、异常)，注意 submit()一定要传 Callable.call ，如果传 Runnable 调用 task.get()是没有返回值的
 			public static void main(String[] arr) {
 				ExecutorService fixedThreadPool = Executors.newFixedThreadPool(4);
 
@@ -118,11 +121,28 @@
 					list.add(future);
 				}
 
-				// 每一条线程的超时时间为1s，谁超时谁就被终止（通过捕捉异常：超时异常，但我们还可以捕捉线程的其他异常比如中断异常）
+				// 每一条线程的超时时间为1s
 				for (Future<String> f : list) {
 					try {
 						System.out.print("开始取返回值：");
-						String s = f.get(1, TimeUnit.SECONDS);
+						String s = f.get(1, TimeUnit.SECONDS);	
+						// 此方法会阻塞到，任何一条线程执行完毕，否则的话，抛异常，然而 catch 中的 f.cancel(true); 会随机的调用活跃的某一条线程，此方法还不如使用，线程池整体超时限制
+							/*
+							try {
+								if (!fixedThreadPool.awaitTermination(600, TimeUnit.SECONDS)) {  // 最多阻塞等待600秒，否则超时
+									log.warn("运行时间超过600秒，线程池将关闭！");
+									for (Future<?> task : tasks) {
+										if (!task.isDone()) {
+											task.cancel(true);
+										}
+									}
+								}
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							} finally {
+								fixedThreadPool.shutdownNow();
+							}
+							*/
 						System.out.println(s);
 					} catch (Exception e) {
 						f.cancel(true);		// 这个会触发线程中断，注意：如果线程里边有处理中断异常的话，线程后续代码还是会继续跑的，慎处理
@@ -136,13 +156,30 @@
 				while (!fixedThreadPool.isTerminated());
 				System.out.println("定时器结束...");
 			}
-		4、线程中断的知识
-			Thread.currentThread().isInterrupt();		// 中断线程
-			Thread.currentThread().isInterrupted();		// 判断线程是否中断
-			Thread.interrupted();						// 判断线程是否中断，并且取消中断状态
-            
+		4、线程中断的知识		// 下面三个方法的区别参考 https://www.cnblogs.com/w-wfy/p/6414801.html
+			1、 Thread.currentThread().interrupt();			// 中断(Thread.currentThread())线程
+				1、使线程的状态为将被置为"中断"状态。不是终止
+				2、你可以使用 Thread.currentThread().isInterrupted(); 方法监视，中断了此方法返回 true
+				3、你也可以使用那些抛 InterruptedException 来监视，一旦中断，此方法立即抛 InterruptedException 异常
+			2、 Thread.currentThread().isInterrupted();		
+				// 判断(Thread.currentThread())线程是否中断，使用这个方法就可以，比如 fixedThreadPool.shutdownNow() 会导致调用活跃的线程的 interrupt() 方法
+				// 这时就可以使用此方法，做一些善后处理了
+			3、 Thread.interrupted();						// 判断当前线程是否中断，并且取消中断状态
+			
+			4、 fixedThreadPool.shutdown() 和 fixedThreadPool.shutdownNow()		的比较
+				1、 shutdown()   // (阻塞方法)会等到 活跃的线程和等待的线程全部执行完才会关闭线程池
+				2、 shutdownNow	 // 会立即关闭线程池(但是也是稍微的延迟一小会，但是可以忽略)，会调用活跃的线程的 interrupt() 方法，等到的线程就不启动了
+
+			1、 问题
+				1、 主线程被kill了，那么子线程应该也会被kill，比如tomcat被kill 那么那些子线程也会被kill(好像之前学linux时是这样的，有空去验证一下)
+				2、 能设置线程池里面的每一条线程的超时时间吗？
 
 7、IO流看代码(看代码)
+8、 获取路径的问题
+	this.getClass().getResource("/").getPath()	// 获取类的根路径
+	this.getClass().getResource("").getPath()	// 获取当前类的路径
+	ClassLoader.getSystemResources("")			// 获取类的根路径 和 this.getClass().getResource("/").getPath() 一样（但是 jar包的话用 ClassLoader.getSystemResources("") 才能取到路径）
+	Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);		// ClassLoader.getSystemResources("") 和一样
 8、二进制运算(以后再去学吧，等学到数据类型时再学)
 	1、记住七句话：
 		1、二进制的最高位是符号为：0表示正数，1表示负数。

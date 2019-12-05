@@ -5,15 +5,24 @@
 1、j2se篇
 	1、安装jre（java运行环境），这个其实jdk就有了，但是装这个有好处（他修改系统的注册表，不用我们手动配置lib(一些需要依赖的类库)的环境变量）
 	2、打jar包：到你的你编译好的class文件的最上层目录运行：C:\jdk1.7.0_80\bin\jar -cvf xx.jar *.*  或者 C:\jdk1.7.0_80\bin\jar -cvf xx.jar *
+		1、 可运行jar包 : jar -cef com.Dog Dog.jar test		// 执行此命令时要在class主目录下面
+			c - 代表生成新的jar包；
+			e - 代表可执行的类，亦即main方法所在的类。书写时要加上包名，在本例中是后面的 com.Dog；
+			f - 代表生成的jar包的名称，在本例中是CardLayoutDemo.jar。此包名可以随意命名，没有规定；
+			test - 最后面的这个参数表示将test目录下的所有文件都打包放到新的jar包中
+
 	3、编译成.class文件，在命令行窗口下运行：C:\Program Files\Java\jdk1.7.0_80\bin\javac C:\javaCode\HelloWord.java
 	4、执行编译后的文件，在命令行窗口下运行：java HelloWorld
 		1、要运行你编译过后的文件，还要加一个环境变量：classpath=.;你编译后的class文件所在目录（点代表当前工作目录，但是jdk1.6已经把rt.jar和当前目录给设进去了）
 		2、这个可以不用配置jdk的bin目录，他可能用的是jre的 java.exe
-	5、 运行jar包 ： nohup java -jar dataApi-produce.jar  > dataApi.out  &		// 
+	5、 运行jar包 ： nohup java -jar dataApi-produce.jar  > log.out  &		// 
 		nohup	    - 意为后台不挂断运行，与是否账号退出无关 
 		&		    - 代表后台运行  
 		> log.file  - 输出的日志加入log.file，
-		-Dspring.profiles.active=dev		// 还可以加入java的运行参数 比如 -Dspring.profiles.active=dev
+		-Dspring.profiles.active=dev		// 还可以加入java的运行参数 比如 -Dspring.profiles.active=dev  好像也可以 --moose.task.maxThreadCount=4 这样
+	 -Djoey.elasticsearch.profiles.active=prod -Djoey.neo4j.profiles.active=prod 
+	nohup java -jar app.jar --moose.task.maxThreadCount=4 >> log.out &
+
 2、j2ee篇
 	1、看看hibernate的使用反射机制的源码
 	2、区块链\比特币
@@ -30,64 +39,73 @@
 1、数据库升级机制
 	1、什么时候执行好呢
 	2、分库
-2、commons-codec是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等
-3、字典研究，项目启动慢是不是他的原因，hanl
+2、 commons-codec 是Apache开源组织提供的用于摘要运算、编码解码的包。常见的编码解码工具Base64、MD5、Hex、SHA1、DES等
 4、数据库的触发器
-5、idea自动编译java,和忽略警告
-
-
-
-
-
-
 
 
 	
 		   
-	
 
 2019年后半年
 	1、 nginx 、 springsecrity 、 Shiro 、 接口文档框架(Swagger) 、 java 性能测试工具
-	2、redis的使用场景
-	3、mongo的使用场景
-	4、neo4j的使用场景
+	2、 redis的使用场景
+	3、 mongo的使用场景
+	4、 neo4j的使用场景
 	5、 douker 自动化部署 
 
 
-1、问题
-	1、报错了 Caused by: com.fasterxml.jackson.databind.JsonMappingException: (was java.lang.NullPointerException) (through reference chain: java.util.HashMap["0"]->java.util.LinkedList[19])
-			int count = organizationRepo.updateMergeStatusByIds(successOrgIds, 1);
-	2、3的报错可能和我的线上项目差不多
-	3、感觉 去除了多线程的原因 organization = organizationRepo.findByName(orgName); // 还是很多为空的，会导致创建关系不成功
-	4、 relativeProject = projectRepo.save(endNode); // 如果是更新的话，为空的话会被清空吗？
-	5、 redis端口/sentinel端口
-		172.16.147.15:6300/26300
-		172.16.57.178:6300/26300
-		172.16.146.243:6300/26300
-
-
 待做
-	1、 dataApi接口 启动脚本
-	2、 redis做集群
-	3、 企业更新时间，再查一下天眼查的更新时间
-	4、 neo4/es bidiId为空（因为在enterpriseprofile没找到对应的企业）
-	5、 把合并的更新相关企业的改成 update对应的不要update全部，而且其他实体类要注意新增的字段
-	6、 有空去看 http://www.bxkc.com/gjjs/B00208.html 这里的多选地区
- 
+	1、 redis做集群
+	3、 sys_document 分表后，负责维护的项目
+		1、 bxkc_data_bigdata(要素提取)
+			
+		2、 bidi-data-api
+		3、 moose.document-push
+		4、 moose.enterprise-report		// 目前还未用到 sys_document 后续可能会用到
 
+
+1、 bxkc_data_bigdata(要素提取)
+	用户名 bxkc 数据库 bxkc
+2、 bidi-data-api(数据干预)
+	用户名 bxkc 数据库 bxkc
+3、 moose.document-push(公告推送)
+	用户名 bxkc 数据库 bxkc
+	用户名 bxkc 数据库 moose
+4、 moose.enterprise-report(企业报表接口)
+	用户名 bxkc 数据库 bxkc
+5、 bxkc_data_distinct(公告去重)
+	1、 mysql bxkc_read=bxkc_20RE18AD
+		sys_document(只读)
+	2、 mongo
+		
+
+	5、要素提取， 招标预算价 说没保存，但是我第二次去跑一次又可以了
+		1、 biddingBudget 中标公告没有这个字段，但是会有合并公告的动作
+	6、一键登录做扩展（比如要区分用户是通过一键登录自动注册的）
+	7、标讯快车的企业搜索变成模糊搜索
+	8、m站详情页要用404
+	9、 啊彪改了 bxkc 的密码 对 enterprise-report 可能需要修改
+		1、 这个项目只对 EnterpriseReport 读的操作
+	9、企业报表生成 bidNumber > 10 生成
+	9、000345075-1574933065273-46 富哥说叫我去看一下订单完成后，延迟升级
+	
+	1、 企业画像需要做的事情
+		1、 热门关键字 和 推荐企业 做后台配置界面	// 好了，但是推荐企业需要改成去读 mongo的
+		4、 增加四个表
+			bxkc_popular_keywords(热搜) 
+			bxkc_myrecommend(推荐) 
+			bxkc_mysearchkeyword_org(搜索历史) 
+			bxkc_mycollection_enterprise(我的收藏(企业))
+			bxkc_mybrowse_org(企业浏览记录)
+		5、 用户+会员等级+服务(权限) 整理
+			1、 柳裕新加的 bxkc_price(标讯没有的) 可能要废弃了，使用原有的 sys_level_price
+		6、企业画像推荐列表 的提示冲突了
+		7、公告详情的改造
+		8、会员权限的改造(这个需要下单那边配合)
+			有空去整一下会员权限的文档
+		8、 标讯快车手工录入的没有uuid需要补上
 1、问题
-	1、 32.png 找企业搜索地区不准确（这个比较麻烦）
-	2、 企业查询列表（查询地区要改一下）
-	3、 右边的轮播不动
-	4、 sysDocument 分表后的工作
-	5、 支付后没有重新去支付宝校验订单，就直接升级用户等级了
-		1、 点击去支付调用 getordernum.do 接口
-		2、 然后请求支付宝的接口（这个可能也是转给后台去请求支付宝的）
-		3、 支付成功或者失败再次调用后台的 memberUpgrade.do 接口
-		
-		
-
-
+	
 
 1、前端经验
 	1、 jsObj.forEach(fun{});不兼容ie8，但是jqObj.each();支持
@@ -97,5 +115,129 @@
 
 
 
+
+
+
+
+1、 用户行为分析报表
+	1、报表字段
+		1、基础信息(除内部)
+			日期						// 当天日期
+			当天注册					// 当天注册的用户
+			日积累					    // 截止今天所有的注册量
+		2、登录情况(除内部)
+			当天登录					// 当天登录			（同一个用户一天登录多次算1次）
+			当天付费登录				// 登录（付费的用户，过期不算付费）
+			当天未付费登录				// 当天登录 - 付费登录
+			当天去除付费、新增			// 当天登录 - 付费登录 - 当天新增的用户
+			活跃率					    // 当天登录/日积累
+		3、浏览行为(除内部)
+			当天登录无浏览				// 当天登录没有浏览公告的
+			当天未付费看满1条			// 当天看满1条，没有付费的
+			当天未付费看满2条			 
+			当天未付费看满5条
+			当天未付费看满10条
+			当天未付费看满15条
+			当天未付费看满20条
+		4、营收(除内部)
+			付费客户					// 当天付费（同一用户多次算一次）
+			收入						// 所有收入
+			注册转换付费率				// 付费客户/当天注册
+	2、涉及到的表
+		1、 b2c_mall_staff_basic_info(用户表)
+			applyTime(DATETIME)	// 注册时间
+		2、 bxkc_login_info
+			loginTime		// 登录时间
+			operate_type	// 操作类型(10=登陆,20=唤醒)
+			userType		// 用户类型（01内部用户 02供应商 03分销商）+上打了内部标签的
+		3、 bxkc_payment_order(订单表)
+		4、 bxkc_mybrowse(公告浏览记录)
+			1、 新加 bxkc_mybrowse_day 公告浏览统计（每个用户按天统计）		
+				1、表结构
+					create table bxkc_mybrowse_day(
+					  id bigint(20) primary key auto_increment comment '主键',
+					  userid varchar(100) NOT NULL COMMENT '用户id' ,
+					  browse_date varchar(20) NOT NULL COMMENT '浏览日期，精确到天',
+					  num int COMMENT '当天浏览的数量'
+					) comment '公告浏览统计（每个用户按天统计）'
+					engine=InnoDB collate=utf8_bin;
+					create index bxkc_mybrowse_day_userid on bxkc_mybrowse_day (userid);
+					create index bxkc_mybrowse_day_browse_date on bxkc_mybrowse_day (browse_date);
+				2、代码维护
+					新增
+					删除需要删除吗
+
+	3、剩余要做的事情
+		1、 等富哥代码写好了，把 report 代码合并到 dev 并且测试
+		2、 bxkc_mybrowse_day 这个表生产已经有了，但是最好验证一下他的增删改查
+
+
+
+
+
+13533542703		// 小七
+13216628864		// 小七
+16550000		// 开头全是小七的
+18344560792		// 张景霞
+15622774803		// 周乐贤
+13312856589		// 蒋祖富
+15767878598		// 胡艳艳
+13430741690		// 邓佳豪
+13265101824		// 林锦兴
+15018782056		// 吴静江
+13650933659		// 陈家儒
+15290170262		// 张梦辉
+18520595873		// 唐国才
+
+
+
+
+https://item.taobao.com/item.htm?spm=a230r.1.14.53.123a5e2628YaLO&id=585580147993&ns=1&abbucket=17#detail
+
+
+
+
+
+1、  jira 问题：  BDZBW-7 会员权限和支付，购买等修改
+	1、已知的修改
+		1、用户支持成功后，回调升级会员等级时的改造
+			1、自动延期等级比较低的
+		2、用户权限判断的改造
+			1、获取用户当前生效服务项目包括增值服务项目 
+			2、同时把用户过期的服务项目停用
+			
+			3、使用的地方改造
+				1、用户登录				// 刷新一次，不清除 ok
+				2、公告详情				// ok
+				3、招标定制  			// ok
+				4、拟在建项目			// ok
+				5、独家项目				// ok
+				6、审批项目				// ok
+				7、企业画像				// ok
+
+
+	2、其余的
+		1、支付的改造，增加 sysLevelPriceId 
+			1、 官网
+				1、点击立即支付（先创建 业务订单 BxkcPaymentOrder=等待的 需要增加 sysLevelPriceId ）
+					支付宝 ChargeAction
+					微信   PayAction
+			2、 api支付
+			3、 M站的支付
+			
+	3、支付宝的 
+		return_url 和 notify_url 有什么区别		// 测试环境要改一下测试库
+	4、待做
+		2、 有一个复杂的场景以后优化
+
+BxkcMemberTermServiceImpl
+	upgrade_web
+
+
+product_code
+
+
+
+双门/156/金色/无边玻璃门体 冷藏+冷冻
 
 

@@ -4,8 +4,8 @@
 
 
 
-
-
+WebStorm与IntelliJ IDEA的区别参考如下，如果你不想使用webstorm 也可以下载插件实现webstorm的所有功能
+	https://www.jianshu.com/p/4431b63e8d50
 
 
 

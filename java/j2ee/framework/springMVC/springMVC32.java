@@ -164,7 +164,7 @@
 				logger.info("主线程结束");
 				return result;
 			}
-		3、 如果是使用 Callable<String> 或者 DeferredResult<String> 做异步请求的服务，需要使用一下四个设置对应的拦截器和对应的任务处理超时和异常处理
+		3、 如果是使用 Callable<String> 或者 DeferredResult<String> 做异步请求的服务，需要使用以下四个设置对应的拦截器和对应的任务处理超时和异常处理
 			@Override
 			public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 				configurer.registerCallableInterceptors();
@@ -172,6 +172,7 @@
 				configurer.setDefaultTimeout(1);
 				configurer.setTaskExecutor();
 			}
+		4、 总结： 这样异步之后我们的tomcat的程序池空闲的线程就多了，但是前台还是要等到子线程处理完成才可以得到相应，所以前台应该也是异步的调用
 	2、 @PathVariable 注解可以取得 @GetMapping("/{id}") id的值
 10、 @ControllerAdvice 全部的controllerr的增强器 有空去看
 	1、  处理所有控制器抛出的异常统一处理

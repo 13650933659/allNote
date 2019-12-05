@@ -44,7 +44,7 @@
 		1、<!-- -->
 		2、<%-- -->：建议用这一种减少网络传输的开销
 
-4、jsp三大标签：标签使用原则：jstl+el首先，如果有需求就用（jstl+el+struts混用可能会对文件上传支持更好一点因为有一个文件域控件）
+4、jsp三大标签：标签使用原则： jstl+el首先，如果有需求就用（jstl+el+struts混用可能会对文件上传支持更好一点因为有一个文件域控件）
 	1、自定标签不讲了（即：老程序员喜欢用的）
 	2、jstl标签：在jstl炸包/META-INF/这里就有jstl的一些标签库uri就是用这里库：<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 		1、这里只讲c标签，不讲sql好xml标签

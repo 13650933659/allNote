@@ -13,3 +13,7 @@
 
 
 4、各个数据库的修改字段长度
+
+
+5、 not in 和 not exists
+	参考 https://www.cnblogs.com/xuyufengme/p/9175929.html

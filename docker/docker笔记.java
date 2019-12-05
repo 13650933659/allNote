@@ -27,7 +27,7 @@
 	3、在/etc/sysconfig/docker 文件加入：other_args="--registry-mirror=https://l5k5u5op.mirror.aliyuncs.com"
 	4、重启docker：service docker restart
 	5、ps -ef | grep docker：如果看到--registry-mirror参数说明阿里云的镜像配置成功
-	6、测试一把：docker run hello-world(如果没有此镜像就会去镜像仓库下载)
+	6、测试一把： docker run hello-world(如果没有此镜像就会去镜像仓库下载)
 5、docker的常用命令
 	1、帮助命令
 		1、docker --version
@@ -57,7 +57,7 @@
 			1、docker rmi -f 镜像id1 镜像id2 ：支持批量删除
 			2、docker rmi -f $(docker images -qa)：删除全部
 	3、容器命令
-		1、docker run [options] 镜像id [command] [arg...]：运行镜像实例(容器)
+		1、 docker run [options] 镜像id [command] [arg...]：运行镜像实例(容器)
 			1、options说明
 				--name 容器新的名字，如果不指定他会随便给一个
 				-d 后台运行，并返回容器id
@@ -102,14 +102,17 @@
 		12、查看容器内部细节：docker inspect 容器id
 		13、从容器内拷贝文件到主机上：docker cp 容器id:容器内路径 主机的目标路径
 	4、tomcat容器使用案例
-		1、docker run -it -p 8888:8080 tomcat：运行tomcat容器外部使用8888端口访问
-		2、docker exec -it /bin/bash：进入tomcat容器的home目录可以进行操作，比如删除docs
-		3、docker commit -a="cjr" -m="del tomcat docs" 容器id cjr/tomcat01:1.8：提交我们制定好的tomcat(只提交到本机，没有到远程仓库)
+		1、 docker run -it -p 8888:8080 tomcat：运行tomcat容器外部使用8888端口访问
+		2、 docker exec -it /bin/bash：进入tomcat容器的home目录可以进行操作，比如删除docs
+		3、 docker commit -a="cjr" -m="del tomcat docs" 容器id cjr/tomcat01:1.8：提交我们制定好的tomcat(只提交到本机，没有到远程仓库)		
+			// 学这个是为了更好理解 docker build 因为 build 每执行一步都需要 commit 的，以后我们直接使用 build 即可
+			-a  // 作者
+			-m	// 日志
 	5、数据卷
 		1、方法1直接使用命令添加
 			1、docker run -it -v /宿主机目录a:/容器内目录b centos /bin/bash：带数据卷功能的启动容器，ab之间可以共享，默认是两边都可读写
 			2、docker run -it -v /宿主机目录a:/容器内目录b:or centos /bin/bash：带数据卷功能的启动容器，ab之间可以共享，主机可读写，容器只读
-			3、通过1,2的启动之后，可以使用docker inspect 容器id验证数据卷是否绑定成功，挂载主机目录出现cannot open directory .: Permission denied 解决办法：在挂载目录后多加一个--privileged=true参数即可
+			3、通过1,2的启动之后，可以使用docker inspect 容器id (验证数据卷是否绑定成功)，挂载主机目录出现cannot open directory .: Permission denied 解决办法：在挂载目录后多加一个--privileged=true参数即可
 		2、使用dockerfile添加
 			1、创建文件/mydocker/dockerfile，增加如下内容
 				# 解释：继承centos的dockerfile,在容器中创建dataVolume_c1和dataVolume_c2两个数据卷，主机对应的卷直接使用docker inspect查
@@ -118,33 +121,34 @@
 				CMD echo "finished,--------success1"
 				CMD /bin/bash
 			2、docker build -f /mydocker/dockerfile -t zzyy/centos：生成新的centos镜像(增强了启动之后就会创建两个数据卷)
+				-f  // 指定 dockerfile 文件
 		3、数据卷-容器间的数据传递共享(--volumes-from：就像主从复制一样，下列三者之间互相同步)
-			1、启动父容器：docker run -it --name dc01 zzyy/centos
-			2、dc02继承dc01：docker run -it --name dc02 --volumes-from dc01 zzyy/centos
-			3、dc03继承dc01：docker run -it --name dc03 --volumes-from dc01 zzyy/centos
+			1、启动父容器： docker run -it --name dc01 zzyy/centos
+			2、dc02继承dc01： docker run -it --name dc02 --volumes-from dc01 zzyy/centos
+			3、dc03继承dc01： docker run -it --name dc03 --volumes-from dc01 zzyy/centos
 	6、Dockerfile文件：是由一系列命令和参数构成的脚本
 		1、构建的三部曲
-			1、编写Dockerfile文件
-			2、docker build
-			3、docker run
+			1、 编写 Dockerfile 文件
+			2、 docker build
+			3、 docker run
 		2、Dockerfile内容基础知识
 			1、每条保留字指令都必须大写字母
 			2、指令从上到下执行
 			3、#表示注释
 			4、每一条指令都会创建一个新的镜像层，并且对镜像进行提交
 		3、保留字指令
-			1、FROM：基础镜像，像父亲
-			2、MAINTAINER：镜像的维护者姓名和邮箱地址
-			3、RUN：容器构建时需要运行的命令
-			4、EXPOSE：当前容器对外暴露的端口
-			5、WORKDIR：指定创建容器后，终端的落脚点
-			6、ENV：用来构建进行过程中设置的环境变量
-			7、COPY：可以将宿主机的文件拷贝到容器
-			8、ADD：带解压缩功能的copy，可以将宿主机的文件解压拷贝到容器
-			9、VOLUME：数据卷，用于容器数据持久化
-			10、CMD：指定容器启动时要运行的命令，只有最后一个生效，也会被docker run参数替换
-			11、ENTRYPOINT：指定容器启动是要运行的命令，和docker run参数一并起作用
-			12、ONBUILD：当被继承时触发的脚本
+			1、 FROM ：基础镜像，像父亲
+			2、 MAINTAINER ：镜像的维护者姓名和邮箱地址
+			3、 RUN ：容器构建时需要运行的命令
+			4、 EXPOSE ：当前容器对外暴露的端口
+			5、 WORKDIR ：指定创建容器后，终端的落脚点
+			6、 ENV ：用来构建进行过程中设置的环境变量
+			7、 COPY ：可以将宿主机的文件拷贝到容器
+			8、 ADD ：带解压缩功能的copy，可以将宿主机的文件解压拷贝到容器
+			9、 VOLUME ：数据卷，用于容器数据持久化
+			10、 CMD ：指定容器启动时要运行的命令，只有最后一个生效，也会被docker run参数替换
+			11、 ENTRYPOINT ：指定容器启动是要运行的命令，和docker run参数一并起作用
+			12、 ONBUILD ：当被继承时触发的脚本
 		4、base镜像(scratch)：docker hub中99%的镜像都是从base镜像构建出来的
 		5、自定义镜像的案例(vim支持 网络配置支持 登录后默认路径)
 			1、自定义mycentos镜像
@@ -161,8 +165,8 @@
 						CMD echo $MYPATH
 						CMD echo "success--------------ok"
 						CMD /bin/bash
-				2、构建成本地镜像：docker build -t mycentos:1.3 .(如果你的文件名为Dockerfile就不用-f 文件名)
-				3、运行：docker run -it mycentos:1.3
+				2、构建成本地镜像： docker build -t mycentos:1.3 .(如果你的文件名为Dockerfile就不用-f 文件名)
+				3、运行： docker run -it mycentos:1.3
 				4、列出镜像变更历史：docker history 镜像名:tag
 			2、CMD和ENTRYPOINT的案例(都是指定容器启动是要运行的命令)
 				1、CMD案例(run参数会覆盖cmd)

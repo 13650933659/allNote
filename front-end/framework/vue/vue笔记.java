@@ -1,5 +1,6 @@
 
-看完 16
+
+路线就是es6,nodejs,vue基础语法,webpack,vuerouter,vuex
 
 1、 作者：尤雨溪
 2、 引入 <script type="text/javascript" src="../js/vue.js"></script>
@@ -293,6 +294,71 @@
 				3. 使用指令
 					v-my-directive='xxx'	// xxx好像没什么用
 
+	17、插件
+		1、 插件文件 vue-myPlugin.js 
+			(function (window) {
+			  const MyPlugin = {}
+			  MyPlugin.install = function (Vue, options) {
+				// 1. 添加全局方法或属性
+				Vue.myGlobalMethod = function () {
+				  console.log('Vue函数对象的myGlobalMethod()')
+				}
+
+				// 2. 添加全局资源
+				Vue.directive('my-directive',function (el, binding) {
+				  el.textContent = 'my-directive----'+binding.value
+				})
+
+				// 4. 添加实例方法
+				Vue.prototype.$myMethod = function () {
+				  console.log('vm $myMethod()')
+				}
+			  }
+			  window.MyPlugin = MyPlugin
+			})(window)
+		2、 使用
+				<script type="text/javascript" src="vue-myPlugin.js"></script>
+				<script type="text/javascript">
+				  // 声明使用插件(安装插件: 调用插件的install())
+				  Vue.use(MyPlugin) // 内部会调用插件对象的install()
+
+				  const vm = new Vue({
+					el: '#test',
+					data: {
+					  msg: 'HaHa'
+					}
+				  })
+				  Vue.myGlobalMethod()
+				  vm.$myMethod()
+				</script>
+
+
+
+	18、使用vue创建项目
+		1、安装好 nodejs 和 npm 
+		2、 npm install -g cnpm --registry=https://registry.npm.taobao.org 听说这个淘宝的 npm 镜像仓库，会比较快 使用命令 把 npm 改为 cnpm
+		2、安装 vue-cli : npm install -g vue-cli 安装之后就可以使用 vue 命令了
+		3、创建我们的本地项目
+			1、 vue init webpack vue_demo	// 初始化项目
+				? Project name 项目名称必须小写
+				? Project description 项目描述
+				? Author 项目作者
+				? Vue build standalone				// 回车即可
+				? Install vue-router? No			// 暂时不按照路由
+				? Use ESLint to lint your code? Yes	// 先用一下
+				? Pick an ESLint preset Standard	// 回车即可
+				? Set up unit tests No
+				? Setup e2e tests with Nightwatch? No
+				? Should we run npm install for you after the project has been create	// 问你怎么下载你的项目
+					Yes, use NPM
+					Yes, use Yarn
+					No, I will handle that myself	
+				// 我这里就选择 No, I will handle that myself 
+				cd vue_demo
+				npm install
+				npm run dev
+				npm run build	// 打包，然后会生成 dist 文件夹，就可以交给后端工程师了
+	19、在 idea 搭建webpack项目参考： https://www.cnblogs.com/wyq-web/p/9639274.html
 
 
 
@@ -300,20 +366,24 @@
 
 
 
+1、理解
+	eslint		// 规范的检查
+	webpack		// 模块的打包工具（把 .js/.sass/.vue/.less 等等 打包成 .js/.css 浏览器可以运行的代码）
 
 
+1、 element UI的使用：
+	1、找官网  http://element.eleme.io/#/zh-CN/component/quickstart
+	2、安装  cnpm i element-ui -S         -S表示  --save
+	3、 main.js 引入element UI的css 和 插件，这种事全部引入，可以考虑使用按需引入
+		import ElementUI from 'element-ui';
+		import 'element-ui/lib/theme-chalk/index.css';
+		Vue.use(ElementUI);
+	4、/webpack.config.js  配置file_loader	（我没这个问题）      http://element.eleme.io/1.4/#/zh-CN/component/quickstart
+		去 /package.json 检查是否安装了 file-loader ，如果没安装则使用 cnpm install file-loader --save	// 或者 --save-dev
+		  {
+			test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
+			loader: 'file-loader'
+		}
+	5、看文档直接使用。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+http://localhost:8086/vue-admin/static/js/app.9e989bbda849dadd0e63.js

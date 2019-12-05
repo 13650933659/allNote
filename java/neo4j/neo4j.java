@@ -26,7 +26,7 @@
 		4、删除节点：match(d:Dept) delete d				// 如果有关系的话使用 match(d:Dept) detach delete d 他会清除所有关系然后在删除
 		5、更新属性：match(d:Dept{name:'zs'}) set d.name='zs2',d.age=10;	// 没有属性就会增加
 		6、排序：match(d:Dept) return d order by d.id  // 用id排序默认升序，降序可以使用desc
-		7、联合多个查询结果：match(d:Dept{name:'zs1'}) return d.name as name union match(d2:Dept{name:'zs1'}) return d2.name as name  // 如果要合并相同行可以使用union all
+		7、联合多个查询结果：match(d:Dept{name:'zs1'}) return d.name as name union match(d2:Dept{name:'zs1'}) return d2.name as name  // 如果不合并相同行可以使用union all
 		7、合并相同数据：match (o:Organization)-[r]->(p:Project) return distinct  id(o);
 		8、分页：match(d:Dept) return skip 10 limit 10  // 跳过前10行，取十行
 		9、处理空is null和is not null：match(d:Dept{name:'zs1'}) where d.id is not null return d	// 为空或者没有此字段的，不包括空字符串的，要判断空字符串使用下面的
@@ -53,7 +53,7 @@
 			Match (o:Organization)-[r]->(p:Project) where o.name in['比地1','比地2','比地3'] and type(r) in['ZhaoBiaoRelation','ZhongBiaoRelation']  return o.name as 名称,count(*) as 招投标数 order by  count(*) desc
 
 
-
+Match (o:Organization)-[r]->(p:Project) where o.name='上海雅轩办公家具有限公司' return count(r);
 
 
 
@@ -92,7 +92,23 @@ neo4j java客户端
 
 
 
-45548996
-50000000
 
-50000000
+1、 慢的查询 
+	查多种关系 type(r)='TouBiaoRelation' 或者 type(r) in ['ZhaoBiaoRelation'] 比 (o:Organization)-[r:ZhaoBiaoRelation]->(p:Project) 慢几十倍，但是也要看情况，再去优化
+
+
+
+
+
+
+
+
+
+
+http://www.bidizhaobiao.com/info-32782538.html  
+http://www.bidizhaobiao.com/info-35128298.html  
+http://www.bidizhaobiao.com/info-41452611.html   
+http://www.bidizhaobiao.com/info-50077159.html   
+http://www.bidizhaobiao.com/info-67992679.html
+
+

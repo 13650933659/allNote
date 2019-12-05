@@ -145,6 +145,7 @@
 			2、ls -a：显示当前目录下的所文件和目录包括隐藏的
 			3、ls -l：显示当前目录下的所文件和目录，以列表方式
 			4、ls -al：显示当前目录下的所文件和目录a+l
+			5、 ls -lta | grep ".pdf" | head -n 10 |  awk '{print $NF}' > data.txt		// 把此目录的 .pdf 文件名称存到 data.txt
 		3、cd
 			1、cd ~：切到用户的home
 			2、cd ..：切到上一级目录
@@ -297,7 +298,7 @@
 			5、永久挂载
 				1、vim /etc/fstab：打开fstab在最后一行加入：/dev/sdb1 /home/newdisk ext4 defaults 0 0
 	24、磁盘使用情况查询
-		1、df -lh：查看系统所有磁盘的使用情况
+		1、 df -lh ：查看系统所有磁盘的使用情况
 		2、查看指定目录的磁盘占用情况
 			1、du -ach /home/
 				-s 指定目录占用大小汇总
@@ -439,6 +440,16 @@
 	2、查看自己安装的contos的版本信息：lsb_release -a(centos7无此命令)
 	3、getconf LONG_BIT：查看系统的是32为还是64位
 
+	4、 查看某文件夹下文件的个数
+　　	ls -l |grep "^-"|wc -l 或 find ./company -type f | wc -l
+
+　　5、 查看某文件夹下文件的个数，包括子文件夹里的。
+　　	ls -lR|grep "^-"|wc -l
+
+　　6、 查看某文件夹下文件夹的个数，包括子文件夹里的。
+　　	ls -lR|grep "^d"|wc -l
+
+
 问题
 	1、用户属于多个组怎么弄呢？
 	2、删除组，然后组用户怎么办？
@@ -449,9 +460,6 @@
 
 
 看完57
-
-
-
 
 
 

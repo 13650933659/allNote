@@ -1,4 +1,4 @@
-
+DocumentDetails
 
 
 讲师-周丰阳
@@ -149,7 +149,7 @@
 	1、日志门面+实现
 		1、日志门面有：JCL(Jakarta Commons Logging),SLF4j,Jboss-logging	
 		2、日志实现有：JUL(java.util.Logging),Log4j->Log4j2->Logbak
-		3、总结：门面选slf4j，实现选log4j2或者logbak，因为jcl他老了，并且slf4j和log4j2和logbak是同一个人写的
+		3、总结：门面选slf4j，实现选log4j2或者logbak，因为jcl他老了，并且 slf4j 和 log4j2 和 logbak 是同一个人写的
 	2、日志的统一（ slf4j+logbak 或者 slf4j+log4j2 ）；
 		1、排除其他日志框架门面，比如spring的jcl门面，这个springboot已经帮我们移除了，其他的门面就要自己去排除了
 			<dependency>
@@ -164,7 +164,7 @@
 			</dependency>
 		2、springboot自动帮我们引入了 jul-to-slf4j 、log4j-over-slf4j、jcl-over-slf4j等等其他门面的偷天换日包(最后全部调用slf4j)
 		3、接下来就是实现了
-			1、如果你直接使用logbak你就不用配置了，springboot默认就是使用logbak
+			1、如果你直接使用 logbak 你就不用配置了，springboot 默认就是使用 logbak
 			2、选用log4j2就要使用如下配置
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
@@ -181,7 +181,7 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-log4j2</artifactId>
 				</dependency>
-			3、选用log4j，这个没意义，log4j不好，而且又要加入适配包，所以不用
+			3、选用 log4j ，这个没意义， log4j 不好，而且又要加入适配包，所以不用
 	3、使用
 		1、代码使用
 			public void contextLoads() {

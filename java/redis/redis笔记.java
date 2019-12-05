@@ -192,5 +192,4 @@
 
 
 
-{bidiIds:[1,2]}
-
+moose-enterprise-report-api

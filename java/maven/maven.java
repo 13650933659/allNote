@@ -68,7 +68,7 @@
 
 
 10、settings.xml的配置说明
-	1、配置创建maven项目默认使用的jdk版本
+	1、配置创建maven项目默认使用的jdk版本，在<profiles>标签下面加入下面代码
 		<profile>
 		  <id>jdk-1.8</id>
 		  <activation>
@@ -82,7 +82,7 @@
 			<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 		  </properties>
 		</profile>
-	2、maven的仓库
+	2、maven的仓库，在<mirrors>标签配置如下代码
 		1、全球中心仓库(配置镜像提高下载速度，优先阿里的再去中央仓库)
 			<mirror>
 				<id>alimaven</id>
@@ -97,7 +97,7 @@
 				<mirrorOf>central</mirrorOf>
 			</mirror>
 		2、本地仓库
-			1、默认位置：C:\Users\Chenjiaru\.m2\repository，修改<localRepository>新的位置</localRepository>
+			1、默认位置：C:\Users\Chenjiaru\.m2\repository，修改<localRepository>新的位置</localRepository>，这个一般默认不改的
 11、maven 安装jar包到本地
 	1、安装指定文件到本地仓库命令： mvn install:install-file
 		-DgroupId=<groupId>       : 设置项目代码的包名(一般用组织名)

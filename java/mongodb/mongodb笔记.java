@@ -89,10 +89,11 @@
 			1、{'f.name':'a'}	// 如果是内嵌的对象，则一定要使用引号包起来
 			1、var stu_id = db.stu.findOne()._id; db.order.find({stu_id:stu_id})	// 可以结合js语法查询
 			2、$ne(不等于)：{field:{$ne:v}}
+				db.enterprise_profile.find({tycUpdateTime: {$ne:null}}).count();		// tycUpdateTime != null
 			3、$nin(not in)：{field:{$nin: [v1,v2]}}
 			4、$all(用于数组)：{field:{$all:[v1,v2..]}}
-			5、$exists(不存在field列的)：
-				1、 db.stu.find({name:{$exists:1}})		// 不存在name字段的，但是不包括 name=null的，如果需要包括则使用 db.stu.find({"check":null})
+			5、$exists(存不存在field列的)：
+				1、 db.stu.find({name:{$exists:0}})		// 不存在name字段的，但是不包括 name=null的，如果需要包括则使用 db.stu.find({"check":null})（如果需要查存在的，把0改成1）
 				2、 db.stu.find({name:null})			// name为null，包括了不存在此字段的，但不包括 name=''
 			6、$nor(所有条件不满足返回true)：{$nor: [条件1,条件2]}
 			7、{$or: [ { status: "A" }, { qty: { $lt: 30 } } ] }	// or

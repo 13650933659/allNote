@@ -229,7 +229,7 @@ curl -XGET 'http://172.16.57.178:9200/organizations/Organization/46502113?pretty
 		{
 		  "query": {
 			"multi_match": {
-			  "query": "深圳市国际招标有限公司",
+			  "query": "比地科技",
 			  "type": "phrase",
 			  "slop": 0,
 			  "fields": [
@@ -264,11 +264,25 @@ curl -XGET 'http://172.16.57.178:9200/organizations/Organization/46502113?pretty
 		也可以把 {"prefix": {"name.keyword": "比地"}} 
 		替换成   {"regexp": {"name.keyword": "比地.*"}}
 
-
-
+{
+  "query": {
+    "match": {
+      "name": "比地科技"
+    }
+  }
+}
 
 1、 公司 ES 的使用
 	
 	1、 head插件： http://47.97.210.202:9100
 	2、 部署路径： /usr/local/elasticsearch-6.4.2
+
+
+
+64157478352834562
+
+64157478352834562
+
+64157478352834562
+
 

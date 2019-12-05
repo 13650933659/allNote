@@ -1,13 +1,27 @@
 
 
 
+0、以下的最好加入以下springcloud的依赖（这个是支持 springboott2.x 的springcloud版本）
+	<dependencyManagement>
+		<!-- springcloud的依赖，按需引入 -->
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Greenwich.SR1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
+	
 1、 springcloud 实战
 	1、Eureka
 		1、引入 eureka-server 组件
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-eureka-server</artifactId>
+				<artifactId>spring-cloud-starter-eureka-server</artifactId>	// 要换成 spring-cloud-starter-netflix-eureka-server
 			</dependency>
 		2、yml配置
 			server: 
@@ -159,6 +173,8 @@
 			public Dept get(@PathVariable("id") Long id) {
 				return service.get(id);
 			}
+			
+
 	5、 hystrix
 		1、hystrix 的 @HystrixCommand 用法，好像上面的 DeptClientServiceFallbackFactory 比这个好用？
 			1、 hystrix 的依赖	// 在provider配置
@@ -198,7 +214,7 @@
 					dept.setDb_source("no this database in MySQL");
 					return dept;
 				}
-	6、 zuul
+	6、 zuul		// 可以略微参考一下 https://blog.csdn.net/u012326462/article/details/80659582
 		1、 zuul 的依赖
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -220,20 +236,21 @@
 			zuul: 
 			  prefix: /atguigu
 			  ignored-services: "*"
-			  #ignored-services: microservicecloud-dept	单个微服务,上面是全部微服务
+			  # ignored-services: microservicecloud-dept	单个微服务,上面是全部微服务 (过滤 1、难道这个是忽略的作用，过滤掉黑名单的ip访问，有空去看看)
 			  routes: 
-				mydept.serviceId: microservicecloud-dept
-				mydept.path: "/mydept/**"	# ""不要了
+				mydept: 
+					serviceId: microservicecloud-dept
+					path: "/mydept/**"	# ""不要的，为了不变绿色
 				
-				#访问 mydept.serviceId 就用 mydept.path 代替
+				#访问 mydept.serviceId 就用 mydept: path 代替
 		3、zuul的作用：路由+代理+过滤三大功能
 			1、路由
-				1、使用了路由地址变化：localhost/dept/get/2 -> myzuul.com:9527/微服务名称/dept/get/2  // 但是之前的地址还能访问吗？都可以
+				1、使用了路由地址变化：localhost/dept/get/2 -> myzuul.com:9527/微服务名称/dept/get/2  // 体现路由，但是之前的地址还能访问吗？都可以
 			2、代理
 				1、代理之后的地址访问： myzuul.com:9527/microservicecloud-dept/dept/get/2 -> myzuul.com:9527/myDept/dept/get/2  // 都可以访问
 			3、过滤
 				1、难道这个是忽略的作用，过滤掉黑名单的ip访问，有空去看看
-		4、主程序 @EnableZuulProxy	// 网关
+		4、主程序 @EnableZuulProxy	// 网关， 好像也要 注解 @EnableEurekaClient
 
 	7、 config // 集中化配置，如果远程配置文件有变化，直接重启 config客户端，还是说重启config服务端，应该是客户端
 		1、 config 服务
@@ -401,15 +418,14 @@
 	1、参考：spring-msg-server\spring-msg-producer\spring-msg-consumer
 	2、参考杨恩雄的
 		1、rabbitmq
-			1、下载安装：Erlang，然后配置 ERLANG_HOME
-			2、下载安装：rabbitmq-server-3.6.11.exe
+			1、下载 otp_win64_20.0.exe 安装一直下一步即可：Erlang，然后配置 ERLANG_HOME
+			2、下载安装：rabbitmq-server-3.6.11.exe 一直下一步即可
 				1、查看插件：rabbitmq-plugins list
-				2、开启管理插件：rabbitmq-plugins enable rabbitmq_management ，然后就可以使用 http://localhost:15672/ 在浏览器管理了，默认账号和密码是guest=guest
-				3、 cd C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.11
+				2、开启管理插件： cd C:\software\openSource\rabbitmpServer3611\rabbitmq_server-3.6.11\sbin 执行 rabbitmq-plugins enable rabbitmq_management ，然后就可以使用 http://localhost:15672/ 在浏览器管理了，默认账号和密码是guest=guest
 		2、kafka(注意这两个软件安装的目录不要太长了)
-			1、解压：zookeeper-3.4.6.tar.gz和解压：kafka_2.11-0.11.0.0.tgz
+			1、解压： zookeeper-3.4.6.tar.gz和解压：kafka_2.11-0.11.0.0.tgz
 			2、把   C:\zookeeper-3.4.10\conf\zoo_sample.cfg 复制一份改名为zoo.cfg放在此目录
-			3、进入 cd C:\zookeeper-3.4.10\bin，启动zookeeper服务输入： zkserver 启动之后窗口不需要关闭，如果启动成功是占用2181端口
+			3、进入 cd C:\zookeeper-3.4.10\bin ，启动zookeeper服务输入： zkserver 启动之后窗口不需要关闭，如果启动成功是占用2181端口
 			4、进入 C:\kafka_2.11-2.0.0\bin\windows，启动kafka输入：kafka-server-start ../../config/server.properties如果启动成功是占用9092端口
 			6、如果有生产者向kafka发送消息了(topic)，查看：进入C:\kafka_2.11-2.0.0\bin\windows输入：kafka-topics --list --zookeeper localhost:2181
 7、bus总线	// 这个没看完

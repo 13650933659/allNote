@@ -42,7 +42,7 @@
 
 			<!-- 定义MybatisPlus的全局策略配置就相当于mybatis的全局配置文件了-->
 			<bean id ="globalConfiguration" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
-				<!-- 自动和db下划线命名做映射，如果你数据库是驼峰反而会报错了，在2.3版本以后，dbColumnUnderline 默认值就是true -->
+				<!-- 自动和db下划线命名做映射，如果你数据库是驼峰反而会报错了（你可以使用 @TableField("companyId") 解决报错，看谁少，少的就写 @TableField 注解 ），在2.3版本以后，dbColumnUnderline 默认值就是true -->
 				<property name="dbColumnUnderline" value="true"></property>
 				<!-- 全局的主键策略0代表自增，这样配置，其他如果是自增的就不用配置(@TableId(value="id" , type =IdType.AUTO)) -->
 				<property name="idType" value="0"></property>
@@ -72,8 +72,8 @@
 				2、T selectOne(@Param("ew" T e));	// 查询一条记录，如果多条会报错
 				3、List<T> selectBatchIds(List<? extends Serializable> id idList);	// 根据id集合获取记录
 				4、List<T> selectByMap(@param("cm") Map<String, Object> columnMap);	// 根据Map<列名->值>获取记录，列名一定要和数据库一样
-				5、List<T> selectByPage(RowBounds rowBounds, @param("ew") Wrapper<T> wrapper)	// 内存分页(不推荐，推荐PageHelper插件，或者mybatisplus自己的)
-					List<Employee> emps =employeeMapper.selectPage(
+				5、List<T> selectByPage(RowBounds rowBounds, @param("ew") Wrapper<T> wrapper)	// 内存分页(不推荐，推荐PageHelper插件，或者mybatisplus自己的)		// 这个可能配置了分页插件， service 也是真正的分页了
+					List<Employee> emps =employeeMapper.	(
 					new Page<Employee>(1, 2),
 					new EntityWrapper<Employee>().between("age", 18, 50).eq("gender", 1).eq("last_name", "Tom")
 					);
@@ -225,8 +225,7 @@
 						System.out.println("是否有上一页: " + page.hasPrevious());
 						System.out.println("是否有下一页: " + page.hasNext());
 
-						//将查询的结果封装到page对象中,直接给前台返回
-						page.setRecords(emps);
+						page.setRecords(emps);	//将查询的结果封装到page对象中,直接给前台返回
 
 					}
 			2、全表操作sql的终止插件(开发环境使用)
