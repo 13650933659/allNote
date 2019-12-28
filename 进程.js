@@ -23,6 +23,8 @@
 	 -Djoey.elasticsearch.profiles.active=prod -Djoey.neo4j.profiles.active=prod 
 	nohup java -jar app.jar --moose.task.maxThreadCount=4 >> log.out &
 
+nohup java -jar bxkc_crawl_config.jar >> log.out &
+
 2、j2ee篇
 	1、看看hibernate的使用反射机制的源码
 	2、区块链\比特币
@@ -174,10 +176,10 @@
 
 
 
+16550000		// 开头全是小七的
 
 13533542703		// 小七
 13216628864		// 小七
-16550000		// 开头全是小七的
 18344560792		// 张景霞
 15622774803		// 周乐贤
 13312856589		// 蒋祖富
@@ -192,20 +194,20 @@
 
 
 
-https://item.taobao.com/item.htm?spm=a230r.1.14.53.123a5e2628YaLO&id=585580147993&ns=1&abbucket=17#detail
-
 
 
 
 
 1、  jira 问题：  BDZBW-7 会员权限和支付，购买等修改
-	1、已知的修改
-		1、用户支持成功后，回调升级会员等级时的改造
-			1、自动延期等级比较低的
-		2、用户权限判断的改造
+	1、 标讯快车官网
+		1、支付的改造 支付宝(ChargeAction) 、微信(PayAction) 
+			1、点击立即支付 先创建 waiting 的 BxkcPaymentOrder ，并且 productCode = sysLevelPriceId 
+		2、用户支持成功后，回调升级会员等级时的改造
+			1、支付成功之后升级时候需要查到 waiting 的BxkcPaymentOrder，再拿到 productCode）
+			2、自动延期等级比较低的
+		3、用户权限(服务项目)判断的改造
 			1、获取用户当前生效服务项目包括增值服务项目 
 			2、同时把用户过期的服务项目停用
-			
 			3、使用的地方改造
 				1、用户登录				// 刷新一次，不清除 ok
 				2、公告详情				// ok
@@ -214,30 +216,446 @@ https://item.taobao.com/item.htm?spm=a230r.1.14.53.123a5e2628YaLO&id=58558014799
 				5、独家项目				// ok
 				6、审批项目				// ok
 				7、企业画像				// ok
+	2、 标讯快车app
+		1、点击立即支付，创建业务订单 （为了兼容 查出 sysLevelPriceId）
+		2、支付成功后的回调（做升级 取到 sysLevelPriceId）
+		3、自动刷新用户权限
+		4、使用权限
+			1、用户登录				// 刷新一次，不清除 ok
+			2、公告详情				// ok
+			3、招标定制  			// ok
+			4、拟在建项目			// ok
+			5、独家项目				// ok
+			6、审批项目				// ok
+			7、企业画像				// ok
 
-
-	2、其余的
-		1、支付的改造，增加 sysLevelPriceId 
-			1、 官网
-				1、点击立即支付（先创建 业务订单 BxkcPaymentOrder=等待的 需要增加 sysLevelPriceId ）
-					支付宝 ChargeAction
-					微信   PayAction
-			2、 api支付
-			3、 M站的支付
-			
-	3、支付宝的 
-		return_url 和 notify_url 有什么区别		// 测试环境要改一下测试库
 	4、待做
-		2、 有一个复杂的场景以后优化
+		2、有一个复杂的场景待研究和测试
+		3、支付宝的 
+			return_url 和 notify_url 有什么区别		// 测试环境要改一下测试库
+		4、在会员等级那里配置产品改造一下
+		5、获取权限那边可能要改一下了（扣除次数就是不要滞后）
+		6、 sysMemberSystemService.delUserRedis(userId);	// (不要注释测试一下) 因为 RedisContantKey.USER_INFO + "_"+userid 存放的是 BaseUser ，有效期是一天，不能每次登陆清一次，如果有此次登陆有效的信息，不要放在这里 
 
-BxkcMemberTermServiceImpl
-	upgrade_web
+2、小七给你的标讯快车的问题
+3、修复标讯快车的修改等级的配置价格那里（参考梦辉的）
+	1、更新时需要更新 sysLevelPrice 表
+	
 
 
-product_code
+1、 待会修改 bxkc-api 的 judgeUserHavePermission
+	levelResult.setStatus(levelResult.getResidue() > 0 ? SysMemberLevelResult.ISOK : SysMemberLevelResult.NO_HAVE_NUM);     // 如果次数已经用完了，需要给一个标记
+
+
+http://localhost:8888
 
 
 
-双门/156/金色/无边玻璃门体 冷藏+冷冻
+
+图片 160
+手机淘宝到
+360手机助手
+喜乐动（备份）
+QQ
+美颜相机
+微信
+广东移动
+豆果美食
+百度地图
+掌上生活（招商）
+支付宝
+全名k个
+酷我音乐
+钉钉
+度小满金融（可要看可不要）
+中国工商银行
+微众银行
+
+铁路12306
+润钱包
+中国建设银行
+蛋壳公寓
+京东
+京东金融
 
 
+
+
+写到推荐信息
+
+
+
+
+
+
+
+function getData(){
+    var bidiId=$("#bidiId").val();
+    var residueDegree=$("#residueDegree").val();
+    var seen=$("#seen").val();//是否已经看过
+    $.ajax({
+        type: "POST",
+        url: basePath+"/zhaotoubiaohappening!getData.do",
+        data: {
+            bidiId:bidiId
+        },
+        success: function(msg){
+            var jsonObject=msg.data;
+            console.info(jsonObject);
+            if(jsonObject != undefined && jsonObject != null){
+                if(jsonObject.zhaobiaoProject.type=='zhaobiao'){
+                    var zhaoList="";
+                    zhaoList+="<h3 class=\"fl-title\">"
+                    zhaoList+="<span class=\"text\">"+jsonObject.zhaobiaoProject.company+"已发布的招标项目 </span>"
+                    if(jsonObject.zhaobiaoProject.list.length>0){
+                        if (residueDegree=='0' && seen=='false'){
+                            zhaoList+="<span class=\"count\">( <strong>***</strong> ) </span>"
+                        }else{
+                            zhaoList+="<span class=\"count\">( <strong>"+jsonObject.zhaobiaoProject.total+"</strong> ) </span>"
+                        }
+                        zhaoList+="<a class=\"more pull-right \" target=_blank style=\"cursor:pointer;\" onclick=\"getdeatil('zhaobiao')\">more</a>"
+                    }else{
+                        zhaoList+="<span class=\"count\">( <strong class=\"grey\">0</strong> ) </span>"
+                        zhaoList+="<a class=\"more pull-right hide\" target=_blank style=\"cursor:pointer;\">more</a>"
+                    }
+                    zhaoList+="</h3>"
+                    if (jsonObject.zhaobiaoProject.list.length>0) {
+                        var zhaoData=jsonObject.zhaobiaoProject.list;
+                        zhaoList+="<div class=\"border company-list\">"
+                        zhaoList+="<ul>"
+                        for(var i=0;i<zhaoData.length;i++){
+                            zhaoList+="<li>"
+                            zhaoList+="<strong class=\"city\">"+zhaoData[i].city+"</strong>"
+                            zhaoList+="<strong class=\"type\">"+zhaoData[i].channelName+"</strong>"
+                            zhaoList+="<a class=\"text pull-left\" target=_blank href=\""+basePath+"/info-"+zhaoData[i].projectId+".html\">"+zhaoData[i].projectName+"</a>"
+                            zhaoList+="<span class=\"date pull-right\">"+zhaoData[i].pageTime+"</span>"
+                            zhaoList+="</li>"
+                        }
+                        zhaoList+="</ul></div>"
+                    }else{
+                        zhaoList+="<div class=\"item-noContent\">"
+                        zhaoList+="<img src=\""+basePath+"/client/img/qyhx/hx_wsj01.png\" alt=\"\">没有查找到相关的信息</div>"
+                    }
+                    $("#zhaoList").html(zhaoList);
+                }
+                if(jsonObject.zhongbiaoProject.type=='zhongbiao'){
+                    var zhongList="";
+                    zhongList+="<h3 class=\"fl-title\">"
+                    zhongList+="<span class=\"text\">"+jsonObject.zhaobiaoProject.company+"已参与的中标项目 </span>"
+                    if(jsonObject.zhongbiaoProject.list.length>0){
+                        if (residueDegree=='0' && seen=='false') {
+                            zhongList += "<span class=\"count\">( <strong>***</strong> ) </span>"
+                        }else{
+                            zhongList += "<span class=\"count\">( <strong>" + jsonObject.zhongbiaoProject.total + "</strong> ) </span>"
+                        }
+                        zhongList+="<a class=\"more pull-right \" target=_blank style=\"cursor:pointer;\" onclick=\"getdeatil('zhongbiao')\">more</a>";
+                    }else{
+                        zhongList+="<span class=\"count\">( <strong class=\"grey\">0</strong> ) </span>"
+                        zhongList+="<a class=\"more pull-right hide\" target=_blank style=\"cursor:pointer;\">more</a>";
+                    }
+                    zhongList+="</h3>"
+                    if (jsonObject.zhongbiaoProject.list.length>0) {
+                        var zhongData=jsonObject.zhongbiaoProject.list;
+                        zhongList+="<div class=\"border company-list\">"
+                        zhongList+="<ul>"
+                        for(var i=0;i<zhongData.length;i++){
+                            zhongList+="<li>"
+                            zhongList+="<strong class=\"city\">"+zhongData[i].city+"</strong>"
+                            zhongList+="<strong class=\"type\">"+zhongData[i].channelName+"</strong>"
+                            zhongList+="<a class=\"text pull-left\" target=_blank href=\""+basePath+"/info-"+zhongData[i].projectId+".html\">"+zhongData[i].projectName+"</a>"
+                            zhongList+="<span class=\"date pull-right\">"+zhongData[i].pageTime+"</span>"
+                            zhongList+="</li>"
+                        }
+                        zhongList+="</ul></div>"
+                    }else{
+                        zhongList+="<div class=\"item-noContent\">"
+                        zhongList+="<img src=\""+basePath+"/client/img/qyhx/hx_wsj01.png\" alt=\"\">没有查找到相关的信息</div>"
+                    }
+                    $("#zhongList").html(zhongList);
+                }
+            }
+        }
+    });
+}
+
+public String getData() throws ParseException {
+		JSONObject param=new JSONObject();
+		param.put("bidiId",bidiId);
+		param.put("pageSize",10);
+		SysLoginUser lgUser = getLoginUser();
+		UserLoginInfo ulInfo = lgUser.getUserLoginInfo();
+		if (ulInfo != null && ulInfo.getUserid() != null) {
+			param.put("userId",ulInfo.getUserid());
+		}
+        System.out.println(DateUtil.format(new Date(),"yyyy-MM-dd"));
+		param.put("beginTime","2010-01-01");
+		param.put("endTime",DateUtil.format(new Date(),"yyyy-MM-dd"));
+		//已发布的招标信息
+		zhaobiaoProject =zhaoZhongBiaoProjectService.zhaoZhongBiaoProject(param,ZHAOBIAO);
+		//参与中标信息
+		zhongbiaoProject =zhaoZhongBiaoProjectService.zhaoZhongBiaoProject(param,ZHONGBIAO);
+		JSONObject object=new JSONObject();
+		object.put("zhaobiaoProject",zhaobiaoProject);
+		object.put("zhongbiaoProject",zhongbiaoProject);
+//		object.put("recentZhaoBiao",recentZhaoBiao);
+		sendToJson(object, true, "查询成功");
+		return NONE;
+	}
+
+
+	public  String getAreaList(String list){
+		String areas="";
+		if(StringUtils.isNotBlank(list)){
+			JSONArray areaList = JSONArray.fromObject(list);
+			if(null!=areaList&&areaList.size()>0){
+				String province ;
+				String city;
+				for(int i=0;i<areaList.size();i++){
+					JSONObject area = areaList.getJSONObject(i);
+					if (area != null) {
+						province = area.getString("area");
+						city =area.getString("city");
+						if("全国".equals(province)){
+							BxkcAreaset areaVo = new BxkcAreaset();
+							areaVo.setCtype("20");
+							List<BxkcAreaset> areasetList = bxkcAreasetService.getBxkcAreasets("", "", areaVo);
+							if(areasetList.size()>0){
+								for(BxkcAreaset bxkcAreaset:areasetList){
+									if("".equals(areas)){
+										areas=getArea(bxkcAreaset.getCname());
+									}else{
+										areas=areas+","+getArea(bxkcAreaset.getCname());
+									}
+								}
+							}
+							return areas;
+						}
+						if("".equals(city)){
+							if("".equals(areas)){
+								areas=getArea(province);
+							}else{
+								areas=areas+","+getArea(province);
+							}
+						}else{
+							if("".equals(areas)){
+								areas=city;
+							}else{
+								areas=areas+","+city;
+							}
+						}
+					}
+				}
+			}
+		}
+		return areas;
+	}
+
+public String getArea(String cname){
+		if("".equals(cname)||cname==null){
+			return "";
+		}
+		long parentId = -1;
+		if (!StringUtil.isEmpty(cname)) {
+			BxkcAreaset areaVo = new BxkcAreaset();
+			areaVo.setCname(cname);
+			areaVo.setCtype("20");
+			List<BxkcAreaset> list = bxkcAreasetService.getBxkcAreasets("", "", areaVo);
+			if (list != null && list.size() > 0) {
+				parentId = list.get(0).getId();
+			}
+		}
+		BxkcAreaset vo = new BxkcAreaset();
+		vo.setParentid(parentId);
+		List<BxkcAreaset> areaList = bxkcAreasetService.getBxkcAreasets("", "", vo);
+		String areas="";
+		if(areaList.size()>0){
+			for (BxkcAreaset bxkcAreaset:areaList){
+				if("".equals(areas)){
+					areas=bxkcAreaset.getCname();
+				}else{
+					areas=areas+","+bxkcAreaset.getCname();
+				}
+			}
+		}
+		return areas;
+
+	}
+
+
+function getTable(data) {
+        if(!$.isEmptyObject(data)){
+            var nums=data.zbNums.split(",");
+            var zbSumPrice=data.zbSumPrice.split(",");
+            var dataList="";
+            dataList+="<tr><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th></tr>"
+            dataList+="<tr>";
+            for(var i=0;i<nums.length;i++){
+                dataList+="<td>";
+                dataList+="<span>中标</span>";
+                dataList+="<strong>"+nums[i]+"</strong>个";
+                dataList+="</td>";
+            }
+            dataList+="</tr>";
+            dataList+="<tr class=\"tr-line\">";
+            for(var i=0;i<nums.length;i++){
+                dataList+="<td>";
+                dataList+="<span>金额</span>";
+                dataList+="<span><strong>"+zbSumPrice[i]+"</strong>万</span>";
+                dataList+="</td>";
+            }
+            dataList+="</tr>";
+        }else{
+            dataList+="<tr>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>中标</span>\n" +
+                "                                        <strong>0</strong>个\n" +
+                "                                    </td>\n" +
+                "                                </tr>\n" +
+                "                                <tr class=\"tr-line\">\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                    <td>\n" +
+                "                                        <span>金额</span>\n" +
+                "                                        <strong>0</strong>万\n" +
+                "                                    </td>\n" +
+                "                                </tr>";
+        }
+        $("#tableId").html(dataList)
+    }
+
+
+
+relationTendereeAndCompetitor
+relationWinTendererAndTenderer
+
+relationWinTenderer
+tenderer
+
+
+portrait.js
+
+
+
+
+
+61407649872728064
+
+
+
+中招项目的问题
+	1、 中标业绩-整体趋势 选择年份换成动态获取
+
+	2、[ 信息检索管理 ] -[ 信息检索列表 ] 和 喜鹊首页的数据对不上
+
+
+
+http://www.bxkc.com/bdqyhx/115234022961434624/zhaobiao/zbxm.html
+
+http://www.bxkc.com/bdqyhx/115234022961434624/zhongbiao/zbxm.html
+
+
+
+
+
+
+
+
+1、解决jira问题 PC-109 1.企业画像详情》已发布的招标项目与企业已发布的招标项目列表的数据对应不上
+2、解决jira问题 PC-108 1.企业画像详情》已参与的中标项目拿错数据了
+
+
+
+http://www.bxkc.com/bdqyhx/115234022961434624/zhaobiao/zbxm.html
+
+
+
+
+
+
+request.loadpicture_a00201

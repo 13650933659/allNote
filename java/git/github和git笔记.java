@@ -57,7 +57,7 @@
 		5、由于远程仓库地址长，所以我们记一下(会记录到.git/config文件)
 			1、查看当前所有的远程地址：git remote -v
 			2、添加远程仓库地址：git remote add [名称] [远程地址]
-				1、例子：git remote add origin http://192.168.2.65:3000/chenjiaru/bd.git
+				1、例子：git remote add origin http://192.168.2.170:3000/bxkc/zhongzhao-frontend.git
 			3、删除远程仓库地址：git remote remove 名称
 		6、把远程库拉下来：git pull origin master
 		7、如果6报错使用：git pull origin master --allow-unrelated-histories(建立他们的关联，并且会把新代码拉下来，)

@@ -19,11 +19,15 @@
 		https://www.cnblogs.com/fhen/p/5896105.html
 
 
-
+完善
 
 
  
 
 
-
+# 生产环境 中招数据库
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://rm-bp1quo50k0q2ok73gi.mysql.rds.aliyuncs.com:3306/zhongzhao?useTimezone=true&serverTimezone=GMT%2B8
+jdbc.username=zhongzhao
+jdbc.password=R%B@KULye3rIYSBY
 

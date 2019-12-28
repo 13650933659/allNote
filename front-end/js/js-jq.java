@@ -53,6 +53,7 @@
         2、	$( 'p').text('hi')《设置获取元素的文本》
         3、	$( 'p').end()《链式操作》
         4、	$( 'p').each()《循环上面的结果》
+			return; 或者 return false; 提前结束循环， return true 相当于 continu  但是没有 break 
         5、	$( 'p').attr('属性名','属性值')《更新p元素属性值》
         6、	$( 'p').remove()/$( 'p').empty()《移除p元素/清空p元素的所有孩子》
         7、	o=$("<div>我是新建的元素</div>");《创建元素》

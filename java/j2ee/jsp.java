@@ -44,6 +44,18 @@
 		1、<!-- -->
 		2、<%-- -->：建议用这一种减少网络传输的开销
 
+
+1、引入
+	1、 异步引入
+		<!--企业信息的头部-->
+		<s:action name="userInfo" namespace="/" executeResult="true">
+			<s:param name="userid">${userid}</s:param>		// 给 userInfo 传参数 ${userid} 是当前页面
+		</s:action>
+	2、静态引入另一个jsp页面，不可传参数，他只会生成一个servlet文件，编译之前合并
+		<%@incluce file="xx.jsp"%> 
+	3、这是就是  <jsp:incluce 动态引入 两个request
+		<s:include value="inc-vars.jsp"></s:include>
+
 4、jsp三大标签：标签使用原则： jstl+el首先，如果有需求就用（jstl+el+struts混用可能会对文件上传支持更好一点因为有一个文件域控件）
 	1、自定标签不讲了（即：老程序员喜欢用的）
 	2、jstl标签：在jstl炸包/META-INF/这里就有jstl的一些标签库uri就是用这里库：<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
