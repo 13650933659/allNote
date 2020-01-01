@@ -149,7 +149,7 @@ DocumentDetails
 	1、日志门面+实现
 		1、日志门面有：JCL(Jakarta Commons Logging),SLF4j,Jboss-logging	
 		2、日志实现有：JUL(java.util.Logging),Log4j->Log4j2->Logbak
-		3、总结：门面选slf4j，实现选log4j2或者logbak，因为jcl他老了，并且 slf4j 和 log4j2 和 logbak 是同一个人写的
+		3、总结：门面选 slf4j ，实现选 log4j2 或者 logbak ，因为jcl他老了，并且 slf4j 和 log4j2 和 logbak 是同一个人写的
 	2、日志的统一（ slf4j+logbak 或者 slf4j+log4j2 ）；
 		1、排除其他日志框架门面，比如spring的jcl门面，这个springboot已经帮我们移除了，其他的门面就要自己去排除了
 			<dependency>
