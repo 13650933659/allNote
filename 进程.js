@@ -113,11 +113,17 @@ nohup java -jar bxkc_crawl_config.jar >> log.out &
 	2、 idea安装less插件 https://www.cnblogs.com/liaojie970/p/6653593.html
 	3、 A.jsp使用 struts 异步引用的jsp里面的引用的js代码，在A.jsp的其他js可以用使用
 
-
-
-
-
-
+2、后端经验
+	1、struts 的标签 <s:iterator
+		<s:iterator var="obj" value="tenderCount.dcountArr" status="st">		// tenderCount.dcountArr 是数组 obj 是字符串
+		<s:iterator id="picture" value="loadpicture_a1" status="st">			// loadpicture_a1 是数组	并且 picture 是对象
+			<div class="item ${st.index==0?'active':''}">
+				<a href="${picture.ahref == null || picture.ahref == '' ? '#' : picture.ahref}" style="display: block; width: 100%;height: 378px; background: url('${picture.imageurl}') no-repeat center top;"></a>
+			</div>
+		</s:iterator>
+		<s:iterator var="city" value="#request.citylist" status="st" >		// 有的是这种写法
+			<li id="danXuan_<s:property value="#st.index"/>" ><s:property value="#city"/></li>
+		</s:iterator>
 
 
 1、 用户行为分析报表
@@ -175,20 +181,20 @@ nohup java -jar bxkc_crawl_config.jar >> log.out &
 
 
 
-16550000		// 开头全是小七的
+	16550000		// 开头全是小七的
 
-13533542703		// 小七
-13216628864		// 小七
-18344560792		// 张景霞
-15622774803		// 周乐贤
-13312856589		// 蒋祖富
-15767878598		// 胡艳艳
-13430741690		// 邓佳豪
-13265101824		// 林锦兴
-15018782056		// 吴静江
-13650933659		// 陈家儒
-15290170262		// 张梦辉
-18520595873		// 唐国才
+	13533542703		// 小七
+	13216628864		// 小七
+	18344560792		// 张景霞
+	15622774803		// 周乐贤
+	13312856589		// 蒋祖富
+	15767878598		// 胡艳艳
+	13430741690		// 邓佳豪
+	13265101824		// 林锦兴
+	15018782056		// 吴静江
+	13650933659		// 陈家儒
+	15290170262		// 张梦辉
+	18520595873		// 唐国才
 
 
 
@@ -236,10 +242,7 @@ nohup java -jar bxkc_crawl_config.jar >> log.out &
 		5、获取权限那边可能要改一下了（扣除次数就是不要滞后）
 		6、 sysMemberSystemService.delUserRedis(userId);	// (不要注释测试一下) 因为 RedisContantKey.USER_INFO + "_"+userid 存放的是 BaseUser ，有效期是一天，不能每次登陆清一次，如果有此次登陆有效的信息，不要放在这里 
 
-2、小七给你的标讯快车的问题
-3、修复标讯快车的修改等级的配置价格那里（参考梦辉的）
-	1、更新时需要更新 sysLevelPrice 表
-	
+
 
 
 1、 待会修改 bxkc-api 的 judgeUserHavePermission
@@ -251,37 +254,15 @@ nohup java -jar bxkc_crawl_config.jar >> log.out &
 
 中招项目的问题
 	1、[ 信息检索管理 ] -[ 信息检索列表 ] 和 喜鹊首页的数据对不上
-	
+	1、启信宝删除接口联调
+	2、要素提取（mongo 和 neo4j 的改造）
+	3、告诉佳豪 他那个 对手检测 取数方式可能需要改动
+		1、先通过 es 拿到 organization （监测的公司）
+		2、然后通过neo4j 查到对应 project		// 到这里就可以了
+		3、找根据docid 再去 solr 拿
+	4、  jira 问题：  BDZBW-7 会员权限和支付，购买等修改 (标讯快车api的待修复)
 
 
-Indexes
-   ON :Project(city) ONLINE 
-   ON :Project(project_code) ONLINE 
-   ON :Project(project_name) ONLINE 
-   ON :Project(province) ONLINE 
-   ON :Project(sub_project_name) ONLINE 
-   ON :Project(upgradeStatus) ONLINE 
-   ON :Project(zhao_biao_id) ONLINE 
-   ON :Project(zhao_biao_page_time) ONLINE 
-   ON :Project(zhao_biao_uuid) ONLINE 
-   ON :Project(zhong_biao_id) ONLINE 
-   ON :Project(zhong_biao_page_time) ONLINE 
-   ON :Project(zhong_biao_uuid) ONLINE 
-
-Constraints
-   ON ( organization:Organization ) ASSERT organization.name IS UNIQUE
 
 
-project_code
-project_name
-sub_project_name
-zhao_biao_page_time/zhong_biao_page_time
 
-
-// 招标
-match (o:Organization{name:{0}})-[:ZhaoBiaoRelation]->(p:Project) where p.zhao_biao_page_time={1} and p.project_name={2} and p.project_code={3} and p.sub_project_name={4}
-// 中标
-match (o:Organization{name:{0}})-[:ZhaoBiaoRelation]->(p:Project) where p.zhong_biao_page_time={1} and p.project_name={2} and p.project_code={3} and p.sub_project_name={4}
-
-
-[B@11a9e7c8
