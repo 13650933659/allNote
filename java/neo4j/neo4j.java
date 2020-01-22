@@ -17,7 +17,7 @@
 		1、默认的数据库目录会在neo4jHome/data/，好像是可以通过neo4jHome/conf/的某一个文件可以改的
 	2、创建节点
 		1、增加
-			1、创建空节点：create(s:Student) // s是节点的名称这个好像没什么用，但是最好给上不然查询不到，Student是节点标签(这个很有用)
+			1、创建空节点：create(s:Student) // s是节点的名称这个好像没什么用，但是最好给上不然查询不到，Student是节点标签(这个很有用) 会动态的创建节点
 			2、创建有属性的节点：create (s:Student {id:10,name:zs})
 			3、创建关系：match(s:Student{name:'zs'}),(t:Teacher{name:'msb'}) create r=(s)-[b:Belong{这里还可以写关系的属性}]->(t) return r;  // 如果要合并已有的关系可以使用merge，s->[b]->t必须全部一样才合并
 		2、查询

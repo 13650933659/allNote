@@ -59,10 +59,17 @@
 	3、查看是否创建成功：show index from 表名，也可以在UI客户端清晰的看到
 
 
-WebSourceNoOrgRelMapper
+6、TRUNCATE,DELETE,DROP放在一起比较
+	TRUNCATE TABLE：删除内容、释放空间但不删除定义。
+	DELETE TABLE:删除内容不删除定义，不释放空间。
+	DROP TABLE：删除内容和定义，释放空间。
 
 
 
+
+// 只需要 docid 即可
+
+insert into sys_extraction_temp(docid) select docid from sys_document_0 limit 0,100;
 
 
 
