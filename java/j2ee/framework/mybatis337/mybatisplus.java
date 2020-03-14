@@ -3,17 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 1、mybatis plus：MyBatis-Plus(简称MP)是一个MyBatis的增强工具，提供给我们很多实用的插件。在Mybatis的基础上只做增强不做改变，为简化我们开发，提高工作效率。
 2、安装
 	<!-- mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring整合包的 相关的依赖-->
@@ -25,7 +14,7 @@
 3、使用
 	1、mybatis直接和spring整合的
 		1、spring的配置文件
-			<!--  配置SqlSessionFactoryBean 
+			<!--  配置 SqlSessionFactoryBean 
 				Mybatis提供的: org.mybatis.spring.SqlSessionFactoryBean
 				MP提供的:com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean
 			 -->
@@ -50,7 +39,7 @@
 				<property name="tablePrefix" value="tbl_"></property>
 			</bean>
 		2、创建对应Mapper接口要继承 BaseMapper 接口：@Mapper public interface EmployeeMapper extends BaseMapper<Employee>{} ， 
-			继承了他之后如果是单表的操作你甚至不用写xml文件了，你可以可以写xml但是单表的sql你可以不用写，写一些多表关联的sql，可以考虑多建一个VO为之服务
+			继承了他之后如果是单表的操作你甚至不用写xml文件了，你也可以写xml文件，写一些多表关联的sql，可以考虑多建一个VO为之服务
 			但是这个xml和mapper.java是怎么关联的呢？
 				1、mapper.xml和mapper.java
 					1、 springboot 主配置文件使用 mybatis-plus.mapper-locations=classpath*:mapper\/*.xml 

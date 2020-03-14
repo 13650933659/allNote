@@ -31,13 +31,11 @@
 	1、 security 的默认校验
 		security.basic.enabled = false		// 禁用 security 的默认校验（即： .httpBasic() 的校验）
 	2、 扩展 security 的校验 需要继承 WebSecurityConfigurerAdapter 并且实现 configure(HttpSecurity http) 方法，具体扩展配置看项目代码
-		@Autowired
-		private SecurityProperties securityProperties;		// security 属性的自定义配置(包括 browser/code/social/oauth 等等)
 		http
 			//.httpBasic()	// 这个就是 security 的默认检验方式（即：就是一个security的默认登录表单，和 .formLogin() 冲突）
 			.formLogin()
 			.loginPage("/authentication/require")		 // 自定义登录页面（我们使用一个控制器吧，比较灵活，可以把html和那种数据请求的分开处理）
-			.loginProcessingUrl("/authentication/form")	 // 定义登录的表单提交时请求的url，默认是 /login 
+			.loginProcessingUrl("/authentication/form")	 // 登录的表单提交时请求的url，默认是 /login 
 			.successHandler(imoocAuthenticationSuccessHandler)								// 表单登录成功的处理器
 			.failureHandler(imoocAuthenticationFailureHandler);								// 表单登录失败的处理器
 			.authorizeRequests()	// 资源
@@ -102,7 +100,7 @@
 	5、 自定义登录验证后的处理器
 		1、 成功的处理器
 			@Component("imoocAuthenticationSuccessHandler")
-			public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {		// SavedRequest 是保存了之前的请求，所以他才会到之前请求页面
+			public class ImoocAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {		// SavedRequest 是保存了之前的请求，所以他才可以到之前请求页面
 				@Autowired
 				private ObjectMapper objectMapper;
 
@@ -255,11 +253,12 @@
 
 4、 spring-security 认证之后的 authentication 的保存
 	1、 seesion
-		1、 spring.session.timeout=10	// 配置10秒，默认30分钟，最小1分钟
-		2、 集群 session 的处理
-
-
-
+		1、 server.session.timeout=10	// 配置10秒，默认30分钟，最小1分钟
+			1、上面是 springboot1.x 的 2.x 是配置server.servlet.session.timeout: 3600S     # session失效期配置一小时 为 Duration 其他格式具体去查（例如 timeout: PT1H  也是一小时）
+			2、但是还有一个配置叫 spring.session.timeout: 3600S 但是这个我测试不生效，网上有人提到
+		2、 集群 session 的处理（我选择 redis 请看项目）
+		3、 用户退出
+			
 
 5、 spring-security 扩展知识点
 	1、 基于 OAuth2 协议的认证

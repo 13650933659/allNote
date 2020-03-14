@@ -17,6 +17,7 @@
 	5、 运行jar包 
 		1、例子
 			nohup java -jar app.jar -Dspring.profiles.active=dev >> log.out &
+			nohup java -jar dataApi-produce-202001100830.jar >> dataApi.out &
 		2、参数说明
 			nohup	    - 意为后台不挂断运行，与是否账号退出无关 
 			&		    - 代表后台运行  
@@ -32,7 +33,7 @@
 		1、什么时候执行好呢
 		2、分库
 	4、数据库的触发器
-	5、 nginx  、 Shiro 、 java 性能测试工具
+	5、 nginx  、 druid 、 Shiro 、 java 性能测试工具
 	6、 redis的使用场景
 	7、 douker 自动化部署 
 
@@ -112,7 +113,7 @@
 			15290170262		// 张梦辉
 			18520595873		// 唐国才
 	4、  jira 问题：  BDZBW-7 会员权限和支付，购买等修改
-		1、 标讯快车官网
+		1、 bxkc-pc
 			1、支付的改造 支付宝(ChargeAction) 、微信(PayAction) 
 				1、点击立即支付 先创建 waiting 的 BxkcPaymentOrder ，并且 productCode = sysLevelPriceId 
 			2、用户支持成功后，回调升级会员等级时的改造
@@ -129,7 +130,7 @@
 					5、独家项目				// ok
 					6、审批项目				// ok
 					7、企业画像				// ok
-		2、 标讯快车app
+		2、 bxkc-api
 			1、点击立即支付，创建业务订单 （为了兼容 查出 sysLevelPriceId）
 			2、支付成功后的回调（做升级 取到 sysLevelPriceId）
 			3、自动刷新用户权限
@@ -150,436 +151,116 @@
 			4、在会员等级那里配置产品改造一下
 			5、获取权限那边可能要改一下了（扣除次数就是不要滞后）
 			6、 sysMemberSystemService.delUserRedis(userId);	// (不要注释测试一下) 因为 RedisContantKey.USER_INFO + "_"+userid 存放的是 BaseUser ，有效期是一天，不能每次登陆清一次，如果有此次登陆有效的信息，不要放在这里 
+			7、 bxkc-pc 上线了，但是 bxkc-api 还未上线
 	5、要素提取（mongo 和 neo4j 的改造）
 		1、 统计之后的各个项目的维护工作
-			1、数据干预
-				1、删除接口
-		
+			1、bidi-data-api(数据干预)			// 已完成
+			2、bxkc_data_distinct(公告去重)
+				1、删除公告从mongo入手有点问题的，这个需要跟兴哥讨论 
+			3、document-push(公告推送项目)	   // 已完成
+			4、moose-enterprise-report-api	   // 已完成
+			3、bxkc-pc
+				1、各种公告详情		// 这个是涉及到mongo比较好改
+				2、企业画像功能
+					1、企业搜索
+						1、企业搜索结构列表-最新招标信息
+					2、企业主页
+						1、 企业图谱《关联招标人&潜在对手》 和 《关联中标人&投标人》
+							1、相关的项目
+						2、 已发布的招标项目
+						3、 已发布的招标项目-点击 更多 里面的二次搜索
+						4、 最近招标历程
+						5、 已参与的中标项目
+						6、 已参与的中标项目-点击 更多 里面的二次搜索
+						7、 中标业绩-整体趋势
+				
+		bidi-data-api(数据干预)\bxkc_data_distinct(公告去重)\document-push(公告推送项目)\moose-enterprise-report-api
+		bxkc-pc\bxkc-api\xique\zhongzhao
+
+
+			4、bxkc-api
+			5、xique
+			6、zhongzhao
+			7、可能 富哥、佳豪、江哥 自己负责的项目有用到 mongo 和 neo4j 的
+
+
 	6、告诉佳豪 他那个 对手检测 取数方式可能需要改动
 		1、先通过 es 拿到 organization （监测的公司）
 		2、然后通过neo4j 查到对应 project		// 到这里就可以了
-		3、找根据docid 再去 solr 拿
-
-	
+		3、找根据 docid 再去 solr 拿
 
 
+4、我负责的项目
+	1、自己负责的项目
+		1、 bidi-data-api(数据干预)
+		2、 bxkc_data_bigdata (要素提取)
+		3、 bxkc_data_distinct(公告去重)
+	2、moose我负责的项目
+		1、 document-push(给启信宝、天眼查推送公告的项目，目前在 47.98.49.4 运行)
+		2、 moose-enterprise-report-api(生成企业报表+给百度获取生成公告的接口)	
+			1、生成企业报表，目前不运行，有运行是在 47.98.49.4 运行   // 注意生成报表的代码如果要运行需要对应改造 mongo + neo4j 的数据，改好，但是需要再次测试数据的准确性
+			2、给百度获取生成公告的接口 这个再moose运行
+	3、协同参与的项目
+		1、 bxkc-pc
+		2、 bxkc-api
+		3、 xique
+		4、 xique-m
+		5、 zhongzhao(中招联合)
+		6、 zhongzhao-frontend(和艳艳交互代码的项目)
+	4、私服项目
+		1、 bidi-common(公司私服-存放 EnterpriseProfile 等实体)
+		2、 business_bxkc(公司私服-存放 mongo\neo4j\es 等实体)
+		3、 joey-elasticsearch(公司私服-es访问工具类)
 
 
 
 
-2020-01-22 17:14:43.248  WARN 12106 [pool-7-thread-1] : 处理成功的数量0
-2020-01-22 17:14:43.248  WARN 12106 [pool-7-thread-1] : 定时器结束!
-2020-01-22 17:14:43.896  WARN 12106 [pool-7-thread-1] : ===============  第 2 个定时器运行结束，耗时 802 ================
-2020-01-22 17:14:44.896  WARN 12106 [pool-7-thread-1] : ==================== hist第 3 个定时器开始运行 ====================
-2020-01-22 17:14:44.899  WARN 12106 [pool-7-thread-1] : 开始查询,sys_extraction_temp.status=2，查询数量1
-2020-01-22 17:14:44.903  WARN 12106 [pool-7-thread-1] : 查询完毕,结果数目1
-2020-01-22 17:14:44.915  WARN 12106 [pool-7-thread-1] : sys_document查询完毕,结果数目1
-2020-01-22 17:14:45.122  WARN 12106 [       90663749] : jsonObj=
-{title=淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告, doc_id=90663749, content=<div> 
- <div>
-   淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告 
- </div> 
- <table border="1" style="border-collapse:collapse;"> 
-  <tbody> 
-   <tr> 
-    <td colspan="2">一、采购项目名称：淮阳县文正幼儿园环境创设工程</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">二、采购项目编号：2020-01-14</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">三、项目预算金额：187705元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 最高限价：187705元 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 
-     <table border="1" style="border-collapse:collapse;"> 
-      <tbody> 
-       <tr> 
-        <td>序号</td> 
-        <td>包号</td> 
-        <td>包名称</td> 
-        <td>包预算（元）</td> 
-        <td>包最高限价（元）</td> 
-       </tr> 
-       <tr> 
-        <td>1</td> 
-        <td>1</td> 
-        <td>淮阳县文正幼儿园环境创设工程</td> 
-        <td>187705</td> 
-        <td>187705</td> 
-       </tr> 
-      </tbody> 
-     </table> </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">四、采购项目需要落实的政府采购政策</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">执行《财政部国家发展改革委关于印发〈节能产品政府采购实施意见〉的通知》（财库[2004]185号）；执行《财政部环保总局关于环境标志产品政府采购实施的意见》（财库[2006]90号）；《财政部 发展改革委 生态环境部 市场监管总局 关于调整优化节能产品、环境标志产品政府采购执行机制的通知》（财库﹝2019﹞9号）；执行《政府采购促进中小企业发展暂
-行办法》（财库[2011]181号）；执行《财政部、司法部关于政府采购支持监狱企业发展有关问题的通知》（财库[2014]68号）；执行《三部门联合发布关于促进残疾人就业政府采购政策的通知》（财库[2017]141号）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">五、项目基本情况（包括数量、规格描述等）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">淮阳县文正幼儿园环境创设工程，详见附件清单</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">六、供应商资格要求</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1、符合《中华人民共和国政府采购法》第二十二条要求；<br>2、投标人具有房屋建筑施工总承包叁级及以上资质，并在人员、设备、资金等方面具有相应的施工能力，其中，投标人拟派项目负责人须具备房屋建筑工程专业三级及以上注册建造师资格，具备有效的安全生产考核合格证书，且未担任其他在施建设工程项目的项目经理；<br>3、根据《关于在政府采购活动中查询及使用
-信用记录有关问题的通知》(财库[2016]125号)的规定，对列入失信被执行人、重大税收违法案件当事人名单、政府采购严重违法失信行为记录名单的供应商，拒绝参与本项目政府采购活动；【查询渠道：“信用中国”网站（www.creditchina.gov.cn）、中国政府采购网（www.ccgp.gov.cn）】；<br>4、本项目不接受联合体投标。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">七、获取竞争性 谈判文件 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月17日&nbsp;&nbsp;至&nbsp;&nbsp;2020年01月21日（北京时间，法定节假日除外。）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">3.方式：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）凭CA数字证书报名和下载谈判文件。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">4.售价：60元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">八、响应文件提交的截止时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">九、响应文件的开启时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十、发布公告的媒介及招标公告期限</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 本次招标公告在《河南省政府采购网》《全国公共资源交易平台（河南省？周口市）》上发布。 公告期限为三个工作日2020年01月17日至2020年01月21日。 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十一、联系方式</td> 
-   </tr> 
-   <tr> 
-    <td>1. 采购人：淮阳县教育体育局</td> 
-   </tr> 
-   <tr> 
-    <td>地址：淮阳县文正路西段</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李静</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：13949978176</td> 
-   </tr> 
-   <tr> 
-    <td>2.采购代理机构：周口市政府采购中心</td> 
-   </tr> 
-   <tr> 
-    <td>地址：周口市东新区光明路和政通路交叉口北100米路东</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：0394-8106517</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布时间：2020年01月17日</td> 
-   </tr> 
-  </tbody> 
- </table> 
-</div>}
-2020-01-22 17:14:45.142  WARN 12106 [       90663749] : result=localvariable'data_res'referencedbeforeassignment
-2020-01-22 17:14:45.142  WARN 12106 [       90663749] : jsonObj={title=淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告, doc_id=90663749, content=<div> 
- <div>
-   淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告 
- </div> 
- <table border="1" style="border-collapse:collapse;"> 
-  <tbody> 
-   <tr> 
-    <td colspan="2">一、采购项目名称：淮阳县文正幼儿园环境创设工程</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">二、采购项目编号：2020-01-14</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">三、项目预算金额：187705元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 最高限价：187705元 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 
-     <table border="1" style="border-collapse:collapse;"> 
-      <tbody> 
-       <tr> 
-        <td>序号</td> 
-        <td>包号</td> 
-        <td>包名称</td> 
-        <td>包预算（元）</td> 
-        <td>包最高限价（元）</td> 
-       </tr> 
-       <tr> 
-        <td>1</td> 
-        <td>1</td> 
-        <td>淮阳县文正幼儿园环境创设工程</td> 
-        <td>187705</td> 
-        <td>187705</td> 
-       </tr> 
-      </tbody> 
-     </table> </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">四、采购项目需要落实的政府采购政策</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">执行《财政部国家发展改革委关于印发〈节能产品政府采购实施意见〉的通知》（财库[2004]185号）；执行《财政部环保总局关于环境标志产品政府采购实施的意见》（财库[2006]90号）；《财政部 发展改革委 生态环境部 市场监管总局 关于调整优化节能产品、环境标志产品政府采购执行机制的通知》（财库﹝2019﹞9号）；执行《政府采购促进中小企业发展暂
-行办法》（财库[2011]181号）；执行《财政部、司法部关于政府采购支持监狱企业发展有关问题的通知》（财库[2014]68号）；执行《三部门联合发布关于促进残疾人就业政府采购政策的通知》（财库[2017]141号）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">五、项目基本情况（包括数量、规格描述等）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">淮阳县文正幼儿园环境创设工程，详见附件清单</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">六、供应商资格要求</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1、符合《中华人民共和国政府采购法》第二十二条要求；<br>2、投标人具有房屋建筑施工总承包叁级及以上资质，并在人员、设备、资金等方面具有相应的施工能力，其中，投标人拟派项目负责人须具备房屋建筑工程专业三级及以上注册建造师资格，具备有效的安全生产考核合格证书，且未担任其他在施建设工程项目的项目经理；<br>3、根据《关于在政府采购活动中查询及使用
-信用记录有关问题的通知》(财库[2016]125号)的规定，对列入失信被执行人、重大税收违法案件当事人名单、政府采购严重违法失信行为记录名单的供应商，拒绝参与本项目政府采购活动；【查询渠道：“信用中国”网站（www.creditchina.gov.cn）、中国政府采购网（www.ccgp.gov.cn）】；<br>4、本项目不接受联合体投标。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">七、获取竞争性 谈判文件 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月17日&nbsp;&nbsp;至&nbsp;&nbsp;2020年01月21日（北京时间，法定节假日除外。）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">3.方式：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）凭CA数字证书报名和下载谈判文件。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">4.售价：60元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">八、响应文件提交的截止时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">九、响应文件的开启时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十、发布公告的媒介及招标公告期限</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 本次招标公告在《河南省政府采购网》《全国公共资源交易平台（河南省？周口市）》上发布。 公告期限为三个工作日2020年01月17日至2020年01月21日。 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十一、联系方式</td> 
-   </tr> 
-   <tr> 
-    <td>1. 采购人：淮阳县教育体育局</td> 
-   </tr> 
-   <tr> 
-    <td>地址：淮阳县文正路西段</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李静</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：13949978176</td> 
-   </tr> 
-   <tr> 
-    <td>2.采购代理机构：周口市政府采购中心</td> 
-   </tr> 
-   <tr> 
-    <td>地址：周口市东新区光明路和政通路交叉口北100米路东</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：0394-8106517</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布时间：2020年01月17日</td> 
-   </tr> 
-  </tbody> 
- </table> 
-</div>}
-2020-01-22 17:14:45.160  WARN 12106 [       90663749] : result=localvariable'data_res'referencedbeforeassignment
-2020-01-22 17:14:45.160  WARN 12106 [       90663749] : jsonObj={title=淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告, doc_id=90663749, content=<div> 
- <div>
-   淮阳县教育体育局淮阳县文正幼儿园环境创设工程-竞争性谈判公告 
- </div> 
- <table border="1" style="border-collapse:collapse;"> 
-  <tbody> 
-   <tr> 
-    <td colspan="2">一、采购项目名称：淮阳县文正幼儿园环境创设工程</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">二、采购项目编号：2020-01-14</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">三、项目预算金额：187705元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 最高限价：187705元 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 
-     <table border="1" style="border-collapse:collapse;"> 
-      <tbody> 
-       <tr> 
-        <td>序号</td> 
-        <td>包号</td> 
-        <td>包名称</td> 
-        <td>包预算（元）</td> 
-        <td>包最高限价（元）</td> 
-       </tr> 
-       <tr> 
-        <td>1</td> 
-        <td>1</td> 
-        <td>淮阳县文正幼儿园环境创设工程</td> 
-        <td>187705</td> 
-        <td>187705</td> 
-       </tr> 
-      </tbody> 
-     </table> </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">四、采购项目需要落实的政府采购政策</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">执行《财政部国家发展改革委关于印发〈节能产品政府采购实施意见〉的通知》（财库[2004]185号）；执行《财政部环保总局关于环境标志产品政府采购实施的意见》（财库[2006]90号）；《财政部 发展改革委 生态环境部 市场监管总局 关于调整优化节能产品、环境标志产品政府采购执行机制的通知》（财库﹝2019﹞9号）；执行《政府采购促进中小企业发展暂
-行办法》（财库[2011]181号）；执行《财政部、司法部关于政府采购支持监狱企业发展有关问题的通知》（财库[2014]68号）；执行《三部门联合发布关于促进残疾人就业政府采购政策的通知》（财库[2017]141号）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">五、项目基本情况（包括数量、规格描述等）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">淮阳县文正幼儿园环境创设工程，详见附件清单</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">六、供应商资格要求</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1、符合《中华人民共和国政府采购法》第二十二条要求；<br>2、投标人具有房屋建筑施工总承包叁级及以上资质，并在人员、设备、资金等方面具有相应的施工能力，其中，投标人拟派项目负责人须具备房屋建筑工程专业三级及以上注册建造师资格，具备有效的安全生产考核合格证书，且未担任其他在施建设工程项目的项目经理；<br>3、根据《关于在政府采购活动中查询及使用
-信用记录有关问题的通知》(财库[2016]125号)的规定，对列入失信被执行人、重大税收违法案件当事人名单、政府采购严重违法失信行为记录名单的供应商，拒绝参与本项目政府采购活动；【查询渠道：“信用中国”网站（www.creditchina.gov.cn）、中国政府采购网（www.ccgp.gov.cn）】；<br>4、本项目不接受联合体投标。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">七、获取竞争性 谈判文件 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月17日&nbsp;&nbsp;至&nbsp;&nbsp;2020年01月21日（北京时间，法定节假日除外。）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">3.方式：周口市公共资源电子交易服务平台会员系统（网址http://www.zkggzyjy.gov.cn/）凭CA数字证书报名和下载谈判文件。</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">4.售价：60元</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">八、响应文件提交的截止时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">九、响应文件的开启时间及地点</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">1.时间：2020年01月22日10时00分（北京时间）</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">2.地点：周口市公共资源交易中心四楼407房间</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十、发布公告的媒介及招标公告期限</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2"> 本次招标公告在《河南省政府采购网》《全国公共资源交易平台（河南省？周口市）》上发布。 公告期限为三个工作日2020年01月17日至2020年01月21日。 </td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">十一、联系方式</td> 
-   </tr> 
-   <tr> 
-    <td>1. 采购人：淮阳县教育体育局</td> 
-   </tr> 
-   <tr> 
-    <td>地址：淮阳县文正路西段</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李静</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：13949978176</td> 
-   </tr> 
-   <tr> 
-    <td>2.采购代理机构：周口市政府采购中心</td> 
-   </tr> 
-   <tr> 
-    <td>地址：周口市东新区光明路和政通路交叉口北100米路东</td> 
-   </tr> 
-   <tr> 
-    <td>联系人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td>联系方式：0394-8106517</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布人：李龙龙</td> 
-   </tr> 
-   <tr> 
-    <td colspan="2">发布时间：2020年01月17日</td> 
-   </tr> 
-  </tbody> 
- </table> 
-</div>}
-2020-01-22 17:14:45.176  WARN 12106 [       90663749] : result=localvariable'data_res'referencedbeforeassignment
+
+
+
+1、临时记录
+	1、整理支付流程（移动端、pc端、H5）
+	2、去重项目的优化(当天的公告一条条的处理)
+	3、moose.document_push_log.pushTime 记得创建索引
+
+
+
+
+
+
+
+
+
+
+// 修改 bxkc 的用户缓存(登录对应的后台)
+	http://www.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00013065620200226&type=object
+	http://www.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00013065620200226&type=object
+
+
+	http://admin.xqzhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00037944020200312&type=object
+	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00037507620200303&type=object
+
+
+
+
+
+
+
+
+
+1、 mongo 同步到 solr 
+	<!--mongo fields-->
+	<field column="tenderee" name="tenderee"></field>
+	<field column="win_tenderer" splitBy=";" sourceColName="win_tenderer"></field>
+	<field column="agency" name="agency"></field>
+	<field column="win_bid_price" name="win_bid_price" splitBy=";" sourceColName="win_bid_price"></field>
+	<field column="bidding_budget" name="bidding_budget"></field>
+
+
+
+
+
+
 
 
 

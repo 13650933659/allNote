@@ -53,8 +53,6 @@
 			Match (o:Organization)-[r]->(p:Project) where o.name in['比地1','比地2','比地3'] and type(r) in['ZhaoBiaoRelation','ZhongBiaoRelation']  return o.name as 名称,count(*) as 招投标数 order by  count(*) desc
 
 
-Match (o:Organization)-[r]->(p:Project) where o.name='上海雅轩办公家具有限公司' return count(r);
-
 
 
 5、集群
@@ -99,16 +97,13 @@ neo4j java客户端
 
 
 
+match (o:Organization)-[r:ZhaoBiaoRelation]->(p:Project2) where o.bidiId=61407576317218816  
+with p,(CASE WHEN p.zhongBiaoPageTime is not null THEN p.zhongBiaoPageTime ELSE p.zhaoBiaoPageTime END) as date 
+where date>'2018-01-01' return id(p),p.zhongBiaoPageTime,p.zhaoBiaoPageTime,date  order by  date desc
 
 
+match (o:Organization)-[r:ZhaoBiaoRelation]->(p:Project2) where o.bidiId=61407576317218816 and (p.zhongBiaoPageTime is not null or p.zhaoBiaoPageTime is not null) 
+return id(p),p.zhongBiaoPageTime,p.zhaoBiaoPageTime,(CASE WHEN p.zhongBiaoPageTime is not null THEN p.zhongBiaoPageTime ELSE p.zhaoBiaoPageTime END) as date order by  date desc
 
-
-
-
-http://www.bidizhaobiao.com/info-32782538.html  
-http://www.bidizhaobiao.com/info-35128298.html  
-http://www.bidizhaobiao.com/info-41452611.html   
-http://www.bidizhaobiao.com/info-50077159.html   
-http://www.bidizhaobiao.com/info-67992679.html
 
 
