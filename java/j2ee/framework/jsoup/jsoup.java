@@ -45,7 +45,10 @@
         HttpEntity entity=response.getEntity(); // 获取返回实体
         String content=EntityUtils.toString(entity, "utf-8");
         response.close(); // 关闭流和释放系统资源
-	2、解析 要是到 Document -> Element -> Node
+	2、解析 
+		1、前提知识：
+			Document -> Element -> Node
+			TextNode -> LeafNode -> Node
 		Document doc=Jsoup.parse(content); // 解析网页 得到文档对象
 		
 
@@ -67,8 +70,9 @@
 			Element width1 = e.attr("width", "10px");	// 设置width属性的值，有则会覆盖
 			Element e = e.html("<div>" + e.html() + "</div>");	// 无参数的是取html返回字符串，有参数是设置返回此e
 			Node width = bodyEle.removeAttr("width");		// 删除width属性，并且返回此节点
+			e.before("a");				// 把a文本放在e标签之前，(使用场景：把input的值移出来，然后删掉input标签)
 			e.after("a");				// 把a文本放在e标签之后，(使用场景：把input的值移出来，然后删掉input标签)
-			e.replaceWith(e1)			// 使用e1替换e
+			e.replaceWith(e1)			// 使用e1替换e(注意这是替换整个e包含里面的所有子节点)
 			doc.select("th").tagName("td");	// 把th全部替换成td标签
 			doc.select("td").prepend("#tds#").append("#tde#");	// 在td的文本前后分别加入#tds#和#tde#
 		

@@ -197,7 +197,7 @@ DocumentDetails
 			1、配置文件名称默认是logback-spring.xml or logback.xml ，推荐使用带spring的，因为可以使用spring的高级功能，比如使用springProfile标签来激活那个环境的配置
 				如果是使用log4j2实现，默认配置文件为：log4j2-spring.xml或者log4j2.xml也可以自己指定logging.config=classpath:log4j2-dev.xml（也许log4j2和logback的配置是兼容的）
 			2、日志配置
-				1、logging.level=trace：			日志级别
+				1、logging.level=trace：			// 日志级别 后面的版本改为 logging.level.root=warn
 				2、logging.file=C:/springboot.log： 使用全路径，就不需要logging.path配置了
 				3、logging.pattern.console：        在控制台输出的日志的格式
 					1、日志输出格式：%d{yyyy‐MM‐dd HH:mm:ss.SSS} [%thread] %‐5level %logger{50} ‐ %msg%n
@@ -472,7 +472,9 @@ DocumentDetails
 7、启动配置原理(有空再去看)
 8、自定义starter(有空再去看)
 
-
+9、定时器任务相关
+	@EnableScheduling    // 启用定时器（默认每个定时器要等上一个周期停了，才会开始计时，而且定时器之间也是同步的）
+	@EnableAsync		// 默认定时器之间是同步的，加这个注解，并且在对应的定时器加上 @Async 就可以异步执行（不仅和定时器之间异步，而且每个周期也是异步的）
 
 
 

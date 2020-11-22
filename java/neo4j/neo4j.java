@@ -86,7 +86,8 @@ neo4j java客户端
 			<version>3.1.0</version>
 		</dependency>
 	2、使用spring data
-
+		1、 spring.datasource.neo4j.trust.strategy=TRUST_ON_FIRST_USE 这个最好删掉，要不然连接集群的neo4j会报错
+		2、 2.0.0.RELEASE 才没有问题
 
 
 
@@ -96,14 +97,6 @@ neo4j java客户端
 
 
 
-
-match (o:Organization)-[r:ZhaoBiaoRelation]->(p:Project2) where o.bidiId=61407576317218816  
-with p,(CASE WHEN p.zhongBiaoPageTime is not null THEN p.zhongBiaoPageTime ELSE p.zhaoBiaoPageTime END) as date 
-where date>'2018-01-01' return id(p),p.zhongBiaoPageTime,p.zhaoBiaoPageTime,date  order by  date desc
-
-
-match (o:Organization)-[r:ZhaoBiaoRelation]->(p:Project2) where o.bidiId=61407576317218816 and (p.zhongBiaoPageTime is not null or p.zhaoBiaoPageTime is not null) 
-return id(p),p.zhongBiaoPageTime,p.zhaoBiaoPageTime,(CASE WHEN p.zhongBiaoPageTime is not null THEN p.zhongBiaoPageTime ELSE p.zhaoBiaoPageTime END) as date order by  date desc
 
 
 

@@ -17,14 +17,21 @@
 	5、 运行jar包 
 		1、例子
 			nohup java -jar app.jar -Dspring.profiles.active=dev >> log.out &
-			nohup java -jar dataApi-produce-202001100830.jar >> dataApi.out &
+			nohup java -jar persistence-hist.jar >> log.out &
+
+			nohup java -jar app.jar >> app.log &
 		2、参数说明
 			nohup	    - 意为后台不挂断运行，与是否账号退出无关 
 			&		    - 代表后台运行  
 			>> log.file - 输出的日志追加入log.file，
 			-Dspring.profiles.active=dev		// 加入java的运行参数 好像也可以 --moose.task.maxThreadCount=4 这样
-		
-
+	6、 增量jar https://www.cnblogs.com/wangyayun/p/11725351.html
+		1、把源jar包cp到一个空文件夹里，解压	jar -xf persistence-extract-20201112074211.jar
+		2、进入BOOT-INF/class，替换
+		3、把该文件夹里的源jar包删除			rm -rf persistence-extract-20201112074211.jar
+		4、重新打包								jar -cfM0 persistence-extract-20201112074211.jar *
+		5、把打好的jar包cp到启动目录，启动就ok
+	7、  powerDesigner关联数据库显示中文注释  https://www.cnblogs.com/timeflying/p/11409416.html
 
 2、待学习
 	1、23中设计模式，掌握常用的
@@ -36,123 +43,15 @@
 	5、 nginx  、 druid 、 Shiro 、 java 性能测试工具
 	6、 redis的使用场景
 	7、 douker 自动化部署 
+	8、 wireshark抓包工具详细说明及操作使用 https://blog.csdn.net/qq78069460/article/details/79153895
+
 
 
 
 
 3、待做
 	1、 redis做集群
-	2、一键登录做扩展（比如要区分用户是通过一键登录自动注册的）
-	3、 用户行为分析报表
-		1、报表字段
-			1、基础信息(除内部)
-				日期						// 当天日期
-				当天注册					// 当天注册的用户
-				日积累					    // 截止今天所有的注册量
-			2、登录情况(除内部)
-				当天登录					// 当天登录			（同一个用户一天登录多次算1次）
-				当天付费登录				// 登录（付费的用户，过期不算付费）
-				当天未付费登录				// 当天登录 - 付费登录
-				当天去除付费、新增			// 当天登录 - 付费登录 - 当天新增的用户
-				活跃率					    // 当天登录/日积累
-			3、浏览行为(除内部)
-				当天登录无浏览				// 当天登录没有浏览公告的
-				当天未付费看满1条			// 当天看满1条，没有付费的
-				当天未付费看满2条			 
-				当天未付费看满5条
-				当天未付费看满10条
-				当天未付费看满15条
-				当天未付费看满20条
-			4、营收(除内部)
-				付费客户					// 当天付费（同一用户多次算一次）
-				收入						// 所有收入
-				注册转换付费率				// 付费客户/当天注册
-		2、涉及到的表
-			1、 b2c_mall_staff_basic_info(用户表)
-				applyTime(DATETIME)	// 注册时间
-			2、 bxkc_login_info
-				loginTime		// 登录时间
-				operate_type	// 操作类型(10=登陆,20=唤醒)
-				userType		// 用户类型（01内部用户 02供应商 03分销商）+上打了内部标签的
-			3、 bxkc_payment_order(订单表)
-			4、 bxkc_mybrowse(公告浏览记录)
-				1、 新加 bxkc_mybrowse_day 公告浏览统计（每个用户按天统计）		
-					1、表结构
-						create table bxkc_mybrowse_day(
-						  id bigint(20) primary key auto_increment comment '主键',
-						  userid varchar(100) NOT NULL COMMENT '用户id' ,
-						  browse_date varchar(20) NOT NULL COMMENT '浏览日期，精确到天',
-						  num int COMMENT '当天浏览的数量'
-						) comment '公告浏览统计（每个用户按天统计）'
-						engine=InnoDB collate=utf8_bin;
-						create index bxkc_mybrowse_day_userid on bxkc_mybrowse_day (userid);
-						create index bxkc_mybrowse_day_browse_date on bxkc_mybrowse_day (browse_date);
-					2、代码维护
-						新增
-						删除需要删除吗
-
-			3、剩余要做的事情
-				1、 等富哥代码写好了，把 report 代码合并到 dev 并且测试
-				2、 bxkc_mybrowse_day 这个表生产已经有了，但是最好验证一下他的增删改查
-
-
-
-
-			16550000		// 开头全是小七的
-
-			13533542703		// 小七
-			13216628864		// 小七
-			18344560792		// 张景霞
-			15622774803		// 周乐贤
-			13312856589		// 蒋祖富
-			15767878598		// 胡艳艳
-			13430741690		// 邓佳豪
-			13265101824		// 林锦兴
-			15018782056		// 吴静江
-			13650933659		// 陈家儒
-			15290170262		// 张梦辉
-			18520595873		// 唐国才
-	4、  jira 问题：  BDZBW-7 会员权限和支付，购买等修改
-		1、 bxkc-pc
-			1、支付的改造 支付宝(ChargeAction) 、微信(PayAction) 
-				1、点击立即支付 先创建 waiting 的 BxkcPaymentOrder ，并且 productCode = sysLevelPriceId 
-			2、用户支持成功后，回调升级会员等级时的改造
-				1、支付成功之后升级时候需要查到 waiting 的BxkcPaymentOrder，再拿到 productCode）
-				2、自动延期等级比较低的
-			3、用户权限(服务项目)判断的改造
-				1、获取用户当前生效服务项目包括增值服务项目 
-				2、同时把用户过期的服务项目停用
-				3、使用的地方改造
-					1、用户登录				// 刷新一次，不清除 ok
-					2、公告详情				// ok
-					3、招标定制  			// ok
-					4、拟在建项目			// ok
-					5、独家项目				// ok
-					6、审批项目				// ok
-					7、企业画像				// ok
-		2、 bxkc-api
-			1、点击立即支付，创建业务订单 （为了兼容 查出 sysLevelPriceId）
-			2、支付成功后的回调（做升级 取到 sysLevelPriceId）
-			3、自动刷新用户权限
-			4、使用权限
-				1、用户登录				// 刷新一次，不清除 ok
-				2、公告详情				// ok
-				3、招标定制  			// ok
-				4、拟在建项目			// ok
-				5、独家项目				// ok
-				6、审批项目				// ok
-				7、企业画像				// ok
-
-		4、待做
-			1、 bxkc-api 的改造小七测出的问题，还未修复，修复完成把代码部署到线上
-			2、有一个复杂的场景待研究和测试
-			3、支付宝的 
-				return_url 和 notify_url 有什么区别		// 测试环境要改一下测试库
-			4、在会员等级那里配置产品改造一下
-			5、获取权限那边可能要改一下了（扣除次数就是不要滞后）
-			6、 sysMemberSystemService.delUserRedis(userId);	// (不要注释测试一下) 因为 RedisContantKey.USER_INFO + "_"+userid 存放的是 BaseUser ，有效期是一天，不能每次登陆清一次，如果有此次登陆有效的信息，不要放在这里 
-			7、 bxkc-pc 上线了，但是 bxkc-api 还未上线
-	5、要素提取（mongo 和 neo4j 的改造）
+	2、要素提取（mongo 和 neo4j 的改造）
 		1、 统计之后的各个项目的维护工作
 			1、bidi-data-api(数据干预)			// 已完成
 			2、bxkc_data_distinct(公告去重)
@@ -173,55 +72,182 @@
 						5、 已参与的中标项目
 						6、 已参与的中标项目-点击 更多 里面的二次搜索
 						7、 中标业绩-整体趋势
-				
-		bidi-data-api(数据干预)\bxkc_data_distinct(公告去重)\document-push(公告推送项目)\moose-enterprise-report-api
-		bxkc-pc\bxkc-api\xique\zhongzhao
-
-
 			4、bxkc-api
 			5、xique
 			6、zhongzhao
 			7、可能 富哥、佳豪、江哥 自己负责的项目有用到 mongo 和 neo4j 的
 
 
-	6、告诉佳豪 他那个 对手检测 取数方式可能需要改动
-		1、先通过 es 拿到 organization （监测的公司）
-		2、然后通过neo4j 查到对应 project		// 到这里就可以了
-		3、找根据 docid 再去 solr 拿
-
-
-4、我负责的项目
-	1、自己负责的项目
-		1、 bidi-data-api(数据干预)
-		2、 bxkc_data_bigdata (要素提取)
-		3、 bxkc_data_distinct(公告去重)
-	2、moose我负责的项目
-		1、 document-push(给启信宝、天眼查推送公告的项目，目前在 47.98.49.4 运行)
-		2、 moose-enterprise-report-api(生成企业报表+给百度获取生成公告的接口)	
-			1、生成企业报表，目前不运行，有运行是在 47.98.49.4 运行   // 注意生成报表的代码如果要运行需要对应改造 mongo + neo4j 的数据，改好，但是需要再次测试数据的准确性
-			2、给百度获取生成公告的接口 这个再moose运行
-	3、协同参与的项目
-		1、 bxkc-pc
-		2、 bxkc-api
-		3、 xique
-		4、 xique-m
-		5、 zhongzhao(中招联合)
-		6、 zhongzhao-frontend(和艳艳交互代码的项目)
-	4、私服项目
-		1、 bidi-common(公司私服-存放 EnterpriseProfile 等实体)
-		2、 business_bxkc(公司私服-存放 mongo\neo4j\es 等实体)
-		3、 joey-elasticsearch(公司私服-es访问工具类)
-
-
-
-
-
-
 
 1、临时记录
 	1、整理支付流程（移动端、pc端、H5）
 	2、去重项目的优化(当天的公告一条条的处理)
-	3、moose.document_push_log.pushTime 记得创建索引
+	5、抽空去了解一下 frp和nginx的https请求
+	6、spring的定时器第一次立即运行，怎么配置
+	7、改造之后redis那个 del delObject batchDel 三个方法有时会不生效
+
+
+1、修改 bxkc/xique 的用户缓存(登录对应的后台)
+	http://admin.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00046644120201027
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00038913820201106&type=object
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=seo_hot_focus&type=batch
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_&type=batch
+	
+	// 清菜单
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=bxkc_back_user_all_memu_000370740&type=object
+
+
+	http://admin.xqzhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00044996320201117
+	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00047034520201110&type=object
+	
+
+
+1、补上
+	自动放弃定时器要去掉删除领取记录
+	
+
+
+
+			
+
+1、数据迁移问题汇总
+	1、数据处理
+		1、数据分段
+			1、之前的数据 -> 2020-04 
+			2、2020-04(98759403 -> 99999903)    -> 某个时间点(X) 
+				表 _20 已同步,startDocid=100000001 -> 105000000
+				表 _21 -, 105000001 -> 110000000
+				表 _22 -, 110000001 -> 113055364 -> 115000000
+				表 _23 -, 115000001 -> 115773215 -> 116395814 -> 116678124(以这个为点)
+
+			3、 116678124          -> 未知
+
+
+	1、把数据搬到 document2 to document(下面已处理完成)
+		1-40000000			zhong1	// 完成了
+		40000001-80000000	zhong2	
+		80000001-117089968	114
+		第二次
+			117089968 - 118491094	zhong1
+			118491094 - 118596067	zhong1
+
+			118596067 - 118689952	zhong1
+			
+	2、企业里面的招投标数据和取ots对不上
+	3、获取企业时就要计算招投标数量
+	4、手动把 document_extract2 的数据改为待提取状态
+		98759406 -> 116939615
+			98759406 -> 98779406 -> 100000000 -> 116939615
+	5、数据干预的接口和admin的数据干预
+		1、招标信息发布(原逻辑)
+			1、后台的项目发布和审核
+				1、发布：新增 sys_document_second
+				2、更新：更新 sys_document_second	// 发布后再更新， sys_document_second.docstatus=待审核 ，可以再做审核
+				3、删除：删除 sys_document_second 和 sys_document
+				4、审核：都会更新 sys_document_second 
+					1、通过：新增 sys_document ，如果存在则更新
+					2、驳回：删除 sys_document
+			2、前台的项目发布
+				1、发布：新增 sys_document_second
+				2、更新：更新 sys_document_second
+				3、删除：更新 sys_document_second.docstatus=22 ，但是还可以再次编辑再次审核 ，并且删除已生成的 sys_document
+		2、删除公告		// 记日志
+			1、删除ots.document
+			2、删除对应的gdb.Document ，如果对应的 Project 没有 Document 则需要删除此 Project，如果有删除Project则需要把相关企业重新计算招投标数量
+			3、删除成功之后向队列发送待调用 启信宝 删除接口的消息队列
+			4、记日志
+		3、更新
+			改了之后直接更新 document.status=[1,50] 既可
+		4、修改企业
+			1、ots
+				把 B 的招投标换成 A
+			2、gdb
+				把 B 和P的所有关系，挂到 A
+
+	6、环境
+		zhong1
+		zhong2
+			实时要素提取
+			数据干预项目
+				重新计算企业的招投标
+
+	
+
+1、尽量不要动ots.document的数据
+2、历史要素提取的合并去掉了，update.ots.document.status=[51,100]的动作，会生效吗
+
+
+
+
+
+
+3、报表的开始
+4、bxkc-admin的删除接口地址替换了吗
+5、util.GremlinUtil.deleteOrUpdate(GremlinUtil.java:222)	// 报错了
+6、跑的时候打开计算企业的招投标数量的
+
+
+7、处理历史数据 document_extract(新的gdb实例) - 2020-10-30 15点 完成时间  2020-11-06 10:12:49 大概6天
+	最多docid 118601790 数量(87692898)
+	118601790 -> 120795618
+8、把上的时间差数据补上	
+	1、把 document(docid > 118601790) -> document3
+	2、启用 历史数据的要素提取
+
+
+
+
+
+
+8、数据做升级
+	bxkc_mybrowse_org
+
+
+
+10、bxkc-amdin不生效？顺便把修改补上
+11、公告去重没做
+12、119794035是要素提取破坏了标签吗？
+13、http://192.168.2.170:4999/ showdoc
+14、周总反馈 江苏省 不是一家企业
+15、公告去重，项目去重
+
+
+1、测试企业合并
+	1、数据干预上线 -> bxkc-admin 上线
+		mergeOrg.url=http://172.16.147.49:8002/dataIntervention/mergeOrg
+	3、上午评审的需求都列下功能
+
+
+
+1、共同竞标的项目
+	都是要取gdb
+
+2、换成新的数据库
+	1、实时的要素提取换成新库
+	2、document.maxDocid 记下 118601790 -> 120795618->122178814
+	3、数据同步到document3
+	4、启动历史要素提取
+	5、启动历史入库		// 有时拿不到数据
+	6、重新部署所有端
+		1、bxkc-admin 替换common.properties
+			mergeOrg.url=http://172.16.147.49:8002/dataIntervention/mergeOrg
+		2、bxkc-pc/bxkc-api
+			替换gdb.yaml
+
+3、bidi-data-intervention做自动化部署和守护进程，补上日志
+4、persistence-extract做自动化部署和守护进程
+5、gdb慢的问题
+6、合并脏数据
+7、公告去重、项目去重
+8、专业版后台
+	企业画像-协助
+9、把documentUtils抽取
+	easy-tablestore
+	
+	com.bidizhaobiao
+	tablestore-util
+
+com.bidizhaobiao.tablestoreutil.entity.enterprise
 
 
 
@@ -231,43 +257,42 @@
 
 
 
-
-// 修改 bxkc 的用户缓存(登录对应的后台)
-	http://www.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00013065620200226&type=object
-	http://www.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00013065620200226&type=object
-
-
-	http://admin.xqzhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00037944020200312&type=object
-	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00037507620200303&type=object
+1、全局替换
+	import com.i2f.edoc.ots.util.DocumentUtil;
+	import com.bidizhaobiao.tablestoreutil.document.DocumentUtil;
 
 
 
+	import com.i2f.edoc.utils.search.SearchCondition;
+	import com.bidizhaobiao.tablestoreutil.document.search.SearchCondition;
+
+	import com.i2f.entity.Doc;
+	import com.bidizhaobiao.tablestoreutil.vo.Doc;
+
+
+	import site.dunhanson.aliyun.tablestore.entity.bidi.Document;
+	import com.bidizhaobiao.tablestoreutil.entity.Document;
+
+
+	import site.dunhanson.aliyun.tablestore.entity.bidi.enterprise.Enterprise;
+	import com.bidizhaobiao.tablestoreutil.entity.enterprise.Enterprise;
+
+
+	import site.dunhanson.aliyun.tablestore.entity.bidi.SubDocument;
+	import com.bidizhaobiao.tablestoreutil.entity.SubDocument;
+
+
+	import com.i2f.edoc.utils.pages.DatabasePaginatedList;
+	import com.bidizhaobiao.tablestoreutil.util.DatabasePaginatedList;
 
 
 
+2、清除redis缓存
+	BXKC_PC:HOME_PAGE:ZBZS:TYPE:40
+	BXKC_PC:HOME_PAGE:DOCUMENTS:KEYWORDS:邀标		// 二次删除 10分钟
 
-
-
-1、 mongo 同步到 solr 
-	<!--mongo fields-->
-	<field column="tenderee" name="tenderee"></field>
-	<field column="win_tenderer" splitBy=";" sourceColName="win_tenderer"></field>
-	<field column="agency" name="agency"></field>
-	<field column="win_bid_price" name="win_bid_price" splitBy=";" sourceColName="win_bid_price"></field>
-	<field column="bidding_budget" name="bidding_budget"></field>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1、今天工作
+	1、tablestoreutil jar
+	2、pc改造 切分分支(upgradeOtsutil)
+	3、api和admin的改造
+	4、学习vue

@@ -42,7 +42,7 @@
 			继承了他之后如果是单表的操作你甚至不用写xml文件了，你也可以写xml文件，写一些多表关联的sql，可以考虑多建一个VO为之服务
 			但是这个xml和mapper.java是怎么关联的呢？
 				1、mapper.xml和mapper.java
-					1、 springboot 主配置文件使用 mybatis-plus.mapper-locations=classpath*:mapper\/*.xml 
+					1、 springboot 主配置文件使用 mybatis-plus.mapper-locations='classpath*:mapper/*.xml' 
 					2、 然后对应xml的命名空间 namespace 写成对应的mapper.java
 		3、实体类的处理
 			1、@TableName(value="tbl_employee")			// 映射表名，如果表名和pojo名一样，可以不用写
@@ -61,7 +61,7 @@
 				2、T selectOne(@Param("ew" T e));	// 查询一条记录，如果多条会报错
 				3、List<T> selectBatchIds(List<? extends Serializable> id idList);	// 根据id集合获取记录
 				4、List<T> selectByMap(@param("cm") Map<String, Object> columnMap);	// 根据Map<列名->值>获取记录，列名一定要和数据库一样
-				5、List<T> selectByPage(RowBounds rowBounds, @param("ew") Wrapper<T> wrapper)	// 内存分页(不推荐，推荐PageHelper插件，或者mybatisplus自己的)		// 这个可能配置了分页插件， service 也是真正的分页了
+				5、List<T> selectByPage(RowBounds rowBounds, @param("ew") Wrapper<T> wrapper)	// 要在 SessionFactory 配置分页插件(推荐PageHelper插件，或者mybatisplus自己的)才会生效的
 					List<Employee> emps =employeeMapper.	(
 					new Page<Employee>(1, 2),
 					new EntityWrapper<Employee>().between("age", 18, 50).eq("gender", 1).eq("last_name", "Tom")
@@ -175,27 +175,51 @@
 		9、MP插件
 			1、分页插件
 				1、相当于在主配置文件加入插件(PaginationInterceptor有空去看里边的代码)
-					<bean id="sqlSessionFactoryBean" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
-						<!-- 插件注册 -->
-						<property name="plugins">
-							<list>
-								<!-- 注册分页插件 -->
-								<bean class="com.baomidou.mybatisplus.plugins.PaginationInterceptor"></bean>
-								<!-- 注册执行分析插件，MySQL5.6.3以上才可以的，这个插件没什么用 -->
-								<bean class="com.baomidou.mybatisplus.plugins.SqlExplainInterceptor">
-									<property name="stopProceed" value="true"></property>
-								</bean>
-								<!-- 注册性能分析插件 -->
-								<bean class="com.baomidou.mybatisplus.plugins.PerformanceInterceptor">
-									<property name="format" value="true"></property>
-									<!-- <property name="maxTime" value="5"></property> -->
-								</bean>
-								<!-- 注册乐观锁插件 -->
-								<bean class="com.baomidou.mybatisplus.plugins.OptimisticLockerInterceptor">
-								</bean>
-							</list>
-						</property>
-					</bean>
+					1、xml配置方式
+						<bean id="sqlSessionFactoryBean" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+							<!-- 插件注册 -->
+							<property name="plugins">
+								<list>
+									<!-- 注册分页插件 -->
+									<bean class="com.baomidou.mybatisplus.plugins.PaginationInterceptor"></bean>
+									<!-- 注册执行分析插件，MySQL5.6.3以上才可以的，这个插件没什么用 -->
+									<bean class="com.baomidou.mybatisplus.plugins.SqlExplainInterceptor">
+										<property name="stopProceed" value="true"></property>
+									</bean>
+									<!-- 注册性能分析插件 -->
+									<bean class="com.baomidou.mybatisplus.plugins.PerformanceInterceptor">
+										<property name="format" value="true"></property>
+										<!-- <property name="maxTime" value="5"></property> -->
+									</bean>
+									<!-- 注册乐观锁插件 -->
+									<bean class="com.baomidou.mybatisplus.plugins.OptimisticLockerInterceptor">
+									</bean>
+								</list>
+							</property>
+						</bean>
+					2、java代码配置
+						@Bean("mysqlSqlSessionFactory")
+						public MybatisSqlSessionFactoryBean mysqlSqlSessiongFactory() throws Exception {
+							MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
+
+							// 1、设置数据源
+							mybatisSqlSessionFactoryBean.setDataSource(shardingTableDataSource());
+
+							// 2、设置mybatis配置文件
+							Resource mybatisConfig = new ClassPathResource("mybatis-config.xml");
+							mybatisSqlSessionFactoryBean.setConfigLocation(mybatisConfig);
+
+							// 3、分页插件
+							mybatisSqlSessionFactoryBean.setPlugins(new Interceptor[]{
+									paginationInterceptor()
+							});
+
+							return mybatisSqlSessionFactoryBean;
+						}
+						@Bean
+						public PaginationInterceptor paginationInterceptor(){
+							return new PaginationInterceptor();
+						}
 				2、java代码的使用
 					@Test
 					public void testPage() {

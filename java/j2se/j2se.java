@@ -44,6 +44,18 @@
 			Array读快改慢
 			Linked改快读慢
 			Hash两者之间
+	3、实战
+		1、 List 转 Array
+			ArrayList<String> list = new ArrayList<String>();
+			String[] arr2 = list.toArray(new String[list.size()]);
+		2、 Array 转 List
+			String[] s = {"a","b","c"};
+			List list = java.util.Arrays.asList(s);
+		3、Map遍历（JSONObject也是Map）
+			JSONObject jsonObject = (JSONObject)JSON.toJSON(obj);
+			for (Map.Entry<String, Object> map : jsonObject.entrySet()) {
+				log.warn("{}={}", map.getKey(), map.getValue());
+			}
 4、面向对象编程(OOP)
 	1、类：
 		1、构造方法：初始化属性，实例化子类时会自动调父类的无参构造方法，如果没有，子类有没有显示调用父类构造方法，就会会报错，不能无本之木，调用普通方法用super.fun()
@@ -95,7 +107,7 @@
 			MyThread myThread = new MyThread();
 			myThread.setName("t1");
 			myThread.start();
-	4、创建固定的线程池：ExecutorService s = Executors.newFixedThreadPool(10);	// 并发10条，但是可以放入10+线程，10+以后的线程就可以等待其他线程运行完成才可以执行
+	4、创建固定的线程池：ExecutorService s = Executors.newFixedThreadPool(10);	// 并发10条，但是可以放入10+线程，10+以后的线程就在队列等待运行（先进先出），但是每一条线程需要要使用try要不然全部并发
 		1、线程池的好处 与 问题
 			1、好处
 				1、管理线程
@@ -124,9 +136,8 @@
 				// 每一条线程的超时时间为1s
 				for (Future<String> f : list) {
 					try {
-						System.out.print("开始取返回值：");
 						String s = f.get(1, TimeUnit.SECONDS);	
-						// 此方法会阻塞到，任何一条线程执行完毕，否则的话，抛异常，然而 catch 中的 f.cancel(true); 会随机的调用活跃的某一条线程，此方法还不如使用，线程池整体超时限制
+						// 此方法会阻塞到(调用到f.get才开始计时)，此线程执行完毕，否则抛超时异常，然而 catch 中的 f.cancel(true); 和线程池整体超时限制有区别
 							/*
 							try {
 								if (!fixedThreadPool.awaitTermination(600, TimeUnit.SECONDS)) {  // 最多阻塞等待600秒，否则超时
@@ -140,16 +151,20 @@
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							} finally {
-								fixedThreadPool.shutdownNow();
+								fixedThreadPool.shutdownNow();	// 有了这句，上的循环task.cancel(true);可以不要
 							}
 							*/
 						System.out.println(s);
 					} catch (Exception e) {
-						f.cancel(true);		// 这个会触发线程中断，注意：如果线程里边有处理中断异常的话，线程后续代码还是会继续跑的，慎处理
+						f.cancel(true);		// 会触发线程中断，注意：线程里边没有处理中断异常的话，线程后续代码还是会继续跑的，
+						// 但线程池的活跃数量是不是就减一了，队列的线程就可以执行了？
+						// 使用下面测试
+						ThreadPoolExecutor tpe = ((ThreadPoolExecutor) fixedThreadPool);
+						int queueSize = tpe.getQueue().size();		// 队列数量
+						int activeCount = tpe.getActiveCount();		// 活跃数量
 						System.out.println("超时");
 					}
 				}
-
 
 				// 由于cpu核数有限，调用shutdownNow也不一定马上终止所有线程，所以要while小等待一下，真的所有线程停止之后isTerminated才等于true
 				fixedThreadPool.shutdownNow();
@@ -178,8 +193,24 @@
 8、 获取路径的问题
 	this.getClass().getResource("/").getPath()	// 获取类的根路径
 	this.getClass().getResource("").getPath()	// 获取当前类的路径
-	ClassLoader.getSystemResources("")			// 获取类的根路径 和 this.getClass().getResource("/").getPath() 一样（但是 jar包的话用 ClassLoader.getSystemResources("") 才能取到路径）
-	Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);		// ClassLoader.getSystemResources("") 和一样
+	ClassLoader.getSystemResource("")			// 获取类的根路径 和 this.getClass().getResource("/").getPath() 一样（但是 jar包的话用 ClassLoader.getSystemResource("") 才能取到路径）
+	Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);		// ClassLoader.getSystemResource("") 和一样
+8、java反射
+
+	1、示例
+		Field[] fields = Dog.class.getFields();					// 获取public的方法，包括继承的 getDeclaredMethods() 也类似
+		Field[] fields = vo.getClass().getDeclaredFields();		// 得到"紧紧"自己声明的变量，但是不包括继承的属性 getMethods() 也类似
+			1、操作字段
+				1、直接操作如果是 private 的字段
+					field.setAccessible(true);				// 需要这句，要不然下面会报错
+					Object v = field.get(vo);				// 获取值
+					field.set(vo, value);					// 设置值
+				2、通用的方法，获取他们的 set/get 对其的操作
+					String name = field.getName();
+					Class<?> type = field.getType();
+					Method setMethod = vo.getClass().getMethod("set" + name.substring(0, 1).toUpperCase() + name.substring(1), type);
+					Method getMethod = vo.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), type);
+
 8、二进制运算(以后再去学吧，等学到数据类型时再学)
 	1、记住七句话：
 		1、二进制的最高位是符号为：0表示正数，1表示负数。
@@ -221,7 +252,6 @@
 
 
 
-登录之后不需要清除以 user_info 为前缀的用户缓存信息，因为他的有效期是一天
 
 
 

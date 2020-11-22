@@ -158,7 +158,7 @@
 			repo.saveContext(contextAfterChainExecution, holder.getRequest(),holder.getResponse());		// 当前线程请求执行完毕后，把后面认证好了的 SecurityContext 放入 session 以备此session的再次请求
 	2、 UsernamePasswordAuthenticationFilter	// 登录请求验证(即登录表单提交时的请求/authentication/form)
 		
-
+P
 	3、 BasicAuthenticationFilter
 	3、 SocialAuthenticationFilter			// social 的过滤器
 	4、 RememberMeAuthenticationFilter		// 记住我的过滤器
@@ -315,6 +315,17 @@
 					2、 不需要 redis 直接使用 jwt 规范
 						1、 自包含 + 密签名 + 扩展
 						2、 去 官网 https://www.jsonwebtoken.io/ 可以解析我们的 jwt 但是好像不需要秘钥？？？
+
+
+
+PW_bd.cjr1
+
+
+
+
+___
+
+
 
 
 

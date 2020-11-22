@@ -83,7 +83,13 @@
 //Date对象（类）
 001、date.tolocaleString()  //得到客服端本地的时间表示格式
 001、  //得到年份//得到月份//得到天份//得到时//得到分//得到秒
-001、
+001、开始时间不能比结束时间大
+		var stime = new Date(distributeStartDate);
+		var etime = new Date(distributeEndDate);
+		if (stime > etime) {
+			ealert("资源分配开始时间不能大于结束时间！");
+			return false;
+		}
 
 
 //String对象（类）

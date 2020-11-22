@@ -37,6 +37,11 @@ WebStorm与IntelliJ IDEA的区别参考如下，如果你不想使用webstorm �
 	3、Maven->importing->import Maven projects automatically(勾上说明我们pom.xml文件一旦修改就会马上更新依赖jar包)->automatically download(Sources和Documentation)不建议勾上
 	4、使用maven projects窗口的Lifecycle使用maven的命令
 5、下载Idea插件
+	1、安装一直下一步
+	2、安装好选择试用，30天后删除以下东西
+		1、删除目录： C:\Users\cjr.IntelliJIdea2019.3\config\eval
+		2、删除文件： C:\Users\cjr.IntelliJIdea2019.3\config\options\other.xml
+		3、删除注册表： HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains\idea
 
 6、取消自动更新Idea
 

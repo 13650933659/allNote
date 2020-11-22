@@ -1,0 +1,145 @@
+GraphJSON
+{
+"data": {
+"@type": "g:List"
+"@value": [
+{
+"@type": "g:Int64"
+"@value": 117809856
+}
+{
+"@type": "g:Int64"
+"@value": 116128843
+}
+{
+"@type": "g:Int64"
+"@value": 115394002
+}
+{
+"@type": "g:Int64"
+"@value": 115394000
+}
+{
+"@type": "g:Int64"
+"@value": 114750188
+}
+{
+"@type": "g:Int64"
+"@value": 114607786
+}
+{
+"@type": "g:Int64"
+"@value": 114371829
+}
+{
+"@type": "g:Int64"
+"@value": 114285328
+}
+{
+"@type": "g:Int64"
+"@value": 113400333
+}
+{
+"@type": "g:Int64"
+"@value": 113093629
+}
+{
+"@type": "g:Int64"
+"@value": 112764097
+}
+{
+"@type": "g:Int64"
+"@value": 112351409
+}
+{
+"@type": "g:Int64"
+"@value": 112188677
+}
+{
+"@type": "g:Int64"
+"@value": 112056515
+}
+{
+"@type": "g:Int64"
+"@value": 111878794
+}
+{
+"@type": "g:Int64"
+"@value": 111637409
+}
+{
+"@type": "g:Int64"
+"@value": 111637408
+}
+{
+"@type": "g:Int64"
+"@value": 111419257
+}
+{
+"@type": "g:Int64"
+"@value": 111277771
+}
+{
+"@type": "g:Int64"
+"@value": 110500261
+}
+{
+"@type": "g:Int64"
+"@value": 110375975
+}
+{
+"@type": "g:Int64"
+"@value": 120416935
+}
+{
+"@type": "g:Int64"
+"@value": 119867756
+}
+{
+"@type": "g:Int64"
+"@value": 119867739
+}
+{
+"@type": "g:Int64"
+"@value": 119324707
+}
+{
+"@type": "g:Int64"
+"@value": 118922631
+}
+{
+"@type": "g:Int64"
+"@value": 118783297
+}
+{
+"@type": "g:Int64"
+"@value": 118783293
+}
+{
+"@type": "g:Int64"
+"@value": 122184432
+}
+{
+"@type": "g:Int64"
+"@value": 122184384
+}
+{
+"@type": "g:Int64"
+"@value": 121769318
+}
+{
+"@type": "g:Int64"
+"@value": 121471254
+}
+{
+"@type": "g:Int64"
+"@value": 120800903
+}
+]
+}
+"meta": {
+"@type": "g:Map"
+"@value": [
+]
+}
+}

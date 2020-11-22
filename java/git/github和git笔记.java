@@ -186,7 +186,9 @@
 问题
 	1、回滚此次的push
 		1、第一种：你直接在本地删除错误的代码，再次提交(这种如果文件多就麻烦了)
-		2、第二种：git revert是用一次新的commit来回滚之前的commit，再次提交(类似第一种了)
+		2、第二种：git revert是用一次新的commit来回滚之前的commit，再次提交(类似第一种了)			// 参考 https://www.jianshu.com/p/5e7ee87241e4
+			git revert --no-commit f7742cd..551c408			// 回滚 (f7742cd, 551c408] 前开后闭（--no-commit 代表不做提交到本地库，然后手动commit 再push，默认会提交）
+			git revert --no-commit f7742cd					// 回滚 f7742cd
 		3、第三种：git reset但是会删除之前的本地库的提交，你git push可能导致冲突(如果本地版本落后于远程)
 	2、git rebase(衍合操作)，一般我使用git merge最终效果是一样的，整洁的提交历史
 	3、修改提交信息
@@ -196,5 +198,3 @@
 
 	
 
-
-	mapZhongbiao = neo4jUtils.finOrgZhongbiaoOrg(    // 245 就是上一次版本的， 370才是当前版本的

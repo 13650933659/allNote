@@ -100,6 +100,10 @@
 			7、也可以直接写正则表达式：db.stu.find({name:/zs.*/},{name:1});
 			8、$where(bson->json再来比效率低)：db.goods.find({$where:'this.id != 3 && this.id != 11'});
 			9、使用内置的_id查询：db.stu.find({_id: ObjectId("5bfff2548fbbcf4d7c482684")});
+			10、时间类型
+				Date()			// Mon Sep 07 2020 16:57:27 GMT+0800 		显示当前的时间
+				new Date()		// ISODate("2020-09-07T08:57:28.429Z")		构建一个格林尼治时间   可以看到正好和Date()相差8小时，我们是+8时区，也就是时差相差8，所以+8小时就是系统当前时间
+				ISODate()		// ISODate("2020-09-07T08:57:28.864Z")		也是格林尼治时间 和 new Date() 一样
 		6、聚合函数
 			1、db.stu.find().count();	// 查询结果条数
 			1、db.stu.find().sort({_id:1});	// 排序1为升序，-1是降序
@@ -195,6 +199,7 @@
 	db.auth("bxkc","bidizhaobiaowang2017")
 
 
+	
 
 
 

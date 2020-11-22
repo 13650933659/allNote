@@ -109,20 +109,20 @@
 				show VARIABLES like '%max_allowed_packet%';
 		3、 mysql 的常用函数
 			1、日期类型
-			now()  //得到：2016-05-12 21:34:50当前系统时间，
-		4、 group_concat(distinct search.KEYWORD separator ',') 实现交叉表
-			select temp.phone 电话,temp.keyword 搜索关键词,group_concat(distinct monitor.KEYWORDS separator ',') 定制关键词 from
-			(
-			  select user.PHONE phone,login.LOGIN_ID loginId,group_concat(distinct search.KEYWORD separator ',') keyword,count(*) keywordNum from b2c_mall_staff_basic_info user
-				join b2c_user_login_info login on login.userid=user.userid
-				join bxkc_mysearchkeyword search on search.CRUSER=login.LOGIN_ID
+				now()  //得到：2016-05-12 21:34:50当前系统时间，
+			1、 group_concat(distinct search.KEYWORD separator ',') 实现交叉表
+				select temp.phone 电话,temp.keyword 搜索关键词,group_concat(distinct monitor.KEYWORDS separator ',') 定制关键词 from
+				(
+				  select user.PHONE phone,login.LOGIN_ID loginId,group_concat(distinct search.KEYWORD separator ',') keyword,count(*) keywordNum from b2c_mall_staff_basic_info user
+					join b2c_user_login_info login on login.userid=user.userid
+					join bxkc_mysearchkeyword search on search.CRUSER=login.LOGIN_ID
 
-			  where user.USERTYPE='02'
-			  GROUP BY user.PHONE,login.LOGIN_ID
-			) temp
-			left join bxkc_monitor monitor on monitor.CRUSER=temp.loginId
-			GROUP BY temp.phone
-
+				  where user.USERTYPE='02'
+				  GROUP BY user.PHONE,login.LOGIN_ID
+				) temp
+				left join bxkc_monitor monitor on monitor.CRUSER=temp.loginId
+				GROUP BY temp.phone
+			1、查某个表的大小： select concat(round(sum(DATA_LENGTH/1024/1024),2),'M') from information_schema.tables where table_schema='bxkc' and table_name='sys_document_0';
 	2、 sqlServer
 		1、 sqlServer 启动关闭-还原备份-创建表案例
 			1、启动关闭
@@ -210,7 +210,23 @@
 				insert into hw_users values(hw_users_s.nextval,1,'hsp','mm','男',18,10000.00,1,'2016-12-12 12:00:00');
 			4、oracle查看数据的结构
 				1、create table table_name/desc table_name(和mysql一样吗)
-
+			5、游标
+				DECLARE
+				  CURSOR emp_cur IS SELECT * FROM bxkc.emp FOR UPDATE ;
+				  emp_row emp_cur%ROWTYPE;
+				BEGIN
+				  OPEN emp_cur;
+				  LOOP
+					FETCH emp_cur INTO emp_row;
+					IF emp_cur%NOTFOUND THEN
+					  EXIT;
+					ELSE
+					  UPDATE bxkc.emp SET name='abc' WHERE CURRENT OF emp_cur;
+					END IF;
+				  END LOOP;
+				  COMMIT;
+				  CLOSE emp_cur;
+				END;
 
 
 

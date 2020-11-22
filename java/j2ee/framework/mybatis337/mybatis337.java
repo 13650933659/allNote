@@ -170,7 +170,8 @@
 								</discriminator>
 							 </resultMap>
 				2、动态sql
-					1、<if>标签，可以参考下面的，<!-- test：判断表达式（OGNL）OGNL参照PPT或者官方文档，特殊符号要转义字符：比如&&-->
+					1、<if>标签，可以参考下面的，<!-- test：判断表达式（OGNL）OGNL参照PPT或者官方文档，特殊符号要转义字符：比如&&-- 也可以使用 <![CDATA[...]]> >
+					
 					2、<choose><when><otherwise>等标签，相当于if-else
 						<select id="getEmpsByConditionChoose" resultType="com.atguigu.mybatis.bean.Employee">
 							select * from tbl_employee 

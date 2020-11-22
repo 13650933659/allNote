@@ -229,7 +229,7 @@ curl -XGET 'http://172.16.57.178:9200/organizations/Organization/46502113?pretty
 		{
 		  "query": {
 			"multi_match": {
-			  "query": "比地科技",
+			  "query": "陕西省采购招标有限责任公司",
 			  "type": "phrase",
 			  "slop": 0,
 			  "fields": [
@@ -276,13 +276,5 @@ curl -XGET 'http://172.16.57.178:9200/organizations/Organization/46502113?pretty
 	
 	1、 head插件： http://47.97.210.202:9100
 	2、 部署路径： /usr/local/elasticsearch-6.4.2
-
-
-
-64157478352834562
-
-64157478352834562
-
-64157478352834562
 
 
