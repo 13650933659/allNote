@@ -54,7 +54,7 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 
 
 
-
+BxkcDesignedProjectSynchronizationDataServiceImpl
 
 1、sdk参考
 	1、 gremlin console(liunx/windows)
@@ -100,13 +100,13 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 						g.addE('created').from(V().has('user', 'name', 'ww')).to(V().has('software', 'name', 'bxkc')).property('weight', 0.5f)		// 相当于 (ww) -[created:{'weight', 0.5f}]-> (bxkc)
 			2、删
 				1、删除 指定 label 的点和边
-					g.E().hasLabel('knows').drop()
+					g.E().hasLabel('knows').drop()	// 不存在不会报错
 					g.V().hasLabel('user').drop()	// 会顺带删除关系的,不存在不会报错
 				2、删除 zs 和 ls 的认识关系
 					g.V('zs').outE('knows').where(inV().has(id, 'ls')).drop()
 			
 			3、改
-				g.V('1').property('age', 50)		// 根据id修改(或新增)属性，
+				g.V('1').property('age', 50)		// 根据id修改(或新增)属性， 如果不存在，则返回0
 			4、查
 				1、合计查询结果 : g.V().count()		
 				2、关联查询(获取 marko 认识的人, marko认识的人created的software)
@@ -236,10 +236,6 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 
 
 
-
-
-
-
 1、场景
 	1、统计 O -> P 的关系下面3种实现（他们建议我用第三种）
 		match (o:Organization)-[r]->(p:Project) where id(o) in ['1','2'] return o.name as name,type(r) as relationType,count(*) as num;
@@ -348,7 +344,8 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 
 
 
-g.V().has('docid',within(1L,2L)).aggregate('x').hasLabel('Document')
+g.V().has('Document','docid',within(1L,2L))
+g.V().has('Document','docid',within(1L,2L)).aggregate('x').hasLabel('Document')
 
 g.V().has('~id', within('1','2')).in().hasLabel('Document')
 
@@ -369,7 +366,7 @@ gremlin 参考文档：http://tinkerpop-gremlin.cn
 // 批量修改 price 为string类型的数据(如果price是字符串 相当于 price is not null)		// 明天问一下巧工，因为这个慢
 g.V().hasLabel('user').has('price',gte(7)).limit(10).property('price',12.2D) 
 
-// 如果 province 为空 则使用 '' 默认值，要不然会报错 
+// 如果 province 为空 则使用 '' 默认值，要不然会报错  .by(select('o').valueMap('name')) 就不会
 g.V('user').as('u').project('province','price')
 .by(select('u').coalesce(values('province'), constant('默认值')))
 .by(select('u').coalesce(values('price'), constant(0D)))

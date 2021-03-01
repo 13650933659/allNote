@@ -1,0 +1,34 @@
+gdb:
+  active: prod9o
+
+############################新开的gdb
+# 生产环境（外网）
+testProd:
+  address: gds-bp130d7rgd9m7n61150070pub.graphdb.rds.aliyuncs.com
+  port: 3734
+  username: bxkc
+  password: 'k0n1bxkc!0K^Em%j'
+
+
+# 生产环境（内网）
+prod:
+  address: gds-bp130d7rgd9m7n61150070.graphdb.rds.aliyuncs.com
+  port: 8182
+  username: bxkc
+  password: 'k0n1bxkc!0K^Em%j'
+
+############################新开的gdb（2020.12.26）
+# 生产环境（外网）
+testProd9o:
+  address: gds-bp150g6509035e9o150030pub.graphdb.rds.aliyuncs.com
+  port: 3734
+  username: bxkc
+  password: 'k0n1bxkc!0K^Em%j'
+
+
+# 生产环境（内网）
+prod9o:
+  address: gds-bp150g6509035e9o150030.graphdb.rds.aliyuncs.com
+  port: 8182
+  username: bxkc
+  password: 'k0n1bxkc!0K^Em%j'

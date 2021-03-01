@@ -109,48 +109,48 @@
 		mvn install:install-file -DgroupId=com.baidu -DartifactId=ueditor -Dversion=1.0.0 -Dpackaging=jar -Dfile=ueditor-1.1.2.jar
 		mvn install:install-file -DgroupId=net.sf.dozer -DartifactId=dozer -Dversion=5.5.1 -Dpackaging=jar -Dfile=C:/Software/net/sf/dozer/dozer/5.5.1/dozer-5.5.1.jar
 12、打包，测试环境根本就不要打包，直接把配置文件考过去，让后他会自动编译java文件(新增的java他会加入的)
-	1、打包命令：clean package -Dmaven.test.skip=true 或者  clean compile -Dmaven.test.skip=true
+	1、打包命令：clean package -Dmaven.test.skip=true -P dev  或者  clean compile -Dmaven.test.skip=true -P dev
 		1、打包参数
 			-DskipTests ：不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
 			-Dmaven.test.skip=true：不执行测试用例，也不编译测试用例类。
 			-Dname=zs：springboot配置文件可以使用@name@来获取值
 		2、打包的Profiles(separated with space)：这里可以指定pom.xml文件指定的profile的id，然后里面的属性springboot配置文件可以使用@name@来获取值
 			 <profiles>
-					<profile>
-						<id>dev-historical-datasource-mode</id>
-						<properties>
-							<profile.active>dev</profile.active>
-							<application.datasource-mode>historical</application.datasource-mode>
-						</properties>
-						<activation>
-							<activeByDefault>true</activeByDefault>
-						</activation>
-					</profile>
-					<profile>
-						<id>dev-daily-datasource-mode</id>
-						<properties>
-							<profile.active>dev</profile.active>
-							<application.datasource-mode>daily</application.datasource-mode>
-						</properties>
-					</profile>
-				</profiles>
-		3、打包时资源文件的管理（先去掉全部，然后在引入，参考下面的）
-			<resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>*</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>application.properties</include>
-                    <include>*-${profile.active}.*</include>
-                    <include>mybatis-config.xml</include>
-                </includes>
-            </resource>
+				<profile>
+					<id>dev</id>
+					<properties>
+						<profiles.active>dev</profiles.active>
+					</properties>
+					<activation>
+						<activeByDefault>true</activeByDefault>
+					</activation>
+				</profile>
+				<profile>
+					<id>prod</id>
+					<properties>
+						<profiles.active>prod</profiles.active>
+					</properties>
+				</profile>
+			</profiles>
+		3、打包时资源文件的管理，只对 resources 下面的文件生效，文件夹都会被打包（先去掉全部，然后在引入，参考下面的，放在 build 标签里面）
+			<resources>
+				<resource>
+					<directory>src/main/resources</directory>
+					<filtering>true</filtering>
+					<excludes>
+						<exclude>*</exclude>
+					</excludes>
+				</resource>
+				<resource>
+					<directory>src/main/resources</directory>
+					<filtering>true</filtering>
+					<includes>
+						<include>application.properties</include>
+						<include>*-${profiles.active}.*</include>
+						<include>mybatis-config.xml</include>
+					</includes>
+				</resource>
+			</resources>
 		4、打包指定war的名称加上时间戳
 			1、指定时间格式
 				<properties>
@@ -173,7 +173,7 @@
                             <goal>rename</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>${project.build.outputDirectory}/hanlp-${profile.active}.properties</sourceFile>
+                            <sourceFile>${project.build.outputDirectory}/hanlp-${profiles.active}.properties</sourceFile>
                             <destinationFile>${project.build.outputDirectory}/hanlp.properties</destinationFile>
                         </configuration>
                     </execution>

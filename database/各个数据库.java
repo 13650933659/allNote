@@ -81,7 +81,9 @@
 					code int NOT NULL COMMENT '插件编码' ,
 					deviceType varchar(255) NOT NULL COMMENT '设备类型' ,
 					name  varchar(255) NOT NULL COMMENT '插件名称' ,
-					url  varchar(2000) NOT NULL COMMENT '插件文件存储的url'
+					url  varchar(2000) NOT NULL COMMENT '插件文件存储的url',
+					price decimal(8,2)					-- 代表整数和小数的位数<=8,小数 <= 2  默认 DECIMAL(10)
+					// DATETIME yyyy-MM-dd hh:mm:ss
 				) comment '插件信息表' 
 				 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 				 create index code on PluginInfo (code);		// 创建索引

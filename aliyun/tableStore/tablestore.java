@@ -73,14 +73,35 @@
 	7、如果使用二级索引表，刚刚开始他们分区比较慢，如需快速操作，需要联系工作人员手动分区，以后会自动分区，但是比较慢
 	8、每个字段的值不能超过 2M 即 2097152 个字节 2 * 1024 = 2048KB * 1024 = 2097152byte, 即能容下 2097152/3约699050 个中文， 2097152 英文和数字
 	4、ots创建二级索引时，包含存量和不包含存量是什么意思呢
+	5、获取记录时 投影的字段不存在，就算记录存在也是不会返回记录的，特别注意
+	1、ots聚合统计 (通用 )
+	1、通用
+		SearchQuery.setLimit(0);								// 聚合统计提高性能
+		SearchQuery.setAggregationList(List<Aggregation>);		// 聚合统计
+		SearchQuery.setGroupByList(List<GroupBy>);				// 分组
+		GroupByField.Builder.size(2000);						// 最多取2000个分组，默认拿前10个， offset+limit 和 nextToken 两种方式都不可以的
+		having(条件过滤)										// 也是实现不了的
+	2、案例
+		1、 去重的合计  select count(distinct name) from user;
+			DistinctCountAggregation distinctCount = AggregationBuilders.distinctCount("tendereeDistinctCount", "tenderee").build();
+			SearchQuery.setAggregationList(aggregationList.add(distinctCount));
+
+		2、  select win_tenderer winTendererGroup,sum(win_bid_price) winBidPriceSum from document group by win_tenderer limit 2000;
+			GroupByField.Builder builder = GroupByBuilders.groupByField("winTendererGroup", "win_tenderer").size(2000);	// 最多2000;
+			builder.addSubAggregation(AggregationBuilders.sum("winBidPriceSum", "win_bid_price"));
+			SearchQuery.setGroupByList(Arrays.asList(builder.build()));
+		3、 select win_tenderer winTendererGroup, count(1) num,sum(win_bid_price) winBidPriceSum from document group by win_tenderer order by num desc,winBidPriceSum desc limit 2000;
+			GroupByField.Builder builder = GroupByBuilders.groupByField("winTendererGroup", "win_tenderer").size(2000);	// 最多2000;
+			builder.addSubAggregation(AggregationBuilders.sum("winBidPriceSum", "win_bid_price"));
+
+			// 排序 ,  项目数量排序倒叙, 再根据项目金额倒叙.
+			List<GroupBySorter> groupBySorter = new ArrayList<>();
+			groupBySorter.add(GroupBySorter.rowCountSortInDesc());					// 数量倒序
+			groupBySorter.add(GroupBySorter.subAggSortInDesc("winBidPriceSum"));	// 总金额倒序
+			builder.addGroupBySorter(groupBySorter);
+			searchQuery.setGroupByList(Arrays.asList(builder.build()));
 
 
-
-1、临时
-	1、
-
-	SearchResponse = client.search(SearchRequest);
-	
 
 2、 Query
 	1、 TermQuery 和 TermsQuery		// 精准查询

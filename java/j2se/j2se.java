@@ -188,7 +188,7 @@
 			1、 问题
 				1、 主线程被kill了，那么子线程应该也会被kill，比如tomcat被kill 那么那些子线程也会被kill(好像之前学linux时是这样的，有空去验证一下)
 				2、 能设置线程池里面的每一条线程的超时时间吗？
-
+	5、Java中synchronized同步锁用法及作用范围		// 请参考 https://blog.csdn.net/yx0628/article/details/79086511
 7、IO流看代码(看代码)
 8、 获取路径的问题
 	this.getClass().getResource("/").getPath()	// 获取类的根路径
@@ -251,6 +251,10 @@
 
 
 
+2、java8以上
+	2、经验
+	 List<Long> ids = records.stream().map(r -> r.getId()).collect(Collectors.toList());		// 取id集合
+	 Map<Long, D> idAndEntityMap = list.stream().collect(Collectors.toMap(D::getId, a -> a));   // 转Map 也可以 list.stream().collect(Collectors.toMap(BxkcDesignedProjectForMysql::getId, Function.identity()));
 
 
 

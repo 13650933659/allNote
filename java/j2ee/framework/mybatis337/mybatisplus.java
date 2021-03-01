@@ -63,7 +63,7 @@
 				4、List<T> selectByMap(@param("cm") Map<String, Object> columnMap);	// 根据Map<列名->值>获取记录，列名一定要和数据库一样
 				5、List<T> selectByPage(RowBounds rowBounds, @param("ew") Wrapper<T> wrapper)	// 要在 SessionFactory 配置分页插件(推荐PageHelper插件，或者mybatisplus自己的)才会生效的
 					List<Employee> emps =employeeMapper.	(
-					new Page<Employee>(1, 2),
+					new Page<	>(1, 2),
 					new EntityWrapper<Employee>().between("age", 18, 50).eq("gender", 1).eq("last_name", "Tom")
 					);
 			4、删除操作
