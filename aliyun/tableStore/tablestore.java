@@ -7,10 +7,11 @@
 
 
 
-1、计费
+1、计费  // 参考 https://www.aliyun.com/price/product?spm=a2c4g.11186623.2.9.56fc44e64kmlbb#/ots/detail
 	1、存储计费
-	2、读写计费
-		1、计费单位为 cp 相当于我们的斤，克，千克...
+	2、读写计费(内部产生的cu不用收费)
+		1、计费单位为 cu 相当于我们的斤，克，千克...
+			写=0.02元/万CU  读=0.01元/万CU
 	3、外网下载计费
 
 
@@ -54,6 +55,18 @@
 5、mysql数据同步到ots 参考 (https://help.aliyun.com/document_detail/124751.html?spm=a2c4g.11174283.6.737.379330afR7by4C)
 	1、table模式（多task），您无需自己写select语句，而是由DataX根据JSON中的的column、table、spliPk配置项，自行拼接SQL语句，
 
+6、多元索引
+	1、 创建
+	2、 Query
+		1、 TermQuery 和 TermsQuery		// 精准查询
+		2、 MatchAllQuery				// 用于匹配所有行，常用于查询表中数据总行数，或者查看表中任意几条数据。
+		3、 MatchQuery					// 匹配查询（用于分词字符串-最大数量语义分词）
+		4、 MatchPhraseQuery			// 短语匹配查询（用于分词字符串-最大数量语义分词）
+		5、 RangeQuery					// 范围条件查询也是用时间
+		6、 WildcardQuery				// 通配符查询
+		7、 BoolQuery					// 多条件组合查询
+		8、 NestedQuery					// 嵌套查询
+		9、	ExistsQuery					// 查询表不为空的数据
 
 
 
@@ -74,7 +87,13 @@
 	8、每个字段的值不能超过 2M 即 2097152 个字节 2 * 1024 = 2048KB * 1024 = 2097152byte, 即能容下 2097152/3约699050 个中文， 2097152 英文和数字
 	4、ots创建二级索引时，包含存量和不包含存量是什么意思呢
 	5、获取记录时 投影的字段不存在，就算记录存在也是不会返回记录的，特别注意
-	1、ots聚合统计 (通用 )
+	6、RangeQuery使用案例
+		null			// 都是查不到的
+		''				// 只有 < 能查到
+		abc				// 都是查不到的
+		时间字符串		// 正常查询
+	
+	1、ots聚合统计 (通用)
 	1、通用
 		SearchQuery.setLimit(0);								// 聚合统计提高性能
 		SearchQuery.setAggregationList(List<Aggregation>);		// 聚合统计
@@ -102,17 +121,6 @@
 			searchQuery.setGroupByList(Arrays.asList(builder.build()));
 
 
-
-2、 Query
-	1、 TermQuery 和 TermsQuery		// 精准查询
-	2、 MatchAllQuery				// 用于匹配所有行，常用于查询表中数据总行数，或者查看表中任意几条数据。
-	3、 MatchQuery					// 匹配查询（用于分词字符串-最大数量语义分词）
-	4、 MatchPhraseQuery			// 短语匹配查询（用于分词字符串-最大数量语义分词）
-	5、 RangeQuery					// 范围条件查询也是用时间
-	6、 WildcardQuery				// 通配符查询
-	7、 BoolQuery					// 多条件组合查询
-	8、 NestedQuery					// 嵌套查询
-	9、	ExistsQuery					// 查询表不为空的数据
 
 
 

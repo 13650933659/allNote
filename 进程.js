@@ -17,6 +17,7 @@
 	5、 运行jar包 
 		1、例子
 			nohup java -jar app.jar -Dspring.profiles.active=dev >> log.out &
+			nohup java -jar bxkc-report.jar --Dspring.config.location=application.yml >> log.out &
 			nohup java -jar persistence-hist.jar >> log.out &
 
 			nohup java -jar app.jar >> app.log &
@@ -25,11 +26,13 @@
 			&		    - 代表后台运行  
 			>> log.file - 输出的日志追加入log.file，
 			-Dspring.profiles.active=dev		// 加入java的运行参数 好像也可以 --moose.task.maxThreadCount=4 这样
+			--Dspring.config.location=application.yml		// 指定外部文件
+
 	6、 增量jar https://www.cnblogs.com/wangyayun/p/11725351.html
-		1、把源jar包cp到一个空文件夹里，解压	jar -xf persistence-extract-202102200942.jar
+		1、把源jar包cp到一个空文件夹里，解压	jar -xf bidi-gateway-business-1.0.0-SNAPSHOT.jar
 		2、进入BOOT-INF/class，替换
-		3、把该文件夹里的源jar包删除			rm -rf persistence-extract-202102200942.jar
-		4、重新打包								jar -cfM0 persistence-extract-202102200942.jar *
+		3、把该文件夹里的源jar包删除			rm -rf bidi-gateway-business-1.0.0-SNAPSHOT.jar
+		4、重新打包								jar -cfM0 bidi-gateway-business-1.0.0-SNAPSHOT.jar *
 		5、把打好的jar包cp到启动目录，启动就ok
 	7、  powerDesigner关联数据库显示中文注释  https://www.cnblogs.com/timeflying/p/11409416.html
 
@@ -50,9 +53,10 @@
 	6、spring的定时器第一次立即运行，怎么配置
 
 
+
 1、修改 bxkc/xique 的用户缓存(登录对应的后台)
 	http://admin.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00054691020210108
-	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00060455820210113&type=object
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00013064520210310&type=object
 	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=seo_hot_focus&type=batch
 
 
@@ -60,38 +64,99 @@
 	
 	// 清菜单
 	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=bxkc_back_user_all_memu_000370740&type=object
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=MOST_SPECIFY_ORGS&type=object
 
 	http://admin.xqzhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00041042320201208
-	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00048298620210224&type=object
+	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00036703520210329&type=object
+	
+ 
+	 http://192.168.2.217:3000/xique/xique.git
+
+1、优先处理记录
+	2、开发一个更新公告立即生效的接口
+	5、建林反馈有时改公告报错，那是因为他们修改的公告还未做要素提取，这个要改造一下
+	5、实体融合要在persistent项目加上
+	7、enterprise.products 更新之后没有同步
+	
+	1、重建 document_index 索引		// 佳豪说暂时先用mysql来做
+		+ page_attachments
+		- attachment
+		
+	
+	3、https的ssl证书申请
+		去阿里云的ssl证书申请(应用安全)
+	4、moose平台技术方案
+	5、杰华
 	
 
-	
-1、优先处理记录
-	1、企业信息不全时需要重新请求天眼查接口
-	2、补录的会覆盖之前的docid 那个id生成器不能在分布式中使用
-	3、近段时间的安排
-		1、重新处理公告数据
-		2、开发一个更新公告立即生效的接口
-		3、抽空把更新公告的接口，同步一下 ots.project
-			53834077,49950529,49660597
-		4、crm接口
+1、问题
+	1、crtime	更新document时，需要重新更新
+	2、重复处理
+	3、crtime 确认一下		// oracle的创建时间
+
+
+1、已完成
+	8、moose.report逻辑修改	// enterprise.ru_wei_number > 0 然后会提示 近一年无数据
+	7、删除公告需要重新更新Project
+	5、那个分解招标中标的，要不要把这个“入围”关键字去掉吧
+	6、更新document联动更新project的程序修复了，已经上线了，明天把袁也提出的六个数据也修复一下
+	4、province\city 会出现两种情况 比如 广东/广东省 广州/广州市
+	2、删除project表
+	2、修復地区匹配
+	3、帮佳豪重建索引
+	10、把 中铁建发(成都)建设工程有限公司 融合到 中铁建发（成都）建设工程有限公司
+	3、 更新公告 合并实体 删除实体 公告删除 也要 同步一下 ots.project
+			更新公告	// 已处理，已上线
+			合并实体	// 
+				下一步就要合并实体的改造一下
+					荣联科技集团股份有限公司		// 正确的一家公司
+					北京荣之联科技股份有限公司
+					中钢招标有限责任公司			// 这个也要改一下
+					// 
+					湖南省财政厅
+					中华人民共和
+	3、公告记录谁删除的
+		1、bxkc-admin 补上
+	1、重新处理公告数据
+		1、前提条件
+			我把zhongzhao1的 deleteDupDocumentSchedule 停了，记得启动
+		2、历史数据入库document_extract(104617594 最大 docid=135625999) -> document  // 开始时间 2021-03-05 21:34:39.292
+	1、 project -> project2
+		我的项目
+		工作台
+		bxkc-pc
+		bxkc-api
+		中招		// 没有project
+	1、拟在建自动跟进要获取最大版本
+	1、enterrise.products保留1000个  
+		2,687,838,313,771 字节
+		25,040 cu
+		1、处理
+			solr5   1->38581822  4000(24)  // 停了 mergeProject 
+				1 -> 30000000				solr5
+				30000001 -> 38581822		solr4
+	2、处理 project.bidway
+		1-76990170
+			1 -> 38495085		solr5
+			38495086 -> 76990170		solr5
+	12、 2021.0309.0923 升级tablestore-util（去掉docchannel的权重排序）
+		bxkc-api
+		bxkc-pc
+		xique
+		zhongzhao
+		moose
+	9、删除公告改成定时器
+	10、ru_wei_number 重建索引 String -> Long 
+	9、增加字段(已改好，已经上线)
+		match_enterprise
+		match_enterprise_type				
+		fingerprint
+	8、把 enterprise.nicknames 改成单字分词
+	4、crm接口
 			规则是根据客户去重后的订阅词获取各个地区的公告量及各个订阅词下各个地区的招标单位，招标数量，招标金额和中标单位， 中标数量 ，中标金额等
 			INPUT:关键词、地区  OUTPUT：
 				top10招标单位、招标数量、预算总金额
 				top10中标单位、中标数量、中标金额
-		5、建林反馈有时改公告报错，那是因为他们修改的公告还未做要素提取，这个要改造一下
-	4、province\city 会出现两种情况 比如 广东/广东省 广州/广州市
-	5、实体融合要在persistent项目加上
-	6、我那个自动发布和自动跟进的定时器出问题，jenkins编译环境的问题，少了雪花算法的类
-	7、 enterprise.products 更新之后没有同步
-	8、把 enterprise.nicknames 改成单字分词
-	9、增加字段(已改好，未上线)
-		match_enterprise
-		match_enterprise_type				
-		fingerprint
-
-
-1、已完成
 	10、增加 采购系统(procurement_system)的提取
 		1、增加字段
 			1、 enterprise 增加 procurement_system
@@ -329,4 +394,45 @@
 	11、重新计算企业的招投标数量的定时器需要更新
 		persistence-extract.UpgradeEnterpriseBidNumberSchedule // zhongzhao1
 		bidi-data-intervention.recalculateBidNumber			   // zhongzhao2
+
+
+
+
+http://www.bidizhaobiao.com/client/designed_project_detail.do?id=429001&pictureId=C00201  // 问题：信息不全，且自动跟进，进展备注为空  原因：自动跟进没有模板参考
+http://www.bidizhaobiao.com/nzjxm-176394018.html										  // 问题：没怎么更新						   原因：不符合自动跟进的条件
+http://www.bidizhaobiao.com/nzjxm-436403.html											  // 问题：自动跟进，进展备注为空		       原因：自动跟进没有模板参考
+http://www.bidizhaobiao.com/nzjxm-194028019.html										  // 问题：没怎么更新						   原因：不符合自动跟进的条件
+
+
+1、没跟进模板的就不要更新了
+	1、方案一
+		考虑加一个 follows follows_number 索引
+		follows_number > 0
+			1、维护
+				1、数据同步的时候
+				2、自动跟进
+				3、后台手动跟进
+		
+		1、步骤
+			tablestore-util 加字段
+			1、数据同步的时候
+			2、自动跟进
+			3、后台手动跟进
+			4、自动跟进再加上 follows_number > 0 过滤
+
+
+2、 2021.4.16 上线的
+
+
+自动跟进每天凌晨1点执行一次，每次跟进符合条件的300条拟在建
+我的代码是14号15点提交到gitlab（bxkc-job项目刚刚迁移完，忘记叫啊彪改jenkins pull代码的地址了），这时jenkins pull的还是gogs仓库，
+15号18:40分才改地址的，所以16号开始新自动跟进的规则才能生效
+
+
+
+
+
+
+
+http://192.168.2.217:3000/moose/moose-user-api.git
 

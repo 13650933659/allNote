@@ -54,8 +54,6 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 
 
 
-BxkcDesignedProjectSynchronizationDataServiceImpl
-
 1、sdk参考
 	1、 gremlin console(liunx/windows)
 		1、  Gremlin控制台需要Java 8 先按照java8 : sudo yum install java-1.8.0-devel
@@ -84,20 +82,18 @@ BxkcDesignedProjectSynchronizationDataServiceImpl
 					1、创建点 label=user  zs/ls/ww
 						g.addV('user').property(id, 'zs').property('name', 'zs').property('age', 20)		// id 不给默认是 uuid ,这个id内置的，且整个图实例中唯一，也必须是string类型，id重复插入报错
 						g.addV('user').property(id, 'ls').property('name', 'ls').property('age', 21)
-						g.addV('user').property('name', 'ww').property('age', 21)
-
-					2、创建点 label=software  bxkc/xique
-						g.addV('software').property('name', 'bxkc').property('lang', 'java')
-						g.addV('software').property('name', 'xique').property('lang', 'object-c')
-				2、创建边(可以理解成点和点的关系)		// 会重复创建，如需要合并，项目操作
+				2、创建边(可以理解成点和点的关系)		// 会重复创建
 					1、 label=knows   
-						g.addE('knows').from(V().has('user', 'name', 'zs')).to(V().has('user', 'name', 'ls')).property('weight', 0.5f)		// 相当于 (zs) -[knows:{'weight', 0.5f}]-> (ls)
+						g.addE('knows').from(V().has('user', 'name', 'zs')).to(V().has('user', 'name', 'ls')).property('weight', 0.5f)		// 相当于 (zs) -[knows:{'weight', 0.5f}]-> (ls)		两个点任意一个不存在会报错
 						g.addE('knows').from(V().has('user', 'name', 'ls')).to(V().has('user', 'name', 'ww')).property('weight', 0.4f)		// 相当于 (ls) -[knows:{'weight', 0.4f}]-> (ww)
-					2、 label=created   
-						g.addE('created').from(V().has('user', 'name', 'zs')).to(V().has('software', 'name', 'bxkc')).property('weight', 0.5f)		// 相当于 (zs) -[created:{'weight', 0.5f}]-> (bxkc)		两个点任意一个不存在会报错
-						g.addE('created').from(V().has('user', 'name', 'ls')).to(V().has('software', 'name', 'bxkc')).property('weight', 0.5f)		// 相当于 (ls) -[created:{'weight', 0.5f}]-> (bxkc)
-						g.addE('created').from(V().has('user', 'name', 'ls')).to(V().has('software', 'name', 'xique')).property('weight', 0.5f)		// 相当于 (ls) -[created:{'weight', 0.5f}]-> (xique)
-						g.addE('created').from(V().has('user', 'name', 'ww')).to(V().has('software', 'name', 'bxkc')).property('weight', 0.5f)		// 相当于 (ww) -[created:{'weight', 0.5f}]-> (bxkc)
+					2、创建边 (zs)-[know]->(ls) 如果存在就不会创建，如果想覆盖全部属性（不包括id）请用第二句
+						g.V('zs').coalesce(outE('know').where(inV().has('~id','ls')), addE('know').to(V('ls')).property(id,'1'))	// 也可以换成 g.V(sId).coalesce(outE(r).filter(otherV().hasId(eId)), g.addE(r).from(V(sId)).to(V(eId)).property(id,G___id))
+						g.V('zs').coalesce(outE('know').where(inV().has('~id','ls')), addE('know').to(V('ls')).property(id,'1')).sideEffect(properties().drop()).property('name','改的')
+					3、不能批量创建边的，最多只会创建一条关系，这是gremlin的语义，如果想用gremlin批量加边，需要先拿出所有的点，然后一个个点添加边
+						g.addE('ZhaoBiaoRelation').from(V().has('Organization', 'name', '比地1')).to(V().has('Project', 'projectName', 'p2'))
+
+						
+		
 			2、删
 				1、删除 指定 label 的点和边
 					g.E().hasLabel('knows').drop()	// 不存在不会报错
@@ -195,18 +191,6 @@ BxkcDesignedProjectSynchronizationDataServiceImpl
 	2、ResultSet result = client().submit("g.V('1').property('name', 'zs')");  更新之后我怎么知道我成功更新的数量，删除操作也类似
 		返回删除的数量 g.V(2).sideEffect(__.drop()).count()		// 删除时需要知道影响的数量 result.one().getInt()
 		更新数量 g.V(1).property("key", "value").count()	    // 更新后需要知道影响的数量 result.one().getInt()
-	3、创建边 (比地1)-[ZhaoBiaoRelation]->(p2) 如果存在完成覆盖
-		g.V().has('Organization','name','比地1').coalesce(__.outE('ZhaoBiaoRelation').where(inV().has('Project','projectName','p2')), addE('ZhaoBiaoRelation').to(V().has('Project','projectName','p2')).property(id,'1')).sideEffect(properties().drop()).property('name','改的')
-		
-		g.V().has('Organization', 'name', orgName).coalesce(outE(r).where(inV().has('~id', pId)), addE(r).from(V().has('Organization', 'name', orgName)).to(V(pId)).property(id,generateId))
-		
-		g.addE(r).from(V().has('Organization', 'name', '%s')).to(V('%s'))
-
-		g.addE(docChannelRelation).from(V(startId)).to(V(endId))
-		g.V(startId).coalesce(outE(docChannelRelation).where(inV().has('~id', endId)), g.addE(docChannelRelation).from(V(startId)).to(V(endId)).property(id,'1'))
-	
-	4、g.addE('ZhaoBiaoRelation').from(V().has('Organization', 'name', '比地1')).to(V().has('Project', 'projectName', 'p2'))   最多只会创建一条关系
-		是的，这是gremlin的语义，如果想用gremlin批量加边，需要先拿出所有的点，然后一个个点添加边
 	5、没有唯一约束，会有一些隐患
 		1、插入时在判断是否有存在的
 	6、g.addV('Project').property('name',null)		// 不支持设置null，但可以置空 g.V('1').sideEffect(properties('name','age',...).drop())

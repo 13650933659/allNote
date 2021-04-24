@@ -1,5 +1,5 @@
 
-
+看完33
 
 0、以下的最好加入以下springcloud的依赖（这个是支持 springboott2.x 的springcloud版本）
 	<dependencyManagement>
@@ -29,7 +29,7 @@
 			 
 			eureka: 
 			  instance:
-				hostname: eureka7001.com 			#eureka服务端的实例名称
+				hostname: eureka7001.com 			# eureka服务端的实例名称(这个不要误认为是 访问http://eureka7001.com 访问到此服务是这个的功劳，是DNS的功劳，这个只是eureka服务端的实例名称，eureka内部有效而已 ) 这个好像没什么用
 			  client: 
 				register-with-eureka: false     	#false表示不向注册中心注册自己。
 				fetch-registry: false     			#false表示自己端就是注册中心，我的职责就是维护服务实例，并不需要去检索服务
@@ -230,13 +230,13 @@
 				service-url: 
 				  defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka  
 			  instance:
-				instance-id: gateway-9527.com
+				instance-id: gateway-9527.com		// 这个和hostname一样吗？不一样
 				prefer-ip-address: true 
 
 			zuul: 
 			  prefix: /atguigu
 			  ignored-services: "*"
-			  # ignored-services: microservicecloud-dept	单个微服务,上面是全部微服务 (过滤 1、难道这个是忽略的作用，过滤掉黑名单的ip访问，有空去看看)
+			  # ignored-services: microservicecloud-dept	忽略微服务配置，即使用 myzuul.com:9527/microservicecloud-dept/ 访问不到microservicecloud-dept服务，只能通过代理myzuul.com:9527/myDept/去访问,上面是全部微服务
 			  routes: 
 				mydept: 
 					serviceId: microservicecloud-dept
@@ -245,14 +245,14 @@
 				#访问 mydept.serviceId 就用 mydept: path 代替
 		3、zuul的作用：路由+代理+过滤三大功能
 			1、路由
-				1、使用了路由地址变化：localhost/dept/get/2 -> myzuul.com:9527/微服务名称/dept/get/2  // 体现路由，但是之前的地址还能访问吗？都可以
+				1、使用了路由地址变化：myzuul.com:9527/微服务名称/dept/get/2  // DNS(myzuul.com=localhost)
 			2、代理
 				1、代理之后的地址访问： myzuul.com:9527/microservicecloud-dept/dept/get/2 -> myzuul.com:9527/myDept/dept/get/2  // 都可以访问
 			3、过滤
-				1、难道这个是忽略的作用，过滤掉黑名单的ip访问，有空去看看
+				1、忽略微服务配置，即使用 myzuul.com:9527/microservicecloud-dept/ 访问不到microservicecloud-dept服务，只能通过代理myzuul.com:9527/myDept/去访问,上面是全部微服务
 		4、主程序 @EnableZuulProxy	// 网关， 好像也要 注解 @EnableEurekaClient
 
-	7、 config // 集中化配置，如果远程配置文件有变化，直接重启 config客户端，还是说重启config服务端，应该是客户端
+	7、 config // 集中化配置，如果远程配置文件有变化，直接重启 config客户端，可能需要使用立即生效那种方式
 		1、 config 服务
 			1、 config-server 的依赖
 				<dependency>

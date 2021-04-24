@@ -193,7 +193,7 @@
 8、 获取路径的问题
 	this.getClass().getResource("/").getPath()	// 获取类的根路径
 	this.getClass().getResource("").getPath()	// 获取当前类的路径
-	ClassLoader.getSystemResource("")			// 获取类的根路径 和 this.getClass().getResource("/").getPath() 一样（但是 jar包的话用 ClassLoader.getSystemResource("") 才能取到路径）
+	ClassLoader.getSystemResource("")			// 获取类的根路径 和 this.getClass().getResource("/").getPath() 但是在jar包获取不到了
 	Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);		// ClassLoader.getSystemResource("") 和一样
 8、java反射
 
@@ -249,8 +249,16 @@
 
 
 
-
-
+11、使用经验
+	1、 int 和 Integer 的比较
+		1、参考https://blog.csdn.net/xingkongdeasi/article/details/79618421
+		2、总结
+			0、int和int比较是正常的比较  equals比较都相等(因为他比的是数值)
+			1、无论如何，Integer与new Integer不会相等。不会经历拆箱过程，因为它们存放内存的位置不一样。（要看具体位置，可以看看这篇文章：点击打开链接）
+			2、两个都是非new出来的Integer，如果数在-128到127之间，则是true,否则为false。
+			3、两个都是new出来的,则为false。
+			4、int和integer(new或非new)比较，都为true，因为会把Integer自动拆箱为int，其实就是相当于两个int类型比较。
+			
 2、java8以上
 	2、经验
 	 List<Long> ids = records.stream().map(r -> r.getId()).collect(Collectors.toList());		// 取id集合
@@ -259,8 +267,7 @@
 
 
 
-
-
+http://www.bidizhaobiao.com/excel_detail.do?code=547183b938186fcbb468ec528b64c4fa90a71db6043c1b2d8f61a9660626ed42
 
 
 

@@ -125,6 +125,8 @@
 				left join bxkc_monitor monitor on monitor.CRUSER=temp.loginId
 				GROUP BY temp.phone
 			1、查某个表的大小： select concat(round(sum(DATA_LENGTH/1024/1024),2),'M') from information_schema.tables where table_schema='bxkc' and table_name='sys_document_0';
+			2、update bxkc_monitor set PROVINCES=CONCAT('全国,', PROVINCES) where 1=1;		// PROVINCES 前面拼接 '全国,'
+			3、update bxkc_monitor SET PROVINCES=REPLACE(PROVINCES,'全国','') ;			// 把全国替换成'' 如 全国abc 变成 abc
 	2、 sqlServer
 		1、 sqlServer 启动关闭-还原备份-创建表案例
 			1、启动关闭
