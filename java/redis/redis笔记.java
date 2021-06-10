@@ -192,5 +192,10 @@
 
 
 
+1、 topTendereeProjects和topWinProjects 的取数过滤
+	where 
+	省份 in (provinces) 
+	and (公告标题 like '%keyword1%' or 公告标题 like '%keyword2%' or 公告标题 like '%keyword3%' ...)
+	and 公告时间 between startTime and endTime
 
 

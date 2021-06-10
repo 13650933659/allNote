@@ -29,10 +29,10 @@
 			--Dspring.config.location=application.yml		// 指定外部文件
 
 	6、 增量jar https://www.cnblogs.com/wangyayun/p/11725351.html
-		1、把源jar包cp到一个空文件夹里，解压	jar -xf bidi-gateway-business-1.0.0-SNAPSHOT.jar
+		1、把源jar包cp到一个空文件夹里，解压	jar -xf persistence-extract-202105260424.jar
 		2、进入BOOT-INF/class，替换
-		3、把该文件夹里的源jar包删除			rm -rf bidi-gateway-business-1.0.0-SNAPSHOT.jar
-		4、重新打包								jar -cfM0 bidi-gateway-business-1.0.0-SNAPSHOT.jar *
+		3、把该文件夹里的源jar包删除			rm -rf persistence-extract-202105260424.jar
+		4、重新打包								jar -cfM0 persistence-extract-202105260424.jar *
 		5、把打好的jar包cp到启动目录，启动就ok
 	7、  powerDesigner关联数据库显示中文注释  https://www.cnblogs.com/timeflying/p/11409416.html
 
@@ -43,7 +43,9 @@
 		1、什么时候执行好呢
 		2、分库
 	4、数据库的触发器
-	5、 nginx  、 druid 、 Shiro 、 java 性能测试工具
+	5、  druid 、 Shiro 
+	6、java线程，锁 jul包
+	6、java 性能测试工具
 	6、 redis的使用场景
 	7、 douker 自动化部署 
 	8、 wireshark抓包工具详细说明及操作使用 https://blog.csdn.net/qq78069460/article/details/79153895
@@ -51,12 +53,15 @@
 	1、整理支付流程（移动端、pc端、H5）
 	5、抽空去了解一下 frp和nginx的https请求
 	6、spring的定时器第一次立即运行，怎么配置
-
+	
 
 
 1、修改 bxkc/xique 的用户缓存(登录对应的后台)
-	http://admin.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00054691020210108
-	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00013064520210310&type=object
+	http://admin.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00000339120210522
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00072213820210520&type=object
+
+	http://admin.bidizhaobiao.com/basedata/member_list!redisGet.do?key=user_info_${userid+today}
+	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=user_info_${userid+today}&type=object
 	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=seo_hot_focus&type=batch
 
 
@@ -67,35 +72,110 @@
 	http://admin.bidizhaobiao.com/basedata/member_list!redisDel.do?key=MOST_SPECIFY_ORGS&type=object
 
 	http://admin.xqzhaobiao.com/basedata/member_list!redisGet.do?key=user_info_00041042320201208
-	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00036703520210329&type=object
+	http://admin.xqzhaobiao.com/basedata/member_list!redisDel.do?key=user_info_00039861820210430&type=object
 	
- 
-	 http://192.168.2.217:3000/xique/xique.git
+
 
 1、优先处理记录
-	2、开发一个更新公告立即生效的接口
-	5、建林反馈有时改公告报错，那是因为他们修改的公告还未做要素提取，这个要改造一下
-	5、实体融合要在persistent项目加上
 	7、enterprise.products 更新之后没有同步
-	
 	1、重建 document_index 索引		// 佳豪说暂时先用mysql来做
-		+ page_attachments
+		+ page_attachments			// 这个才是预定义字段
 		- attachment
+	7、8-28(星期六做兄弟)
+	9、公告需要再重新划分一下类型
+	
+	14、协助申请专利
+	4、预定义字段满了，看看要怎么扩展
+	1、合并企业
+		15、合并企业联系方式可以改成，一天同步一次，而且跑历史数据是不应该再次合并了
+		1、英文括号换成中文括号
+	2、使用178的redis需要清理掉
+	3、被删除的企业需要重新算招投标数量吗？要的，已经测试待上线
+	2、中标数据二次导出后台报错 // 看一下api的
+	1、企业报表标识业主、供应商
+	2、附件处理的
+	3、迁移到gitlab
+		bxkc-pc
+		bxkc-maven-core
+		tablestoreutil
+		bxkc-api
 		
-	
-	3、https的ssl证书申请
-		去阿里云的ssl证书申请(应用安全)
-	4、moose平台技术方案
-	5、杰华
-	
-
-1、问题
-	1、crtime	更新document时，需要重新更新
-	2、重复处理
-	3、crtime 确认一下		// oracle的创建时间
-
+	3、bxkc_monitor_web=970 改成带前缀的
 
 1、已完成
+	12、新需求
+		bxkc-admin项目新增需求
+			1、更新公告，需要做金额字段的校验
+			2、新增删除企业
+	5、明天处理 enterprise-report.jar
+	1、enterprise新增索引字段
+		new_bidi_id			// 被合并后的bidi_id
+		status				// 空和[200,300]都是成品数据 [400,450]表示被删除
+		baidu_check_status	// 是否去百度获取过数据
+	3、企业报表（业主、供应商）需要加附录
+	2、enterprise.contacts的phone_no和mobile_no有一小部分位置填错了
+	2、开发一个更新公告立即生效的接口(杰华有一个接口，专门针对后台录入的公告进行生效的)
+	3、https的ssl证书申请
+		去阿里云的ssl证书申请(应用安全)
+	4、企业主页的注册资金对不上
+		bxkc-pc已处理，工作台袁也处理了
+	2、上线联系人
+	3、升级企业的改为10s
+	4、明天把 persistence-extract 看一下
+	4、moose平台技术方案
+	5、企业报表（业主版）			// 2021.4.25-2021.4.9 负责人：陈家儒、蔡柏和
+	16、有几家公司的联系方式被删除了，补一下
+	13、bxkc_enterprise_listing_info表的数据同步到ots
+	4、拟在建需求
+		1、搜索增加id搜索
+		2、修改增加page_time
+	3、北京crm接口需要改变
+	10、重建 document_index 
+		"计量数据更新时间"       "存储"				  "行数"		 "预留读CU"
+		<2021年5月13日 15:19:30> <493,148,300,449字节> <116,848,537> <4,600>		// 改前情况
+		<2021年5月14日 08:56:05> <488,507,396,049字节> <117,053,051> <4,550>		// 改后情况（索引的doctitle和doctextcon改为数字切割）
+		<2021年6月9日 21:55:23>  <525,405,251,025字节> <125,802,532> <4,900>		// 改前情况
+
+
+
+	11、重建 enterprise_index 索引 ()
+		<2021年5月13日 21:54:58> <48,149,024,132 字节>  <38,735,702>  <450>
+		<2021年6月2日 21:25:26>  <57,364,566,996 字节>  <38,611,848>  <540>			// （增加 updateTime 索引） 38611910
+																// 2021-06-02 22:41:09 增加 new_bidi_id/status/baidu_check_status 索引
+
+
+		
+		中文+数字	// 不完整搜索不出来
+		
+		doctitle 是单字分词，数字切割
+		场景
+		doctitle=强光充电式手电筒90738
+			1、我使用 "强光充电式手电筒90738"		// 能搜索到
+			2、我使用 "强光充电式手电筒9073"		// 不能搜索到，因为是一个整体
+	
+	14、删除没用到的企业（总共有：243036）
+		(bid_numberi is null or bid_number=0)				// 没有招投标记录
+		and tyc_id is null									// 天眼查那边找不到的企业
+		and (contact_number is null or contact_number=0)	// 没有联系方式的企业
+	13、搜索企业 bid_number>0 or tyc_id is not null 才会显示
+	13、搜索企业 有招投标记录或者有天眼查那边的工商信息才会显示
+		bxkc-pc			// 已合并master
+		bxkc-api		// 已合并master
+		xique			// 已合并master
+		zhongzhao		// 已合并master
+	1、oracle同步ots数据补漏（补漏时间范围 [2021-04-23, 2021-05-11] ）
+		1.锁定docid范围 [4.23最小docid, 5.11最大docid]=docids_全
+		2.docids_全-ots.document=docids_漏
+		3.去mysql.sys_document找对应的 docids_漏 记录
+		4.直接插入ots.document
+	6、新增企业 新增接口 和 修改接口
+	7、把报表项目移动到moose
+	9、替换行业报表模板
+	5、同步地区
+		select * from bxkc_schoolandhospital
+	6、 合并项目漏了docid		// swf重複做要素提取的問題
+	7、 企业主页下载报表按钮提示和实际情况不一致的问题
+	6、去掉 web_source_no_org_rel  规则
 	8、moose.report逻辑修改	// enterprise.ru_wei_number > 0 然后会提示 近一年无数据
 	7、删除公告需要重新更新Project
 	5、那个分解招标中标的，要不要把这个“入围”关键字去掉吧
@@ -398,41 +478,9 @@
 
 
 
-http://www.bidizhaobiao.com/client/designed_project_detail.do?id=429001&pictureId=C00201  // 问题：信息不全，且自动跟进，进展备注为空  原因：自动跟进没有模板参考
-http://www.bidizhaobiao.com/nzjxm-176394018.html										  // 问题：没怎么更新						   原因：不符合自动跟进的条件
-http://www.bidizhaobiao.com/nzjxm-436403.html											  // 问题：自动跟进，进展备注为空		       原因：自动跟进没有模板参考
-http://www.bidizhaobiao.com/nzjxm-194028019.html										  // 问题：没怎么更新						   原因：不符合自动跟进的条件
+我们代表技术部，
+我们想对销售部和客服部的同事说，你们放心的在前线冲，我们技术部会做好你们坚实的后盾，祝愿你们在618期间业绩倍增，开单开到手软
+最后，祝愿公司蓬勃发展，日胜一日!广州早日战胜疫情！加油！
 
 
-1、没跟进模板的就不要更新了
-	1、方案一
-		考虑加一个 follows follows_number 索引
-		follows_number > 0
-			1、维护
-				1、数据同步的时候
-				2、自动跟进
-				3、后台手动跟进
-		
-		1、步骤
-			tablestore-util 加字段
-			1、数据同步的时候
-			2、自动跟进
-			3、后台手动跟进
-			4、自动跟进再加上 follows_number > 0 过滤
-
-
-2、 2021.4.16 上线的
-
-
-自动跟进每天凌晨1点执行一次，每次跟进符合条件的300条拟在建
-我的代码是14号15点提交到gitlab（bxkc-job项目刚刚迁移完，忘记叫啊彪改jenkins pull代码的地址了），这时jenkins pull的还是gogs仓库，
-15号18:40分才改地址的，所以16号开始新自动跟进的规则才能生效
-
-
-
-
-
-
-
-http://192.168.2.217:3000/moose/moose-user-api.git
 

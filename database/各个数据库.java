@@ -8,7 +8,7 @@
 
 	2、的数值型如果是'' （sqlServer他是0，mysql他报错，oracle他已经把''直接当成null处理了）
 
-	3、select * from aa a where a.name not in(null,'cjr');  //这样查不出数据来的，用时注意
+	3、select * from aa a where a.name not in(null,'zs');  //这样查不出数据来的，用时注意，需要使用 not exists
 
 	4、各个数据库的判空（即：''和null）（oracle和mysql用length,sqlserver用len）
 
@@ -85,7 +85,7 @@
 					price decimal(8,2)					-- 代表整数和小数的位数<=8,小数 <= 2  默认 DECIMAL(10)
 					// DATETIME yyyy-MM-dd hh:mm:ss
 				) comment '插件信息表' 
-				 ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+					
 				 create index code on PluginInfo (code);		// 创建索引
 
 
