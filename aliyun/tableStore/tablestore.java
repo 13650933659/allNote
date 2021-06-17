@@ -58,12 +58,12 @@
 6、多元索引
 	1、 创建
 	2、 Query
-		1、 TermQuery 和 TermsQuery		// 精准查询
+		1、 TermQuery 和 TermsQuery		// 精准查询，分词类型为keyword是才能查 ="" 其他的不能查
 		2、 MatchAllQuery				// 用于匹配所有行，常用于查询表中数据总行数，或者查看表中任意几条数据。
 		3、 MatchQuery					// 匹配查询（用于分词字符串-最大数量语义分词）
 		4、 MatchPhraseQuery			// 短语匹配查询（用于分词字符串-最大数量语义分词）
 		5、 RangeQuery					// 范围条件查询也是用时间
-		6、 WildcardQuery				// 通配符查询
+		6、 WildcardQuery				// 通配符查询  * 代表任意字符任意长度，相当于 is not null
 		7、 BoolQuery					// 多条件组合查询
 		8、 NestedQuery					// 嵌套查询
 		9、	ExistsQuery					// 查询表不为空的数据

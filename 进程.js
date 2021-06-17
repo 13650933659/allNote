@@ -78,10 +78,9 @@
 
 1、优先处理记录
 	7、enterprise.products 更新之后没有同步
-	
 	7、8-28(星期六做兄弟)
 	9、公告需要再重新划分一下类型
-	14、协助申请专利
+	
 	4、预定义字段满了，看看要怎么扩展
 	1、合并企业
 		15、合并企业联系方式可以改成，一天同步一次，而且跑历史数据是不应该再次合并了
@@ -91,6 +90,10 @@
 	2、中标数据二次导出后台报错 // 看一下api的
 	1、企业报表标识业主、供应商
 	2、附件处理的
+	3、contacts增加来源区分、和是插入时间，到时可以做排序
+	2、重构企业查询	// 只做了pc的，其他的记得用pc为准 bxkc-api 已经打好包了
+	3、地区匹配需要多加一个规则
+		这里要多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
 	3、迁移到gitlab
 		bxkc-pc
 		bxkc-maven-core
@@ -100,10 +103,19 @@
 		bidi-data-intervention
 		moose-report-api
 		moose-document-push
-		
+		easy-tablestore
+	
+	1、最近的任务（2021.6.15）
+		1、入库程序增把公告纯文本和附件纯文本分别存储到（doctextcon、attachmenttextcon）				// 已上线
+		2、后台增加修改附件的功能
+		3、document预定义字段满了，需要调整document表结构
+		4、地区匹配多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
+		5、柏和
+			1、企业报告业主版需求开发、测试、上线
 	
 
 1、已完成
+	14、协助申请专利
 	1、重建 document_index 索引		// 佳豪说暂时先用mysql来做
 		+ page_attachments			// 这个才是预定义字段
 		- attachment
@@ -486,9 +498,28 @@
 
 
 
+中电系统建设工程有限公司
+中国电子系统工程第二建设有限公司
 
-我们代表技术部，
-我们想对销售部和客服部的同事说，你们放心的在前线冲，我们技术部会做好你们坚实的后盾，祝愿你们在618期间业绩倍增，开单开到手软
-最后，祝愿公司蓬勃发展，日胜一日!广州早日战胜疫情！加油！
 
+
+private static boolean exceedRequestMaxLengthForUpdate(SyncClient client, RowUpdateChange rowUpdateChange, StringBuilder stringBuilder, Object value) {
+	stringBuilder.append(value);
+	if (stringBuilder.length() > requestMaxLength) {        // 超过了限制，则请求一次
+		Condition condition = new Condition(RowExistenceExpectation.EXPECT_EXIST);
+		rowUpdateChange.setCondition(condition);
+		try {
+			UpdateRowResponse updateRowResponse = client.updateRow(new UpdateRowRequest(rowUpdateChange));
+		}catch (TableStoreException e){
+			if ("OTSConditionCheckFail".equals(e.getErrorCode())) {     // 期望不一致返回 num=0即可
+
+			} else {
+				e.printStackTrace();
+				throw e;
+			}
+		}
+		return true;
+	}
+	return false;
+}
 

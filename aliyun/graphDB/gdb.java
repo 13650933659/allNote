@@ -120,7 +120,7 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 					g.V('zs').in('knows')								// 认识zs的人
 					g.V('zs').inE('knows')								// zs 为末端的边(label=knows)
 					g.V().hasLabel('Project').not(has('name'))			// name is null
-
+					g.V().hasLabel('user').has('name', containing('s'))	// where name link '%s%'
 
 	2、java
 		1、加入 pom 依赖

@@ -28,13 +28,11 @@
 			例子 taskkill /pid 5272 -t -f
 
 
-
 4、frp的穿墙技术
 	1、frp配置好
 	2、nginx启动(http和https)
 		1、如果是https的话，对应的域名需要对应证书
 
- http://bxkc-pc.biaoxunkuaiche.com/organizationOfNotLoginAction!searchOrgInfo.do
 
 
 1、徐亮伟的nginx视频2018
