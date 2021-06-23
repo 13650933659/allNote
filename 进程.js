@@ -78,22 +78,35 @@
 
 1、优先处理记录
 	7、enterprise.products 更新之后没有同步
-	7、8-28(星期六做兄弟)
+	
 	9、公告需要再重新划分一下类型
-	
-	4、预定义字段满了，看看要怎么扩展
-	1、合并企业
-		15、合并企业联系方式可以改成，一天同步一次，而且跑历史数据是不应该再次合并了
-		1、英文括号换成中文括号
-	
-	3、被删除的企业需要重新算招投标数量吗？要的，已经测试待上线
-	2、中标数据二次导出后台报错 // 看一下api的
 	1、企业报表标识业主、供应商
-	2、附件处理的
 	3、contacts增加来源区分、和是插入时间，到时可以做排序
-	2、重构企业查询	// 只做了pc的，其他的记得用pc为准 bxkc-api 已经打好包了
+	2、重构企业查询	// 只做了pc的，其他的记得用pc为准 bxkc-api 已经提交到master了，待上线，剩下工作台
 	3、地区匹配需要多加一个规则
 		这里要多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
+	3、企业合并定时器已经写好，等待杰华把 enterprise_check 表在整理一下
+	
+	1、最近安排的任务（2021.6.15）
+		2、后台增加修改附件的功能
+		6、近期准备重新合并项目（报表统计出来的重复项目还挺多的，杰华那边的合并算法有优化）
+		
+		7、俊锋有一批企业邮箱数据需要同步到enterprise表					// 数据在170测试库 tw_tianyan_mail\tw_tianyan_mail_phone 每个表大概有200w+但是有一些是重复的，暂时同步tw_tianyan_mail这个表
+		8、给一个企业名称返回相关企业，相关业主、竞争对手（字段：企业名称、bidi_id、一个联系方式）
+		9、给一个企业返回相关的top10行业
+		10、企业报表（供应商、业主）考虑增加过滤
+	1、后台补录docid冲突了
+	2、供应商报表需要去除删除代码
+
+1、已完成
+	1、入库程序增把公告纯文本和附件纯文本分别存储到（doctextcon、attachmenttextcon）				// 已上线
+	2、中标数据二次导出后台报错 // 看一下api的
+	4、地区匹配多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
+	11、柏和
+		1、企业报告业主版需求开发、测试、上线
+	2、暂停 3、document预定义字段满了，需要调整document表结构		// 写完已上线
+	2、重建 attachment_index
+	2、中午重建enterprise索引、document索引
 	3、迁移到gitlab
 		bxkc-pc
 		bxkc-maven-core
@@ -104,17 +117,6 @@
 		moose-report-api
 		moose-document-push
 		easy-tablestore
-	
-	1、最近的任务（2021.6.15）
-		1、入库程序增把公告纯文本和附件纯文本分别存储到（doctextcon、attachmenttextcon）				// 已上线
-		2、后台增加修改附件的功能
-		3、document预定义字段满了，需要调整document表结构
-		4、地区匹配多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
-		5、柏和
-			1、企业报告业主版需求开发、测试、上线
-	
-
-1、已完成
 	14、协助申请专利
 	1、重建 document_index 索引		// 佳豪说暂时先用mysql来做
 		+ page_attachments			// 这个才是预定义字段
@@ -154,6 +156,9 @@
 		<2021年5月14日 08:56:05> <488,507,396,049字节> <117,053,051> <4,550>		// 改后情况（索引的doctitle和doctextcon改为数字切割）
 		<2021年6月9日 21:55:23>  <525,405,251,025字节> <125,802,532> <4,900>		// 改前情况
 		<2021年6月10日 21:49:24> <521,752,640,353字节> <126,179,029> <4,860>		// 改后情况（+attachmenttextcon+page_attachments.fileMd5 -attachments）
+		<2021年6月22日 21:52:32> <538,624,106,420字节> <128,967,614> <5,020>		// 1、 +crtime attachment_extract_status
+
+
 
 
 
@@ -162,7 +167,13 @@
 	11、重建 enterprise_index 索引 ()
 		<2021年5月13日 21:54:58> <48,149,024,132 字节>  <38,735,702>  <450>
 		<2021年6月2日 21:25:26>  <57,364,566,996 字节>  <38,611,848>  <540>			// （增加 updateTime 索引） 38611910
-																// 2021-06-02 22:41:09 增加 new_bidi_id/status/baidu_check_status 索引
+		<2021年6月2日 21:25:26>  <57,364,566,996 字节>  <38,611,848>  <540>			// 1、 2021-06-02 22:41:09 增加 new_bidi_id/status/baidu_check_status 索引
+		<2021年6月17日 09:44:05> <57,799,987,001字节>	<38,679,364>  <540>			// 1、 之后
+
+
+
+
+
 
 
 		
@@ -498,28 +509,5 @@
 
 
 
-中电系统建设工程有限公司
-中国电子系统工程第二建设有限公司
 
-
-
-private static boolean exceedRequestMaxLengthForUpdate(SyncClient client, RowUpdateChange rowUpdateChange, StringBuilder stringBuilder, Object value) {
-	stringBuilder.append(value);
-	if (stringBuilder.length() > requestMaxLength) {        // 超过了限制，则请求一次
-		Condition condition = new Condition(RowExistenceExpectation.EXPECT_EXIST);
-		rowUpdateChange.setCondition(condition);
-		try {
-			UpdateRowResponse updateRowResponse = client.updateRow(new UpdateRowRequest(rowUpdateChange));
-		}catch (TableStoreException e){
-			if ("OTSConditionCheckFail".equals(e.getErrorCode())) {     // 期望不一致返回 num=0即可
-
-			} else {
-				e.printStackTrace();
-				throw e;
-			}
-		}
-		return true;
-	}
-	return false;
-}
 
