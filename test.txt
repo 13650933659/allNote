@@ -1,8 +1,0 @@
-
-<div>
-	<a href="http://bxkc.oss-cn-shanghai.aliyuncs.com/ueditor/a.pdf" target="_self" title="材料1.pdf" textvalue="材料1.pdf">材料1.pdf</a>
-</div>
-	<a href="http://bxkc.oss-cn-shanghai.aliyuncs.com/ueditor/b.pdf" target="_self" title="材料1.pdf" textvalue="材料1.pdf">材料1.pdf</a>
-<p>
-	<a href="http://bxkc.oss-cn-shanghai.aliyuncs.com/ueditor/c.pdf" target="_self" title="材料1.pdf" textvalue="材料1.pdf">材料1.pdf</a>
-</p>
