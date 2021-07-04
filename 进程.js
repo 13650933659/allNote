@@ -77,27 +77,41 @@
 
 
 1、优先处理记录
-	7、enterprise.products 更新之后没有同步
-	
-	9、公告需要再重新划分一下类型
-	1、企业报表标识业主、供应商
-	3、contacts增加来源区分、和是插入时间，到时可以做排序
-	2、重构企业查询	// 只做了pc的，其他的记得用pc为准 bxkc-api 已经提交到master了，待上线，剩下工作台
-	3、地区匹配需要多加一个规则
-		这里要多加一个规则，如果匹配出多个，而且有跟原来爬虫的city一致的，要保留原来的
-	3、企业合并定时器已经写好，等待杰华把 enterprise_check 表在整理一下
-	
+	1、enterprise.products 更新之后没有同步
+	2、公告需要再重新划分一下类型
+	3、企业报表标识业主、供应商
+	4、contacts增加来源区分、和是插入时间，到时可以做排序
+	5、重构企业查询	// 只做了pc的，其他的记得用pc为准 bxkc-api 已经提交到master了，待上线，剩下工作台
 	1、最近安排的任务（2021.6.15）
-		2、后台增加修改附件的功能
+		2、后台增加修改附件的功能（不支持直接，以html代码的方式添加附件，只能把附件下载本地，然后通过ueditor添加）
+			1、上传到attachment-hub:/filemd5的前四位/当前时间的YYYYmmdd格式/page_time的YYYY-mm-dd格式/web_source_no/文件名称	如果存在则覆盖
+			2、通过之后
+				1、通过jsoup获取我们这边上传的附件 a1 然后把a1的附件添加attachment，存在则不添加
+				2、page_attachments - 所有我们自己的附件 = a2
+				3、a2中没有在正文中找到对应的连接则去掉=a3，因为有一些被手动删除了，注意：不支持手动添加
+				4、a1+a3重新赋值给page_attachments
+			3、如果page_attachments不为空则更新attachmentExtractStatus=0
+		2、企业合并也增加状态过滤
 		6、近期准备重新合并项目（报表统计出来的重复项目还挺多的，杰华那边的合并算法有优化）
+		6、170.tw_company_history 需要合并数据
 		
-		7、俊锋有一批企业邮箱数据需要同步到enterprise表					// 数据在170测试库 tw_tianyan_mail\tw_tianyan_mail_phone 每个表大概有200w+但是有一些是重复的，暂时同步tw_tianyan_mail这个表
+		7、俊锋有一批企业邮箱数据需要同步到enterprise表					// 数据在170测试库 tw_tianyan_mail\tw_tianyan_mail_phone 每个表大概有200w+但是有一些是重复的，暂时同步 tw_tianyan_mail 这个表
 		8、给一个企业名称返回相关企业，相关业主、竞争对手（字段：企业名称、bidi_id、一个联系方式）
 		9、给一个企业返回相关的top10行业
 		10、企业报表（供应商、业主）考虑增加过滤
 	1、后台补录docid冲突了
 	2、供应商报表需要去除删除代码
+	1、document增加是否有表格功能
+	2、document.exist_table创建索引
+		100000000  -> 163884731			// (16)solr-190				完成	
+		70000000   -> 100000000			// (6)zhongzhao2-81			完成
+		40000000   -> 70000000			// (4)zhongzhao1-59			完成
+		10000      -> 40000000			// (16)本地					-> 190
 
+
+	3、创建表 bxkc_enterprise_rank
+	4、排计划给富哥
+	5、上半年总结，好的，不好的，意见等等。下周三前发我
 1、已完成
 	1、入库程序增把公告纯文本和附件纯文本分别存储到（doctextcon、attachmenttextcon）				// 已上线
 	2、中标数据二次导出后台报错 // 看一下api的
@@ -157,6 +171,8 @@
 		<2021年6月9日 21:55:23>  <525,405,251,025字节> <125,802,532> <4,900>		// 改前情况
 		<2021年6月10日 21:49:24> <521,752,640,353字节> <126,179,029> <4,860>		// 改后情况（+attachmenttextcon+page_attachments.fileMd5 -attachments）
 		<2021年6月22日 21:52:32> <538,624,106,420字节> <128,967,614> <5,020>		// 1、 +crtime attachment_extract_status
+		<2021年6月30日 22:30:08> <561,896,348,475字节> <130,456,483> <5,240>		// 1、 +crtime attachment_extract_status之后
+		<2021年6月30日 22:30:08> <561,896,348,475字节> <130,456,483> <5,240>		// 2、 +exist_table
 
 
 
@@ -507,6 +523,162 @@
 		persistence-extract.UpgradeEnterpriseBidNumberSchedule // zhongzhao1
 		bidi-data-intervention.recalculateBidNumber			   // zhongzhao2
 
+
+
+
+1、优化gdb
+	g.V('中国移动通信集团公司').as('o1')
+	.outE('ZhaoBiaoRelation').as('r1')
+	.otherV().hasLabel('Project').as('p1')
+	.inE('TouBiaoRelation','ZhongBiaoRelation').as('r2')
+	.otherV().hasLabel('Organization').not(has('~id','中国移动通信集团公司')).as('o2')
+
+	.select('o1','o2').group()
+
+
+
+	.by(
+		__.project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice')
+		.by(select('o1').values('bidiId'))
+		.by(select('o1').values('name'))
+		.by(select('o2').values('bidiId'))
+		.by(select('o2').values('name'))
+		.by(select('o2').values('province'))
+	)
+	.by(
+		__.fold().project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice', 'num')
+		.by(__.unfold().select('o1').values('bidiId'))
+		.by(__.unfold().select('o1').values('name'))
+		.by(__.unfold().select('o2').values('bidiId'))
+		.by(__.unfold().select('o2').values('name'))
+		.by(__.unfold().select('o2').values('province'))
+		.by(__.unfold().count())
+	).unfold().select(values).limit(30).profile()
+
+
+
+
+	Organization(O) Project(P)
+
+	1、Organization -> Project 的关系有4种
+		ZhaoBiaoRelation	// 招标关系
+		DaiLiRelation		// 代理关系
+		ZhongBiaoRelation	// 中标关系
+		TouBiaoRelation		// 投标关系
+
+	2、刚刚那个复杂的gremlin语句是实现的是：
+		中国移动通信集团公司 关联的入围供应商（中标关系 或者 投标关系）的前30个
+
+
+
+	g.V('beaada7f-961b-4d87-9b50-38fa78c28b40').inE().where(otherV().hasLabel('Organization'))
+
+
+	g.V().has('docid',163341152).out()
+	g.addE('TouBiaoRelation').from(V('沈阳东软医疗系统有限公司')).to(V('beaada7f-961b-4d87-9b50-38fa78c28b40'))
+
+
+
+
+
+
+
+
+	g.V('中国移动通信集团公司').as('o1').outE('ZhaoBiaoRelation').as('r1').otherV().hasLabel('Project').as('p1').profile()
+	.inE('TouBiaoRelation','ZhongBiaoRelation').as('r2')
+	.otherV().hasLabel('Organization').not(has('~id','中国移动通信集团公司')).as('o2')
+
+	.select('o1','o2').group()
+	.by(
+		__.project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice')
+		.by(select('o1').values('bidiId'))
+		.by(select('o1').values('name'))
+		.by(select('o2').values('bidiId'))
+		.by(select('o2').values('name'))
+		.by(select('o2').values('province'))
+	).by(
+		__.fold().project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice', 'num')
+		.by(__.unfold().select('o1').values('bidiId'))
+		.by(__.unfold().select('o1').values('name'))
+		.by(__.unfold().select('o2').values('bidiId'))
+		.by(__.unfold().select('o2').values('name'))
+		.by(__.unfold().select('o2').values('province'))
+		.by(__.unfold().count())
+	).unfold().select(values).order().by(select('num'), desc).skip(0).limit(30)
+
+
+
+
+
+
+
+	// 优化2
+	g.V('中国移动通信集团公司').as('o1').out('ZhaoBiaoRelation').hasLabel('Project').in('TouBiaoRelation','ZhongBiaoRelation').as('o2')
+
+	.select('o1','o2').group()
+	.by(
+		__.project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice')
+		.by(select('o1').values('bidiId'))
+		.by(select('o1').values('name'))
+		.by(select('o2').values('bidiId'))
+		.by(select('o2').values('name'))
+		.by(select('o2').values('province'))
+	).by(
+		__.fold().project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice', 'num')
+		.by(__.unfold().select('o1').values('bidiId'))
+		.by(__.unfold().select('o1').values('name'))
+		.by(__.unfold().select('o2').values('bidiId'))
+		.by(__.unfold().select('o2').values('name'))
+		.by(__.unfold().select('o2').values('province'))
+		.by(__.unfold().count())
+	).unfold().select(values).order().by(select('num'), desc).skip(0).limit(30)
+
+
+	// 优化3
+	g.V('中国移动通信集团公司').as('o1').out('ZhaoBiaoRelation').hasLabel('Project').in('TouBiaoRelation','ZhongBiaoRelation').simplePath().as('o2')
+
+	.select('o1','o2').group()
+	.by(
+		__.project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice')
+		.by(select('o1').values('bidiId'))
+		.by(select('o1').values('name'))
+		.by(select('o2').values('bidiId'))
+		.by(select('o2').values('name'))
+		.by(select('o2').values('province'))
+	).by(
+		__.fold().project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice', 'num')
+		.by(__.unfold().select('o1').values('bidiId'))
+		.by(__.unfold().select('o1').values('name'))
+		.by(__.unfold().select('o2').values('bidiId'))
+		.by(__.unfold().select('o2').values('name'))
+		.by(__.unfold().select('o2').values('province'))
+		.by(__.unfold().count())
+	).unfold().select(values).order().by(select('num'), desc).skip(0).limit(30)
+
+	// 优化3
+	g.V('中国移动通信集团公司').as('o1').out('ZhaoBiaoRelation').hasLabel('Project').in('TouBiaoRelation','ZhongBiaoRelation').hasLabel('Organization').not(has('~id','中国移动通信集团公司')).simplePath().as('o2')
+
+	.select('o1','o2')
+	.group().by(
+		__.project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice')
+		.by(select('o1').values('bidiId'))
+		.by(select('o1').values('name'))
+		.by(select('o2').values('bidiId'))
+		.by(select('o2').values('name'))
+		.by(select('o2').values('province'))
+	).by(
+		__.fold().project('targetOrgBidiId','targetOrgName','orgId', 'orgName', 'provice', 'num')
+		.by(__.unfold().select('o1').values('bidiId'))
+		.by(__.unfold().select('o1').values('name'))
+		.by(__.unfold().select('o2').values('bidiId'))
+		.by(__.unfold().select('o2').values('name'))
+		.by(__.unfold().select('o2').values('province'))
+		.by(__.unfold().count())
+	).unfold().select(values).order().by(select('num'), desc).skip(0).limit(30)
+
+
+
+	select o2.name,o2.province,count(1) num from o2 group by o2.name order by num desc limit 30;
 
 
 

@@ -71,9 +71,10 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 			  config: { serializeResultToString: true }
 			}
 		5、启动：  ./bin/gremlin.sh
-		6、连接到GDB图数据库实例 
-			:remote connect tinkerpop.server conf/gdb-remote.yaml		// 正常情况下，这里会显示当前Gremlin控制台所连接的GDB图数据库实例的Host和Port。
+		6、连接到GDB图数据库实例
+			:remote connect tinkerpop.server conf/gdb-remote-hz.yaml		// 正常情况下，这里会显示当前Gremlin控制台所连接的GDB图数据库实例的Host和Port。
 		7、 切换到远程模式，此后您在Grmlin控制台输入的所有DSL均将发向远端的GDB图数据库实例 
+			:remote config timeout 60000		// 默认是30000 我们可以改为60000
 			:remote console
 		8、退出 :exit
 		8、开始和 gdb 交互 
@@ -91,7 +92,7 @@ http://tinkerpop.apache.org/docs/3.4.6/reference/
 						g.V('zs').coalesce(outE('know').where(inV().has('~id','ls')), addE('know').to(V('ls')).property(id,'1')).sideEffect(properties().drop()).property('name','改的')
 					3、不能批量创建边的，最多只会创建一条关系，这是gremlin的语义，如果想用gremlin批量加边，需要先拿出所有的点，然后一个个点添加边
 						g.addE('ZhaoBiaoRelation').from(V().has('Organization', 'name', '比地1')).to(V().has('Project', 'projectName', 'p2'))
-
+沈阳东软医疗系统有限公司
 						
 		
 			2、删
